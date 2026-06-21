@@ -1,111 +1,111 @@
-# User Stories
+# ユーザーストーリー
 
-## US-01: Child speaks to robot in turn
+## US-01: 子どもが順番にロボットに話す
 
-**As** Child A or Child B  
-**I want** to tell the robot what happened in my own words  
-**So that** I can explain without facing the other child while upset
+**ユーザー**: 子どもA または 子どもB  
+**やりたいこと**: 自分の言葉でロボットに何があったか伝えたい  
+**目的**: 動揺している間、相手の子どもと向き合わずに説明できる
 
-**Acceptance criteria**:
+**受け入れ基準**:
 
-- Child can start or join a mediation session
-- Robot responds with calm, supportive prompts
-- Each child has a separate listening channel (not simultaneous confrontation)
-- Robot does not say who is right or wrong
+- 子どもが仲介セッションを開始または参加できる
+- ロボットが落ち着いた supportive なプロンプトで応答する
+- 各子どもに別のヒアリングチャネルがある（同時対決ではない）
+- ロボットはどちらが正しいかを言わない
 
-**Priority**: P0
-
----
-
-## US-02: Agent structures facts and feelings
-
-**As** the Nakanaori system  
-**I want** to separate observable facts, reported feelings, and unknown points  
-**So that** the teacher receives neutral, structured information
-
-**Acceptance criteria**:
-
-- Output includes: when/where, what happened (facts), how each child felt, what is still unclear
-- No fields like `guilty_party`, `verdict`, or `winner`
-- Facts use neutral language ("A said...", "B reported...")
-
-**Priority**: P0
+**優先度**: P0
 
 ---
 
-## US-03: Child confirms or corrects summary
+## US-02: エージェントが事実と感情を整理する
 
-**As** Child A or Child B  
-**I want** to hear the robot read back what it understood and fix mistakes  
-**So that** my side of the story is accurately represented
+**ユーザー**: ナカナオリシステム  
+**やりたいこと**: 観察可能な事実、報告された感情、不明点を分離したい  
+**目的**: 先生が中立的で構造化された情報を受け取れる
 
-**Acceptance criteria**:
+**受け入れ基準**:
 
-- Robot presents summary in child-friendly language
-- Child can say "that's wrong" and provide corrections
-- System updates structured data after correction
+- 出力に含まれるもの：いつ・どこで、何が起きたか（事実）、各子どもの気持ち、まだ不明な点
+- `guilty_party`、`verdict`、`winner` などのフィールドはない
+- 事実は中立的な表現（「A は〜と言った」「B は〜と報告した」）
 
-**Priority**: P1
-
----
-
-## US-04: Teacher receives one-page brief
-
-**As** Mr. Tanaka (teacher)  
-**I want** a single brief with timeline, both sides, and suggested questions  
-**So that** I can intervene fairly without re-interviewing both children from scratch
-
-**Acceptance criteria**:
-
-- Dashboard shows: timeline, facts per child, feelings per child, agreements, disagreements, unknowns
-- Brief includes disclaimer: AI organizes only; teacher decides
-- Brief available when both children have been heard (or on escalation)
-
-**Priority**: P0
+**優先度**: P0
 
 ---
 
-## US-05: Immediate escalation for high-risk content
+## US-03: 子どもが要約を確認・訂正する
 
-**As** the Nakanaori system  
-**I want** to stop mediation and alert the teacher immediately  
-**When** violence, bullying, self-harm, or abuse is indicated
+**ユーザー**: 子どもA または 子どもB  
+**やりたいこと**: ロボットが理解した内容を聞き、間違いを直したい  
+**目的**: 自分の側の話が正確に伝わる
 
-**Acceptance criteria**:
+**受け入れ基準**:
 
-- EmotionGuard detects high-risk triggers
-- Session moves to `escalated` state
-- Teacher brief marked urgent; mediation workflow does not continue autonomously
+- ロボットが子ども向けの言葉で要約を提示する
+- 子どもが「違う」と言って訂正できる
+- 訂正後にシステムが構造化データを更新する
 
-**Priority**: P0
-
----
-
-## US-06: Teacher views session list
-
-**As** Mr. Tanaka  
-**I want** to see active and recent mediation sessions  
-**So that** I can prioritize which conflicts to address
-
-**Acceptance criteria**:
-
-- List shows session status: listening, confirming, ready_for_teacher, escalated, closed
-- Escalated sessions visually distinct
-
-**Priority**: P1
+**優先度**: P1
 
 ---
 
-## US-07: Kebbi as physical avatar (sibling repo)
+## US-04: 先生が1枚ブリーフを受け取る
 
-**As** Child  
-**I want** to talk to the Kebbi robot in the classroom  
-**So that** the experience feels natural and calming
+**ユーザー**: 田中先生  
+**やりたいこと**: タイムライン、双方の話、提案質問を1枚のブリーフで見たい  
+**目的**: 両方の子どもを最初から聞き直さずに公正に介入できる
 
-**Acceptance criteria**:
+**受け入れ基準**:
 
-- Kebbi client calls Nakanaori session API (not CharaTomo chat API)
-- TTS plays robot responses; mic captures child speech (Phase 2)
-- Documented in `clients/kebbi/api-contract.md`
+- ダッシュボードに表示：タイムライン、子どもごとの事実・感情、一致点、不一致点、不明点
+- ブリーフに免責：「AI は整理のみ；判断は先生が行う」
+- 両方の子どもを聞き終えた時（またはエスカレーション時）にブリーフが利用可能
 
-**Priority**: P2
+**優先度**: P0
+
+---
+
+## US-05: 高リスク内容の即時エスカレーション
+
+**ユーザー**: ナカナオリシステム  
+**やりたいこと**: 仲介を停止し、先生に即座に知らせたい  
+**条件**: 暴力、いじめ、自傷、虐待の兆候がある場合
+
+**受け入れ基準**:
+
+- EmotionGuard が高リスクトリガーを検知する
+- セッションが `escalated` 状態に遷移する
+- 先生ブリーフが緊急扱い；仲介ワークフローは自律的に続行しない
+
+**優先度**: P0
+
+---
+
+## US-06: 先生がセッション一覧を見る
+
+**ユーザー**: 田中先生  
+**やりたいこと**: アクティブおよび最近の仲介セッションを確認したい  
+**目的**: どのケンカから対応するか優先順位をつけられる
+
+**受け入れ基準**:
+
+- 一覧にセッション状態：listening, confirming, ready_for_teacher, escalated, closed
+- エスカレーション済みセッションが視覚的に区別される
+
+**優先度**: P1
+
+---
+
+## US-07: Kebbi を物理アバターとして利用（sibling repo）
+
+**ユーザー**: 子ども  
+**やりたいこと**: 教室で Kebbi ロボットと話したい  
+**目的**: 自然で落ち着いた体験に感じられる
+
+**受け入れ基準**:
+
+- Kebbi クライアントが Nakanaori セッション API を呼ぶ（CharaTomo chat API ではない）
+- TTS でロボット応答を再生；マイクで子どもの発話を取得（Phase 2）
+- `clients/kebbi/api-contract.md` に文書化
+
+**優先度**: P0（デモ — Web クライアントと同一優先度）

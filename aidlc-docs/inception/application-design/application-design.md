@@ -1,19 +1,19 @@
-# Application Design — Consolidated
+# Application Design — 統合版
 
-## Overview
+## 概要
 
-Nakanaori Agent is a GCP-hosted multi-agent mediation system. Children interact via Web avatar or Kebbi robot; teachers receive structured briefs via a dashboard. The AI acts as kuroko (backstage supporter), never as judge.
+Nakanaori Agent は GCP 上で動作するマルチエージェント仲介システムです。子どもは Web アバターまたは Kebbi ロボットと対話し、先生はダッシュボードで構造化ブリーフを受け取ります。AI は裁き手ではなく、黒子（裏方サポーター）として振る舞います。
 
-## Architecture Summary
+## アーキテクチャサマリー
 
-See individual artifacts:
+個別成果物を参照:
 
 - [components.md](./components.md)
 - [component-methods.md](./component-methods.md)
 - [services.md](./services.md)
 - [component-dependency.md](./component-dependency.md)
 
-## Session State Machine
+## セッション状態マシン
 
 ```mermaid
 stateDiagram-v2
@@ -31,24 +31,29 @@ stateDiagram-v2
     escalated --> closed
 ```
 
-## Technology Stack
+## 技術スタック
 
-| Layer | Technology |
-|-------|------------|
-| Agents | Google ADK + Gemini API |
+| レイヤー | 技術 |
+|----------|------|
+| エージェント | Google ADK + Gemini API |
 | API | Python FastAPI on Cloud Run |
 | Web | Vite + React on Cloud Run |
-| Session | Firestore (or in-memory MVP) |
+| セッション | in-memory MVP（Firestore は後回し） |
+| Gemini | 全エージェント `gemini-2.0-flash` |
+| Web パッケージング | 単一 Vite アプリ（`/teacher`, `/child` ルート） |
 | CI/CD | GitHub Actions |
+| デモクライアント | Web（先生 + 子ども）と Kebbi — 同一優先度 |
 
-## Ethics Constraints (Design-Level)
+## 倫理制約（設計レベル）
 
-- No judgment fields in schemas
-- TeacherBrief always includes `ai_disclaimer`
-- Escalation bypasses normal mediation completion
-- Prompts versioned and CI-checked
+- スキーマに裁きフィールドを含めない
+- TeacherBrief には常に `ai_disclaimer` を含める
+- エスカレーション時は通常の仲介完了をバイパス
+- プロンプトはバージョン管理し CI でチェック
 
-## Units of Work (for Construction)
+## 作業ユニット（Construction 向け）
+
+[unit-of-work.md](./unit-of-work.md)、[unit-of-work-dependency.md](./unit-of-work-dependency.md)、[unit-of-work-story-map.md](./unit-of-work-story-map.md) を参照。
 
 1. unit-agent-core
 2. unit-api

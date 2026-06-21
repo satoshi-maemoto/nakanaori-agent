@@ -1,30 +1,30 @@
-# Kebbi Client (Sibling Repository)
+# Kebbi クライアント（Sibling リポジトリ）
 
-The Nuwa Kebbi Android client is **not** implemented in this repository.
+Nuwa Kebbi Android クライアントは**このリポジトリには実装されていません**。
 
-## Sibling Repository
+## Sibling リポジトリ
 
 - **GitHub**: [SystemFriend/AIxR-CharaTomo-Kebbi](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi)
-- **Local path**: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
+- **ローカルパス**: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
 
-## Integration Approach
+## 連携方針
 
-1. Nakanaori uses a **session-based REST API** (this repo's `services/api/`)
-2. Do **not** use CharaTomo `POST /api/v1/llm/chat` — mediation workflow differs from general chat
-3. Reference CharaTomo-Kebbi for:
-   - Nuwa TTS / ASR patterns (`NuwaSpeechHelper`, playback vs mic coordination)
-   - HTTP client patterns (`ChatApi.kt`, `VoiceApi.kt`)
-   - Robot face animation during speech
+1. Nakanaori は**セッションベース REST API**を使用（この repo の `services/api/`）
+2. CharaTomo `POST /api/v1/llm/chat` は**使用しない** — 仲介ワークフローは一般チャットと異なる
+3. CharaTomo-Kebbi から参照するもの:
+   - Nuwa TTS / ASR パターン（`NuwaSpeechHelper`、再生とマイクの協調）
+   - HTTP クライアントパターン（`ChatApi.kt`、`VoiceApi.kt`）
+   - 発話中のロボット表情アニメーション
 
-## Sync Policy
+## 同期ポリシー
 
-When changing API contract (`clients/kebbi/api-contract.md`):
+API 契約（`clients/kebbi/api-contract.md`）を変更する場合:
 
-1. Update this repo's API routes and schemas
-2. Open `AIxR-CharaTomo-Kebbi` and implement/adapt `NakanaoriApi.kt` (or equivalent)
-3. See `AIxR-CharaTomo-Kebbi/AGENTS.md` for Kebbi agent notes
+1. この repo の API ルートとスキーマを更新
+2. `AIxR-CharaTomo-Kebbi` を開き `NakanaoriApi.kt`（または同等）を実装・適応
+3. Kebbi エージェント向けノートは `AIxR-CharaTomo-Kebbi/AGENTS.md` を参照
 
-## Phase 2: Voice
+## Phase 2: 音声
 
-- STT/TTS via Google Cloud Speech APIs or Kebbi Nuwa SDK
-- Contract extensions documented in `api-contract.md` when added
+- Google Cloud Speech API または Kebbi Nuwa SDK 経由の STT/TTS
+- 追加時は `api-contract.md` に契約拡張を文書化

@@ -1,18 +1,18 @@
-# Nakanaori API Contract (Kebbi / Web Clients)
+# Nakanaori API 契約（Kebbi / Web クライアント）
 
 Base URL: `https://<nakanaori-api-host>/v1`
 
-**Not** CharaTomo `/api/v1/llm/chat`.
+CharaTomo `/api/v1/llm/chat` **ではない**。
 
-## Authentication (MVP)
+## 認証（MVP）
 
-Demo mode: no auth. Session IDs are unguessable UUIDs. Production: teacher API key or Firebase Auth (future).
+デモモード: 認証なし。セッション ID は推測困難な UUID。本番: 先生 API キーまたは Firebase Auth（将来）。
 
-## Endpoints
+## エンドポイント
 
 ### POST /v1/sessions
 
-Create a mediation session.
+仲介セッションを作成。
 
 **Request**
 
@@ -37,7 +37,7 @@ Create a mediation session.
 
 ### GET /v1/sessions/{session_id}
 
-Get session state.
+セッション状態を取得。
 
 **Response** `200`
 
@@ -57,7 +57,7 @@ Get session state.
 
 ### POST /v1/sessions/{session_id}/child-turn
 
-Submit a child's utterance (text). Phase 2: audio via separate STT endpoint.
+子どもの発話（テキスト）を送信。Phase 2: 別 STT エンドポイント経由の音声。
 
 **Request**
 
@@ -80,11 +80,11 @@ Submit a child's utterance (text). Phase 2: audio via separate STT endpoint.
 }
 ```
 
-When `escalated: true`, client should stop mediation UI and show "先生を呼んでください".
+`escalated: true` の場合、クライアントは仲介 UI を停止し「先生を呼んでください」を表示。
 
 ### GET /v1/sessions/{session_id}/teacher-brief
 
-Teacher one-page brief. Available when `state` is `ready_for_teacher` or `escalated`.
+先生向け1枚ブリーフ。`state` が `ready_for_teacher` または `escalated` のとき利用可能。
 
 **Response** `200`
 
@@ -117,19 +117,19 @@ Teacher one-page brief. Available when `state` is `ready_for_teacher` or `escala
 }
 ```
 
-**Forbidden fields** (must never appear): `guilty_party`, `verdict`, `winner`, `punishment_recommendation`
+**禁止フィールド**（出現してはならない）: `guilty_party`, `verdict`, `winner`, `punishment_recommendation`
 
 ### GET /health
 
 **Response** `200` `{ "status": "ok" }`
 
-## Kebbi Implementation Notes
+## Kebbi 実装メモ
 
-- Add `NakanaoriApi.kt` in CharaTomo-Kebbi with base URL from settings (separate from CharaTomo API URL)
-- Map `agent_message` to Nuwa TTS (see `VoiceApi.kt` pattern)
-- Stop mic during TTS playback (see `AGENTS.md` in Kebbi repo)
+- CharaTomo-Kebbi に `NakanaoriApi.kt` を追加（ベース URL は設定から、CharaTomo API URL とは別）
+- `agent_message` を Nuwa TTS にマッピング（`VoiceApi.kt` パターン参照）
+- TTS 再生中はマイク停止（Kebbi repo の `AGENTS.md` 参照）
 
-## Web Implementation Notes
+## Web 実装メモ
 
-- Child UI: `POST child-turn` loop with `child_id` matching session `active_child`
-- Teacher UI: poll or refresh `GET teacher-brief` when session list shows `ready_for_teacher`
+- 子ども UI: セッション `active_child` に合わせた `child_id` で `POST child-turn` ループ
+- 先生 UI: セッション一覧が `ready_for_teacher` のとき `GET teacher-brief` をポーリングまたは更新

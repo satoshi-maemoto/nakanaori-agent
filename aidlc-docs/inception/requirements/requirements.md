@@ -1,85 +1,99 @@
-# Requirements — Nakanaori Agent
+# 要件定義 — Nakanaori Agent
 
-## Intent Analysis
+## 意図分析
 
-### Product Vision
+### プロダクトビジョン
 
-**ナカナオリ・エージェント** is an AI agent that helps children resolve minor conflicts in school by listening to each party, organizing what happened, and preparing a structured brief for the teacher. The AI does not judge who is right or wrong.
+**ナカナオリ・エージェント**は、学校で起きる小さなケンカについて、双方の話を聞き、整理し、先生向けの構造化ブリーフを用意する AI エージェントです。AI はどちらが正しいかを裁きません。
 
-**Core philosophy**:
+**コア哲学**:
 
 - 「ロボットは裁かない。ただ、話を整理して先生につなぐ。」
 - 「主役は人。ロボットは黒子。」
 
-### Problem Statement
+### 課題
 
-| Problem | Description |
-|---------|-------------|
-| Minor verbal arguments | Small-scale conflicts happen frequently in classrooms |
-| Emotions block communication | Children are too upset to explain clearly to each other or adults |
-| Teacher overload | Teachers are called every time, creating high workload |
-
-### Target Users
-
-| User | Role |
+| 課題 | 説明 |
 |------|------|
-| Child A / Child B | Conflict parties who need a calm listener |
-| Teacher | Makes final decisions; receives organized brief |
-| School administrator | Future: oversight and policy (out of MVP scope) |
+| 小さな口論 | 教室で小規模な衝突が頻繁に発生する |
+| 感情がコミュニケーションを妨げる | 動揺して相手や大人にうまく説明できない |
+| 先生の負荷 | 毎回先生が呼ばれ、業務負荷が高い |
 
-### Core Workflow
+### ターゲットユーザー
 
-1. **Intervention** — Conflict detected or child requests help
-2. **Parallel listening** — Separate sessions with Child A and Child B
-3. **Fact structuring** — Separate facts, feelings, and unknowns (no judgment)
-4. **Confirmation loop** — Read back summary; children can correct
-5. **Teacher handoff** — One-page brief delivered to teacher dashboard
+| ユーザー | 役割 |
+|----------|------|
+| 子どもA / 子どもB | 落ち着いた聞き手が必要な当事者 |
+| 先生 | 最終判断者；整理されたブリーフを受け取る |
+| 学校管理者 | 将来：監督・ポリシー（MVP 範囲外） |
 
-### Functional Requirements
+### コアワークフロー
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| FR-01 | Create mediation session with two child participants | P0 |
-| FR-02 | Conduct individual listening sessions per child | P0 |
-| FR-03 | Structure output into facts, feelings, unknowns | P0 |
-| FR-04 | Confirmation loop with child correction | P1 |
-| FR-05 | Generate teacher brief (timeline, both sides, agreements/disagreements) | P0 |
-| FR-06 | Escalate immediately on violence/bullying/self-harm indicators | P0 |
-| FR-07 | Web avatar UI for children | P1 |
-| FR-08 | Teacher dashboard for brief review | P1 |
-| FR-09 | Kebbi robot as physical avatar (sibling repo) | P2 |
-| FR-10 | Speech-to-Text / Text-to-Speech integration | P3 |
+1. **介入** — ケンカ検知または子どもからの助け要請
+2. **個別ヒアリング** — 子どもA・B それぞれと別セッション
+3. **事実整理** — 事実・感情・不明点を分離（裁きなし）
+4. **確認ループ** — 要約を読み返し、子どもが訂正可能
+5. **先生への引き渡し** — 1枚ブリーフを先生ダッシュボードへ
 
-### Non-Functional Requirements
+### 機能要件
 
-| ID | Requirement | Priority |
-|----|-------------|----------|
-| NFR-01 | No judgment labels in any system output | P0 |
-| NFR-02 | Child session data retention ≤ 7 days default | P0 |
-| NFR-03 | Teacher brief includes AI disclaimer | P0 |
-| NFR-04 | Deploy on Google Cloud Run | P0 |
-| NFR-05 | Use Gemini API via ADK | P0 |
-| NFR-06 | CI/CD with prompt forbidden-word checks | P0 |
-| NFR-07 | Structured logging for agent transitions | P1 |
-| NFR-08 | Staging environment with public demo URL | P0 |
+| ID | 要件 | 優先度 |
+|----|------|--------|
+| FR-01 | 2人の子ども参加者で仲介セッションを作成 | P0 |
+| FR-02 | 子どもごとに個別ヒアリングを実施 | P0 |
+| FR-03 | 出力を事実・感情・不明点に構造化 | P0 |
+| FR-04 | 子どもによる訂正を含む確認ループ | P1 |
+| FR-05 | 先生ブリーフ生成（タイムライン、双方、一致/不一致） | P0 |
+| FR-06 | 暴力・いじめ・自傷の兆候で即時エスカレーション | P0 |
+| FR-07 | 子ども向け Web アバター UI | P0（デモ） |
+| FR-08 | ブリーフ確認用の先生ダッシュボード | P0（デモ） |
+| FR-09 | Kebbi ロボットを物理アバターとして利用（sibling repo） | P0（デモ） |
+| FR-10 | Speech-to-Text / Text-to-Speech 連携 | P3 |
 
-### Hackathon Context
+### 非機能要件
 
-- **Event**: DevOps × AI Agent Hackathon 2026
-- **Submission deadline**: 2026-07-10
-- **Required tech**: Google Cloud Run + Gemini API / ADK
-- **Judging criteria**: Agent centrality, approach, usability, practical value, implementation quality
+| ID | 要件 | 優先度 |
+|----|------|--------|
+| NFR-01 | システム出力に裁きラベルを含めない | P0 |
+| NFR-02 | 子どものセッションデータ保持 ≤ 7日（デフォルト） | P0 |
+| NFR-03 | 先生ブリーフに AI 免責事項を含める | P0 |
+| NFR-04 | Google Cloud Run にデプロイ | P0 |
+| NFR-05 | ADK 経由で Gemini API を使用 | P0 |
+| NFR-06 | プロンプト禁止語チェック付き CI/CD | P0 |
+| NFR-07 | エージェント遷移の構造化ログ | P1 |
+| NFR-08 | 公開デモ URL 付き staging 環境 | P0 |
 
-### Out of Scope (MVP)
+### ハッカソンコンテキスト
 
-- Automated punishment or reward decisions
-- Long-term behavioral profiling of children
-- Parent notification
-- Multi-school tenancy
-- Integration with school information systems
+- **イベント**: DevOps × AI Agent Hackathon 2026
+- **提出期限**: 2026-07-10
+- **必須技術**: Google Cloud Run + Gemini API / ADK
+- **審査基準**: エージェント中心性、アプローチ、使いやすさ、実用性、実装品質
 
-### Constraints
+### MVP 範囲外
 
-- Kebbi Android client lives in sibling repo `AIxR-CharaTomo-Kebbi`
-- Do not use CharaTomo `POST /api/v1/llm/chat` — session-based API only
-- GCP standalone architecture (not AIxR platform extension)
+- 自動的な罰・報酬の決定
+- 子どもの長期行動プロファイリング
+- 保護者への通知
+- マルチスクールテナンシー
+- 校務システム連携
+
+### 制約
+
+- Kebbi Android クライアントは sibling repo `AIxR-CharaTomo-Kebbi` に存在
+- CharaTomo `POST /api/v1/llm/chat` は使用しない — セッションベース API のみ
+- GCP スタンドアロン構成（AIxR プラットフォーム拡張ではない）
+
+### 確定した決定事項（2026-06-21）
+
+| トピック | 決定 |
+|----------|------|
+| デプロイ | Cloud Run API + 別 Cloud Run web サービス（`asia-northeast1`） |
+| セッションストア（MVP） | in-memory のみ（デモ；Firestore は未実装） |
+| データ保持ポリシー | 7日デフォルト（倫理ルール） |
+| デモクライアント | **Web（先生 + 子ども UI）と Kebbi ロボット — 同一優先度；両方デモに含める** |
+| 認証（MVP） | なし — セッション ID によるデモモード |
+| 子ども向け言語 | 日本語のみ |
+| エスカレーション通知 | 先生ダッシュボードのフラグのみ（先生がポーリング） |
+| Gemini モデル | 全エージェント `gemini-2.0-flash` |
+| Web パッケージング | `/teacher` と `/child` ルートの単一 Vite アプリ |

@@ -1,29 +1,29 @@
-# Personas
+# ペルソナ
 
-## Child (子ども) — Yui, 8 years old
+## 子ども — ゆい（8歳）
 
-- **Context**: Elementary school student; conflicts with classmates over small things
-- **Goals**: Want to explain what happened; often too emotional to talk to the other child or teacher directly
-- **Frustrations**: Feels misunderstood; afraid of being blamed
-- **Behavior**: May interrupt, cry, or refuse to speak when upset
-- **Needs**: A calm listener who does not judge; chance to correct if summary is wrong
+- **状況**: 小学生；消しゴムなど小さなことでクラスメイトと衝突
+- **目標**: 何があったか説明したい；動揺すると相手の子どもや先生に直接話しにくい
+- **不満**: 誤解されていると感じる；責められるのが怖い
+- **行動**: 動揺すると遮る、泣く、話さないことがある
+- **ニーズ**: 裁かない落ち着いた聞き手；要約が間違っていれば訂正する機会
 
-## Teacher (先生) — Mr. Tanaka
+## 先生 — 田中先生
 
-- **Context**: Homeroom teacher managing 30+ students
-- **Goals**: Fair response to conflicts; understand both sides before intervening
-- **Frustrations**: Called away from class repeatedly; incomplete information from upset children
-- **Behavior**: Wants a quick, clear summary; makes final decisions on consequences and reconciliation
-- **Needs**: Structured brief with facts vs feelings separated; knows AI does not replace judgment
+- **状況**: 30名以上の学級担任
+- **目標**: ケンカへの公正な対応；介入前に双方を理解したい
+- **不満**: 授業中に何度も呼ばれる；動揺した子どもから情報が不完全
+- **行動**: 素早く明確な要約が欲しい；結果と和解について最終判断を下す
+- **ニーズ**: 事実と感情が分離された構造化ブリーフ；AI が判断を代替しないことを理解している
 
-## Robot / Avatar (ロボット) — Nakanaori Agent persona
+## ロボット / アバター — ナカナオリ・エージェント
 
-- **Context**: Web avatar or Kebbi physical robot in classroom
-- **Goals**: Help children feel heard; organize story for teacher
-- **Role**: Kuroko (backstage supporter) — not authority figure
-- **Tone**: Calm, patient, neutral; encourages turn-taking
-- **Constraints**: Never assigns blame; escalates danger immediately
+- **状況**: 教室の Web アバターまたは Kebbi 実機
+- **目標**: 子どもに聞いてもらったと感じさせ、先生のために話を整理する
+- **役割**: 黒子（裏方サポーター）— 権威者ではない
+- **トーン**: 落ち着き、忍耐強く、中立的；順番を促す
+- **制約**: 責任を割り当てない；危険は即座にエスカレーション
 
-## Future: School Administrator
+## 将来: 学校管理者
 
-- Out of MVP scope. May need aggregate statistics (conflict frequency) without child-identifying data.
+- MVP 範囲外。子ども個人を特定しない集計統計（衝突頻度など）が必要になる可能性あり。

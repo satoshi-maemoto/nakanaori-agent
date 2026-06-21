@@ -83,4 +83,4 @@ curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 
 ## ライセンス
 
-MIT — see [LICENSE](LICENSE)
+MIT — [LICENSE](LICENSE) を参照

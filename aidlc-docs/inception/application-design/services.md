@@ -1,46 +1,46 @@
-# Services
+# サービス
 
 ## MediationWorkflowService
 
-Orchestrates the end-to-end mediation flow.
+エンドツーエンドの仲介フローをオーケストレーションする。
 
-**Responsibilities**:
+**責務**:
 
-- Create sessions and assign initial state (`created` → `listening_a` / `listening_b`)
-- After each child turn: invoke EmotionGuard → Listener → check escalation
-- When both sides heard: invoke FactStructurer → Confirmation (per child) → TeacherBrief
-- On escalation: skip mediation completion; generate escalation brief
+- セッション作成と初期状態割り当て（`created` → `listening_a` / `listening_b`）
+- 各子どもターン後：EmotionGuard → Listener → エスカレーション確認
+- 双方ヒアリング完了後：FactStructurer → Confirmation（子どもごと）→ TeacherBrief
+- エスカレーション時：仲介完了をスキップ；エスカレーションブリーフを生成
 
-**Interactions**:
+**連携**:
 
-- Calls SessionOrchestrator for state transitions
-- Delegates to ADK agents via agent registry
-- Writes to SessionStore
+- 状態遷移のために SessionOrchestrator を呼び出す
+- エージェントレジストリ経由で ADK エージェントに委譲
+- SessionStore に書き込む
 
 ## BriefDeliveryService
 
-Delivers teacher briefs to dashboard.
+先生ブリーフをダッシュボードへ届ける。
 
-**Responsibilities**:
+**責務**:
 
-- Store generated `TeacherBrief` on session
-- Mark `ready_for_teacher` or `escalated`
-- Expose via GET `/v1/sessions/{id}/teacher-brief`
+- 生成された `TeacherBrief` をセッションに保存
+- `ready_for_teacher` または `escalated` をマーク
+- GET `/v1/sessions/{id}/teacher-brief` で公開
 
 ## PromptGovernanceService
 
-Ensures output compliance with Nakanaori ethics.
+Nakanaori 倫理に沿った出力コンプライアンスを確保する。
 
-**Responsibilities**:
+**責務**:
 
-- Validate agent outputs against forbidden judgment labels
-- Run in CI via `scripts/check-prompts.sh`
-- Block deployment if prompts violate NAKANAORI-01
+- エージェント出力を禁止裁きラベルと照合
+- `scripts/check-prompts.sh` 経由で CI 実行
+- プロンプトが NAKANAORI-01 に違反する場合デプロイをブロック
 
-## DeploymentService (Operations)
+## DeploymentService（Operations）
 
-**Responsibilities**:
+**責務**:
 
-- Build Docker images for api and web
-- Deploy to Cloud Run staging on merge to main
-- Configure environment variables (Gemini API key via Secret Manager)
+- api と web の Docker イメージをビルド
+- main マージ時に Cloud Run staging へデプロイ
+- 環境変数設定（Gemini API キーは Secret Manager 経由）

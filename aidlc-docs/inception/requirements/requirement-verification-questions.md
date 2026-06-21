@@ -1,79 +1,79 @@
-# Requirement Verification Questions
+# 要件検証質問
 
-Fill in each `[Answer]:` tag below. AI-DLC will not proceed to Construction until all answers are complete.
+以下の各 `[Answer]:` を記入してください。すべて回答が揃うまで AI-DLC は Construction に進みません。
 
-## Deployment & Environment
+## デプロイ・環境
 
-### Q1: Primary deployment target for hackathon demo?
+### Q1: ハッカソンデモの主要デプロイ先は？
 
-- [A] Cloud Run only (API + static web on same service)
-- [B] Cloud Run API + separate Cloud Run web service
-- [C] Cloud Run API + Firebase Hosting for web
+- [A] Cloud Run のみ（API + 静的 Web を同一サービス）
+- [B] Cloud Run API + 別 Cloud Run web サービス
+- [C] Cloud Run API + Firebase Hosting（Web）
 
-[Answer]:
+[Answer]:B
 
-### Q2: GCP project and region preference?
+### Q2: GCP プロジェクトとリージョンの希望は？
 
-- [A] asia-northeast1 (Tokyo)
+- [A] asia-northeast1（東京）
 - [B] us-central1
-- [C] Other (specify)
+- [C] その他（記載）
 
-[Answer]:
+[Answer]:A
 
-## Session & Data
+## セッション・データ
 
-### Q3: Session state storage for MVP?
+### Q3: MVP のセッション状態ストレージは？
 
 - [A] Firestore
-- [B] In-memory only (demo; no persistence)
-- [C] ADK session state only
+- [B] in-memory のみ（デモ；永続化なし）
+- [C] ADK セッション状態のみ
 
-[Answer]:
+[Answer]:B
 
-### Q4: Child data retention period?
+### Q4: 子どもデータの保持期間は？
 
-- [A] 7 days (default per ethics rules)
-- [B] 24 hours (demo only)
-- [C] Until teacher archives
+- [A] 7日（倫理ルールのデフォルト）
+- [B] 24時間（デモのみ）
+- [C] 先生がアーカイブするまで
 
-[Answer]:
+[Answer]:A
 
-## Client Priority
+## クライアント優先度
 
-### Q5: Which client should be demo-ready first for 7/10 submission?
+### Q5: 7/10 提出に向け、最初にデモ対応すべきクライアントは？
 
-- [A] Teacher dashboard + text-based child UI (web)
-- [B] API only with demo script / curl
-- [C] Kebbi physical robot demo (requires sibling repo work)
+- [A] 先生ダッシュボード + テキストベースの子ども UI（Web）
+- [B] API のみ（デモスクリプト / curl）
+- [C] Kebbi 実機デモ（sibling repo の作業が必要）
 
-[Answer]:
+[Answer]:A + C（同一優先度 — Web と Kebbi の両方をハッカソンデモに含める；順序付けしない）
 
-## Authentication
+## 認証
 
-### Q6: Authentication for hackathon MVP?
+### Q6: ハッカソン MVP の認証方式は？
 
-- [A] No auth (demo mode with session IDs)
-- [B] Simple teacher password / API key
+- [A] 認証なし（セッション ID のデモモード）
+- [B] 簡易先生パスワード / API キー
 - [C] Firebase Auth
 
-[Answer]:
+[Answer]:A
 
-## Language
+## 言語
 
-### Q7: Primary language for child interaction?
+### Q7: 子どもとの対話の主要言語は？
 
-- [A] Japanese only
-- [B] Japanese + English
-- [C] Configurable per school
+- [A] 日本語のみ
+- [B] 日本語 + 英語
+- [C] 学校ごとに設定可能
 
-[Answer]:
+[Answer]:A
 
-## Escalation
+## エスカレーション
 
-### Q8: How should teacher receive urgent escalation?
+### Q8: 緊急エスカレーションを先生が受け取る方法は？
 
-- [A] Flag on dashboard only (teacher polls)
-- [B] Dashboard + optional email (future)
-- [C] Real-time WebSocket push to teacher UI
+- [A] ダッシュボードのフラグのみ（先生がポーリング）
+- [B] ダッシュボード + 任意でメール（将来）
+- [C] 先生 UI へのリアルタイム WebSocket プッシュ
 
-[Answer]:
+[Answer]:A

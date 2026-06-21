@@ -1,25 +1,25 @@
-# Component Dependencies
+# コンポーネント依存関係
 
-## Dependency Matrix
+## 依存関係マトリクス
 
-| From | To | Relationship |
-|------|-----|--------------|
+| From | To | 関係 |
+|------|-----|------|
 | ChildWebApp | ApiService | HTTP REST |
 | TeacherWebApp | ApiService | HTTP REST |
-| KebbiClient | ApiService | HTTP REST (sibling repo) |
-| ApiService | MediationWorkflowService | Internal |
-| MediationWorkflowService | SessionOrchestrator | Internal |
-| MediationWorkflowService | ADK Agents | Agent calls |
-| SessionOrchestrator | SessionStore | Read/write state |
-| ADK Agents | Gemini API | LLM inference |
-| EmotionGuardAgent | MediationWorkflowService | Escalation signal |
-| TeacherBriefAgent | BriefDeliveryService | Brief storage |
+| KebbiClient | ApiService | HTTP REST（sibling repo） |
+| ApiService | MediationWorkflowService | 内部 |
+| MediationWorkflowService | SessionOrchestrator | 内部 |
+| MediationWorkflowService | ADK Agents | エージェント呼び出し |
+| SessionOrchestrator | SessionStore | 読み書き |
+| ADK Agents | Gemini API | LLM 推論 |
+| EmotionGuardAgent | MediationWorkflowService | エスカレーション信号 |
+| TeacherBriefAgent | BriefDeliveryService | ブリーフ保存 |
 
-## Communication Patterns
+## 通信パターン
 
 ```mermaid
 flowchart LR
-    subgraph clients [Clients]
+    subgraph clients [クライアント]
         ChildUI[ChildWebApp]
         TeacherUI[TeacherWebApp]
         Kebbi[KebbiClient]
@@ -35,7 +35,7 @@ flowchart LR
         Agents[Listener_Structurer_Brief_Guard]
     end
 
-    subgraph external [External]
+    subgraph external [外部]
         Gemini[Gemini_API]
         Store[SessionStore]
     end
@@ -50,16 +50,16 @@ flowchart LR
     Agents --> Gemini
 ```
 
-## Data Flow
+## データフロー
 
-1. **Child turn**: Client → POST child-turn → Workflow → Guard → Listener → Store
-2. **Structure**: Both heard → Structurer → Store structured facts
-3. **Confirm**: Confirmation per child → corrections → Structurer merge
-4. **Brief**: TeacherBrief → Store → GET teacher-brief → Teacher UI
-5. **Escalate**: Guard triggers → escalate state → escalation brief → Teacher UI
+1. **子どもターン**: Client → POST child-turn → Workflow → Guard → Listener → Store
+2. **整理**: 双方完了 → Structurer → 構造化事実を Store
+3. **確認**: 子どもごと Confirmation → 訂正 → Structurer merge
+4. **ブリーフ**: TeacherBrief → Store → GET teacher-brief → 先生 UI
+5. **エスカレーション**: Guard 発火 → escalate 状態 → エスカレーションブリーフ → 先生 UI
 
-## Kebbi Boundary
+## Kebbi 境界
 
-- KebbiClient is **not** in this repository
-- Contract defined in `clients/kebbi/api-contract.md`
-- Reference implementation: `AIxR-CharaTomo-Kebbi` (adapt, do not copy CharaTomo chat flow)
+- KebbiClient は**このリポジトリに含まれない**
+- 契約は `clients/kebbi/api-contract.md` で定義
+- 参照実装: `AIxR-CharaTomo-Kebbi`（CharaTomo chat フローのコピーは不可）

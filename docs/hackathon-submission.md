@@ -1,43 +1,43 @@
-# Hackathon Submission Checklist
+# ハッカソン提出チェックリスト
 
-**Event**: [DevOps × AI Agent Hackathon 2026](https://findy.co.jp/4127/)  
-**Deadline**: 2026-07-10 (Fri) 23:59  
-**Hashtag**: `#findy_hackathon`
+**イベント**: [DevOps × AI Agent Hackathon 2026](https://findy.co.jp/4127/)  
+**期限**: 2026-07-10（金）23:59  
+**ハッシュタグ**: `#findy_hackathon`
 
-## Required Submissions
+## 必須提出物
 
-- [ ] **GitHub** — Public repository URL
-- [ ] **Deployed URL** — Working demo (Cloud Run)
-- [ ] **Proto Pedia** — Project registration URL
+- [ ] **GitHub** — 公開リポジトリ URL
+- [ ] **Deployed URL** — 動作するデモ（Cloud Run）
+- [ ] **Proto Pedia** — プロジェクト登録 URL
 
-## Required Technology (verify in README)
+## 必須技術（README で確認）
 
 - [ ] Google Cloud Run
 - [ ] Gemini API
-- [ ] ADK (Agents Development Kit)
+- [ ] ADK（Agents Development Kit）
 
-## Recommended Demo Assets
+## 推奨デモ素材
 
-- [ ] 3-minute demo video (eraser scenario — see `demo-scenario.md`)
-- [ ] Architecture diagram in README or `docs/architecture.md`
-- [ ] CI badge / workflow visible in repo
+- [ ] 3分デモ動画（消しゴムシナリオ — `demo-scenario.md` 参照）
+- [ ] README または `docs/architecture.md` にアーキテクチャ図
+- [ ] CI バッジ / workflow がリポジトリで可視
 
-## Judging Criteria Alignment
+## 審査基準との対応
 
-| Criterion | How we demonstrate |
-|-----------|-------------------|
-| Agent centrality | Multi-step ADK workflow, not single chat |
-| Approach | Non-judgment kuroko philosophy, school conflict domain |
-| Usability | Child talk UI + teacher one-page brief |
-| Practical value | Reduces teacher interrupt load; fair information |
-| Implementation | Cloud Run deploy, CI, prompt governance |
+| 基準 | デモ方法 |
+|------|----------|
+| エージェント中心性 | 単一チャットではなく多段 ADK ワークフロー |
+| アプローチ | 非裁断の黒子哲学、学校ケンカドメイン |
+| 使いやすさ | 子ども会話 UI + 先生向け1枚ブリーフ |
+| 実用性 | 先生の中断負荷低減；公正な情報整理 |
+| 実装 | Cloud Run デプロイ、CI、プロンプトガバナンス |
 
-## Registration
+## 登録
 
-- Findy Conference registration (team members)
-- Proto Pedia: see hackathon official site for link
+- Findy Conference 登録（チームメンバー）
+- Proto Pedia: ハッカソン公式サイトのリンクを参照
 
-## Finals
+## 決勝
 
-- 10 teams invited to Google Shibuya Stream, 2026-08-19
-- Live demo: Kebbi + teacher dashboard recommended
+- 10チームが Google 渋谷ストリームに招待、2026-08-19
+- ライブデモ: Kebbi + 先生ダッシュボード推奨

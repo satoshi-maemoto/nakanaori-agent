@@ -1,8 +1,8 @@
 # DevOps — つくる・まわす・とどける
 
-Aligned with hackathon concepts and AI-DLC Operations phase.
+ハッカソン概念および AI-DLC Operations フェーズに沿った構成。
 
-## Pipeline
+## パイプライン
 
 ```mermaid
 flowchart LR
@@ -15,44 +15,44 @@ flowchart LR
     Build --> CloudRun[Cloud_Run_staging]
 ```
 
-## CI (`/.github/workflows/ci.yml`)
+## CI（`/.github/workflows/ci.yml`）
 
-On every push and PR:
+push と PR のたびに:
 
-1. Python lint (ruff) — `agents/`, `services/api/`
-2. Prompt forbidden-word check — `scripts/check-prompts.sh`
-3. Unit tests — pytest
-4. TypeScript check — `services/web/`
+1. Python lint（ruff）— `agents/`、`services/api/`
+2. プロンプト禁止語チェック — `scripts/check-prompts.sh`
+3. ユニットテスト — pytest
+4. TypeScript チェック — `services/web/`
 
-## Deploy (`/.github/workflows/deploy-staging.yml`)
+## デプロイ（`/.github/workflows/deploy-staging.yml`）
 
-On push to `main`:
+`main` への push 時:
 
-1. Build API Docker image → Artifact Registry
-2. Deploy `nakanaori-api` to Cloud Run (staging)
-3. Build web Docker image → deploy `nakanaori-web` (optional same workflow)
+1. API Docker イメージをビルド → Artifact Registry
+2. Cloud Run（staging）に `nakanaori-api` をデプロイ
+3. web Docker イメージをビルド → `nakanaori-web` をデプロイ（同一 workflow に拡張予定）
 
-### Required GitHub Secrets
+### 必要な GitHub Secrets
 
-| Secret | Purpose |
-|--------|---------|
-| `GCP_PROJECT_ID` | GCP project |
-| `GCP_SA_KEY` | Service account JSON for deploy |
-| `GEMINI_API_KEY` | Injected to Cloud Run via Secret Manager or env |
+| Secret | 目的 |
+|--------|------|
+| `GCP_PROJECT_ID` | GCP プロジェクト |
+| `GCP_SA_KEY` | デプロイ用サービスアカウント JSON |
+| `GEMINI_API_KEY` | Secret Manager または env 経由で Cloud Run に注入 |
 
-## Prompt Governance
+## プロンプトガバナンス
 
-- Prompts in `agents/nakanaori/prompts/`
-- CI blocks judgment labels (悪い子, guilty, verdict, etc.)
-- Changes to prompts require PR review
+- プロンプト: `agents/nakanaori/prompts/`
+- CI が裁きラベルをブロック（悪い子、guilty、verdict 等）
+- プロンプト変更は PR レビュー必須
 
-## Monitoring (Operations)
+## 監視（Operations）
 
-- Cloud Logging: structured JSON logs for agent transitions
-- Log fields: `session_id`, `agent_name`, `state`, `escalated`
-- Future: Cloud Monitoring alerts on error rate
+- Cloud Logging: エージェント遷移の構造化 JSON ログ
+- ログフィールド: `session_id`、`agent_name`、`state`、`escalated`
+- 将来: エラー率に対する Cloud Monitoring アラート
 
-## Local Development
+## ローカル開発
 
 ```bash
 # API
@@ -62,6 +62,6 @@ cd services/api && uvicorn nakanaori_api.main:app --reload --port 8080
 cd services/web && npm install && npm run dev
 ```
 
-## Environment
+## 環境
 
-Copy `infrastructure/cloud-run/env.example` to `.env` locally (never commit).
+`infrastructure/cloud-run/env.example` を `.env` にコピー（コミット禁止）。

@@ -1,55 +1,65 @@
-# AI-DLC State Tracking
+# AI-DLC 状態トラッキング
 
-## Project Information
+## プロジェクト情報
 
-- **Project Name**: Nakanaori Agent (ナカナオリ・エージェント)
-- **Project Type**: Greenfield
-- **Start Date**: 2026-06-21
-- **Current Stage**: INCEPTION — Requirements (seeded, pending verification)
+- **プロジェクト名**: Nakanaori Agent（ナカナオリ・エージェント）
+- **プロジェクト種別**: Greenfield（新規）
+- **開始日**: 2026-06-21
+- **現在ステージ**: INCEPTION — 完了、CONSTRUCTION 待ち
 
-## Execution Plan Summary
+## 実行計画サマリー
 
-- **Total Stages**: 14 (planned)
-- **Stages to Execute**: Requirements, User Stories, Workflow Planning, Application Design, Units Generation, NFR Requirements, NFR Design, Infrastructure Design, Code Generation, Build and Test, Operations
-- **Stages to Skip**: Reverse Engineering (greenfield)
+- **総ステージ数**: 14（計画）
+- **実行するステージ**: Requirements, User Stories, Workflow Planning, Application Design, Units Generation, NFR Requirements, NFR Design, Infrastructure Design, Code Generation, Build and Test, Operations
+- **スキップするステージ**: Reverse Engineering（greenfield）
 
-## Units of Work
+## 作業ユニット
 
-1. `unit-agent-core` — ADK multi-agent + prompts
-2. `unit-api` — Cloud Run API
-3. `unit-web-teacher` — Teacher dashboard
-4. `unit-web-child` — Child Web avatar
-5. `unit-devops` — CI/CD + monitoring
-6. `unit-kebbi-contract` — API contract (implementation in sibling repo)
+1. `unit-agent-core` — ADK マルチエージェント + プロンプト（P0）
+2. `unit-api` — Cloud Run API（P0）
+3. `unit-devops` — CI/CD + 監視（P0）
+4. `unit-web-teacher` — 先生ダッシュボード（P0 デモ）
+5. `unit-web-child` — 子ども Web アバター（P0 デモ）
+6. `unit-kebbi-contract` — API 契約 + sibling repo（P0 デモ）
 
-## Stage Progress
+## ステージ進捗
 
-### INCEPTION PHASE
+### INCEPTION フェーズ
 
-- [x] Workspace Detection (COMPLETED — greenfield monorepo)
-- [x] Reverse Engineering (SKIPPED — greenfield)
-- [x] Requirements Analysis (SEEDED — pending verification questions)
-- [x] User Stories (SEEDED — pending approval)
-- [x] Workflow Planning (SEEDED — pending approval)
-- [x] Application Design (SEEDED — pending approval)
-- [ ] Units Generation — EXECUTE (pending Construction)
+- [x] Workspace Detection（完了 — greenfield monorepo）
+- [x] Reverse Engineering（スキップ — greenfield）
+- [x] Requirements Analysis（完了 — 検証質問回答済み）
+- [x] User Stories（承認済み）
+- [x] Workflow Planning（完了）
+- [x] Application Design（承認済み）
+- [x] Units Generation（完了）
 
-### CONSTRUCTION PHASE
+### CONSTRUCTION フェーズ
 
-- [ ] Functional Design — EXECUTE (pending)
-- [ ] NFR Requirements — EXECUTE (pending)
-- [ ] NFR Design — EXECUTE (pending)
-- [ ] Infrastructure Design — EXECUTE (pending)
-- [ ] Code Generation — EXECUTE (pending)
-- [ ] Build and Test — EXECUTE (pending)
+- [ ] Functional Design — 実行待ち
+- [ ] NFR Requirements — 実行待ち
+- [ ] NFR Design — 実行待ち
+- [ ] Infrastructure Design — 実行待ち
+- [ ] Code Generation — 実行待ち
+- [ ] Build and Test — 実行待ち
 
-### OPERATIONS PHASE
+### OPERATIONS フェーズ
 
-- [ ] Operations — EXECUTE (Cloud Run deploy)
+- [ ] Operations — 実行待ち（Cloud Run デプロイ）
 
-## Current Status
+## 現在の状態
 
-- **Lifecycle Phase**: INCEPTION
-- **Current Stage**: Requirements / Application Design seeded
-- **Next Stage**: Complete requirement-verification-questions, then approve Inception artifacts
-- **Status**: Awaiting human review and approval before Construction
+- **ライフサイクルフェーズ**: INCEPTION 完了 → 次は CONSTRUCTION
+- **現在ステージ**: Units Generation（完了）
+- **次ステージ**: Functional Design（ユニット単位）または NFR Requirements
+- **ステータス**: Construction フェーズ開始の承認待ち
+- **デモ優先度**: Web（先生 + 子ども）と Kebbi — 同一優先度
+
+## 確定した決定事項（スナップショット）
+
+- デプロイ: Cloud Run API + 別 Cloud Run web（`asia-northeast1`）
+- セッションストア: in-memory MVP
+- Gemini: 全エージェント `gemini-2.0-flash`
+- Web: 単一 Vite アプリ（`/teacher`, `/child`）
+- 認証: デモモード（セッション ID）
+- エスカレーション: ダッシュボードフラグのみ

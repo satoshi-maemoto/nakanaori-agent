@@ -1,56 +1,61 @@
-# Nakanaori Agent — Agent Guide
+# Nakanaori Agent — エージェントガイド
 
-AI-DLC + GCP monorepo for **ナカナオリ・エージェント** (school conflict mediation).
+**ナカナオリ・エージェント**（学校ケンカ仲介）向け AI-DLC + GCP monorepo。
 
-## Philosophy
+## 哲学
 
 - 「ロボットは裁かない。ただ、話を整理して先生につなぐ。」
 - 「主役は人。ロボットは黒子。」
 
-## AI-DLC Workflow
+## ドキュメント言語
 
-Start in Cursor:
+- プロジェクトの Markdown（`aidlc-docs/`、`docs/`、`README.md` 等）は**基本的に日本語**で記載
+- 識別子、コード、パス、API ルート、JSON フィールド名は英語のまま
+
+## AI-DLC ワークフロー
+
+Cursor で開始:
 
 ```text
-Using AI-DLC, ナカナオリ・エージェントの Inception を続行してください。
-aidlc-docs/inception/ のシード内容を検証し、requirement-verification-questions の [Answer]: を埋めてから Application Design を承認フローで進めてください。
+Using AI-DLC, ナカナオリ・エージェントの Construction を進めてください。
+unit-agent-core から Functional Design を開始してください。
 ```
 
-Artifacts live in `aidlc-docs/`. Rules: `.cursor/rules/ai-dlc-workflow.mdc`, `.aidlc-rule-details/`.
+成果物: `aidlc-docs/`。ルール: `.cursor/rules/ai-dlc-workflow.mdc`、`.aidlc-rule-details/`。
 
-Update AI-DLC rules: `bash scripts/setup-aidlc.sh`
+AI-DLC ルール更新: `bash scripts/setup-aidlc.sh`
 
-## Repository Map
+## リポジトリマップ
 
-| Path | Purpose |
-|------|---------|
-| `agents/nakanaori/` | ADK agent stubs, prompts, schemas |
-| `services/api/` | FastAPI on Cloud Run |
-| `services/web/` | React teacher + child UI |
-| `clients/kebbi/` | API contract (implementation external) |
-| `aidlc-docs/` | Inception / Construction artifacts |
-| `docs/` | Architecture, demo, DevOps, hackathon |
-| `.cursor/rules/` | Cursor rules (product + hackathon) |
+| パス | 目的 |
+|------|------|
+| `agents/nakanaori/` | ADK エージェントスタブ、プロンプト、スキーマ |
+| `services/api/` | Cloud Run 上の FastAPI |
+| `services/web/` | React 先生 + 子ども UI |
+| `clients/kebbi/` | API 契約（実装は外部） |
+| `aidlc-docs/` | Inception / Construction 成果物 |
+| `docs/` | アーキテクチャ、デモ、DevOps、ハッカソン |
+| `.cursor/rules/` | Cursor ルール（プロダクト + ハッカソン） |
 
-## Units of Work (Construction)
+## 作業ユニット（Construction）
 
 1. `unit-agent-core` — `agents/nakanaori/`
 2. `unit-api` — `services/api/`
-3. `unit-web-teacher` / `unit-web-child` — `services/web/src/teacher`, `child`
-4. `unit-devops` — `.github/workflows/`, `scripts/`
+3. `unit-web-teacher` / `unit-web-child` — `services/web/src/teacher`、`child`
+4. `unit-devops` — `.github/workflows/`、`scripts/`
 5. `unit-kebbi-contract` — `clients/kebbi/api-contract.md`
 
-## Kebbi (Sibling Repository)
+## Kebbi（Sibling リポジトリ）
 
-- **Path**: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
-- **Contract**: `clients/kebbi/api-contract.md`
-- Do **not** use CharaTomo `POST /api/v1/llm/chat`
-- When API changes: update contract here + implement `NakanaoriApi.kt` in Kebbi repo
+- **パス**: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
+- **契約**: `clients/kebbi/api-contract.md`
+- CharaTomo `POST /api/v1/llm/chat` は**使用しない**
+- API 変更時: この repo の契約を更新 + Kebbi repo で `NakanaoriApi.kt` を実装
 
-## Local Development
+## ローカル開発
 
 ```bash
-# Agents tests
+# エージェントテスト
 cd agents && pip install -e ".[dev]" && pytest -q
 
 # API
@@ -60,27 +65,27 @@ cd ../services/api && pip install -e . && uvicorn nakanaori_api.main:app --reloa
 # Web
 cd services/web && npm install && npm run dev
 
-# Prompt check
+# プロンプトチェック
 bash scripts/check-prompts.sh
 ```
 
 ## GCP
 
-- Runtime: Cloud Run (`asia-northeast1` default)
-- AI: Gemini API + ADK (wire in agent stubs)
-- Secret: `GEMINI_API_KEY` via Secret Manager in staging
+- ランタイム: Cloud Run（デフォルト `asia-northeast1`）
+- AI: Gemini API + ADK（エージェントスタブに接続）
+- シークレット: staging では Secret Manager 経由の `GEMINI_API_KEY`
 
-## Ethics (mandatory)
+## 倫理（必須）
 
-See `.cursor/rules/nakanaori-product.mdc` and `.aidlc-rule-details/extensions/child-safety/nakanaori/`.
+`.cursor/rules/nakanaori-product.mdc` および `.aidlc-rule-details/extensions/child-safety/nakanaori/` を参照。
 
-- No judgment labels in outputs
-- Escalate violence/bullying/self-harm immediately
-- Teacher brief always includes AI disclaimer
+- 出力に裁きラベルを含めない
+- 暴力・いじめ・自傷は即時エスカレーション
+- 先生ブリーフには常に AI 免責事項
 
-## Hackathon
+## ハッカソン
 
-- Event: DevOps × AI Agent Hackathon 2026
-- Deadline: 2026-07-10
-- Checklist: `docs/hackathon-submission.md`
-- Demo script: `docs/demo-scenario.md`
+- イベント: DevOps × AI Agent Hackathon 2026
+- 期限: 2026-07-10
+- チェックリスト: `docs/hackathon-submission.md`
+- デモ脚本: `docs/demo-scenario.md`

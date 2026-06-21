@@ -1,34 +1,34 @@
-# Components
+# コンポーネント
 
-## Agent Layer (ADK + Gemini)
+## エージェントレイヤー（ADK + Gemini）
 
-| Component | Responsibility |
-|-----------|----------------|
-| SessionOrchestrator | Workflow state machine; selects next agent; manages session lifecycle |
-| ListenerAgent | Individual child hearing; supportive prompts; collects utterances |
-| EmotionGuardAgent | Monitors for escalation triggers; pauses workflow on high risk |
-| FactStructurerAgent | Builds fact/feeling/unknown structure from both sides |
-| ConfirmationAgent | Presents summary to child; processes corrections |
-| TeacherBriefAgent | Generates teacher one-page brief with disclaimer |
+| コンポーネント | 責務 |
+|----------------|------|
+| SessionOrchestrator | ワークフロー状態マシン；次エージェント選択；セッションライフサイクル管理 |
+| ListenerAgent | 個別ヒアリング；supportive プロンプト；発話収集 |
+| EmotionGuardAgent | エスカレーショントリガー監視；高リスク時にワークフロー停止 |
+| FactStructurerAgent | 双方から事実・感情・不明点の構造を構築 |
+| ConfirmationAgent | 子ども向け要約提示；訂正処理 |
+| TeacherBriefAgent | 免責事項付きの先生向け1枚ブリーフ生成 |
 
-## Service Layer
+## サービスレイヤー
 
-| Component | Responsibility |
-|-----------|----------------|
-| ApiService | FastAPI on Cloud Run; REST endpoints; auth (demo mode MVP) |
-| SessionStore | Persists session state (Firestore or in-memory for demo) |
+| コンポーネント | 責務 |
+|----------------|------|
+| ApiService | Cloud Run 上の FastAPI；REST エンドポイント；認証（MVP はデモモード） |
+| SessionStore | セッション状態の保持（MVP は in-memory；Firestore は後回し） |
 
-## Client Layer
+## クライアントレイヤー
 
-| Component | Responsibility |
-|-----------|----------------|
-| TeacherWebApp | Dashboard: session list, brief view, escalation alerts |
-| ChildWebApp | Web avatar UI: talk to robot, see responses |
-| KebbiClient | Sibling repo Android app; HTTP client to ApiService |
+| コンポーネント | 責務 |
+|----------------|------|
+| TeacherWebApp | ダッシュボード：セッション一覧、ブリーフ表示、エスカレーション通知 |
+| ChildWebApp | Web アバター UI：ロボットと会話、応答表示 |
+| KebbiClient | sibling repo の Android アプリ；ApiService への HTTP クライアント |
 
-## Infrastructure
+## インフラ
 
-| Component | Responsibility |
-|-----------|----------------|
-| CloudRunDeployment | API and web container deployment |
-| CICDPipeline | GitHub Actions: lint, test, prompt check, deploy staging |
+| コンポーネント | 責務 |
+|----------------|------|
+| CloudRunDeployment | API と web コンテナのデプロイ |
+| CICDPipeline | GitHub Actions：lint、テスト、プロンプトチェック、staging デプロイ |

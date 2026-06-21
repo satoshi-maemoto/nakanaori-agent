@@ -1,17 +1,17 @@
-# Construction Phase
+# Construction フェーズ
 
-This directory will contain AI-DLC Construction artifacts:
+このディレクトリには AI-DLC Construction 成果物を配置します:
 
-- Functional design (per unit)
-- NFR requirements and design
-- Infrastructure design
-- Code generation plans
-- Build and test reports
+- Functional Design（ユニット単位）
+- NFR 要件・設計
+- Infrastructure Design
+- Code Generation 計画
+- Build and Test レポート
 
-**Start Construction** after Inception approval:
+**Construction 開始**は Inception 承認後:
 
 ```
-Using AI-DLC, proceed to Construction for unit-agent-core and unit-api.
+Using AI-DLC, unit-agent-core と unit-api の Construction を進めてください。
 ```
 
-See `aidlc-docs/inception/plans/execution-plan.md` for unit order.
+ユニット順序は `aidlc-docs/inception/plans/execution-plan.md` を参照。

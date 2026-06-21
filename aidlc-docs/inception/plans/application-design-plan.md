@@ -1,33 +1,33 @@
-# Application Design Plan
+# Application Design 計画
 
-## Checklist
+## チェックリスト
 
-- [x] Generate components.md with component definitions
-- [x] Generate component-methods.md with method signatures
-- [x] Generate services.md with orchestration patterns
-- [x] Generate component-dependency.md with relationships
-- [x] Generate application-design.md consolidated doc
-- [ ] Human approval for application design
+- [x] コンポーネント定義の components.md を生成
+- [x] メソッドシグネチャの component-methods.md を生成
+- [x] オーケストレーションパターンの services.md を生成
+- [x] 関係性の component-dependency.md を生成
+- [x] 統合ドキュメント application-design.md を生成
+- [x] Application Design の人間による承認
 
-## Design Questions
+## 設計質問
 
-### Q1: Session store for hackathon MVP?
+### Q1: ハッカソン MVP のセッションストアは？
 
-- [A] Firestore (persistent, production-like)
-- [B] In-memory (fastest demo setup)
+- [A] Firestore（永続化、本番に近い）
+- [B] in-memory（最速のデモセットアップ）
 
-[Answer]:
+[Answer]:B
 
-### Q2: Should Listener and Confirmation use the same Gemini model tier?
+### Q2: Listener と Confirmation は同じ Gemini モデル階層を使うか？
 
-- [A] Same model (gemini-2.0-flash) for all agents
-- [B] Flash for Listener, Pro for Structurer/Brief
+- [A] 全エージェント同一モデル（gemini-2.0-flash）
+- [B] Listener は Flash、Structurer/Brief は Pro
 
-[Answer]:
+[Answer]:A
 
-### Q3: Web app packaging?
+### Q3: Web アプリのパッケージングは？
 
-- [A] Single Vite app with /teacher and /child routes
-- [B] Two separate mini-apps in services/web
+- [A] `/teacher` と `/child` ルートの単一 Vite アプリ
+- [B] `services/web` 内の2つの別ミニアプリ
 
-[Answer]:
+[Answer]:A

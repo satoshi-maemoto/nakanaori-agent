@@ -1,19 +1,19 @@
-# Architecture
+# アーキテクチャ
 
-## Overview
+## 概要
 
-Nakanaori Agent mediates minor school conflicts using a multi-agent ADK workflow on Google Cloud. Children talk to a Web avatar or Kebbi robot; teachers receive a structured, non-judgmental brief.
+Nakanaori Agent は Google Cloud 上のマルチエージェント ADK ワークフローで、学校の小さなケンカを仲介します。子どもは Web アバターまたは Kebbi ロボットと話し、先生は構造化された非裁断的ブリーフを受け取ります。
 
-## System Context
+## システムコンテキスト
 
 ```mermaid
 flowchart TB
-    subgraph users [Users]
-        Child[Children_A_and_B]
-        Teacher[Teacher]
+    subgraph users [ユーザー]
+        Child[子どもAとB]
+        Teacher[先生]
     end
 
-    subgraph clients [Clients]
+    subgraph clients [クライアント]
         WebChild[Child_Web_Avatar]
         WebTeacher[Teacher_Dashboard]
         Kebbi[Kebbi_Android_sibling]
@@ -37,35 +37,35 @@ flowchart TB
     CloudRunAPI --> Firestore
 ```
 
-## Repository Layout
+## リポジトリ構成
 
-| Path | Purpose |
-|------|---------|
-| `agents/nakanaori/` | ADK agents and prompts |
-| `services/api/` | FastAPI REST service |
-| `services/web/` | React teacher + child UI |
-| `clients/kebbi/` | API contract (implementation external) |
-| `aidlc-docs/` | AI-DLC Inception/Construction artifacts |
-| `.aidlc-rule-details/` | AI-DLC workflow rules |
-| `infrastructure/` | Cloud Run YAML, Terraform (future) |
+| パス | 目的 |
+|------|------|
+| `agents/nakanaori/` | ADK エージェントとプロンプト |
+| `services/api/` | FastAPI REST サービス |
+| `services/web/` | React 先生 + 子ども UI |
+| `clients/kebbi/` | API 契約（実装は外部） |
+| `aidlc-docs/` | AI-DLC Inception/Construction 成果物 |
+| `.aidlc-rule-details/` | AI-DLC ワークフロールール |
+| `infrastructure/` | Cloud Run YAML、Terraform（将来） |
 
-## Agent Workflow
+## エージェントワークフロー
 
-1. **ListenerAgent** — Hear each child separately
-2. **EmotionGuardAgent** — Check for escalation on each turn
-3. **FactStructurerAgent** — Build facts / feelings / unknowns
-4. **ConfirmationAgent** — Read back and accept corrections
-5. **TeacherBriefAgent** — Generate teacher report
+1. **ListenerAgent** — 各子どもを個別にヒアリング
+2. **EmotionGuardAgent** — 各ターンでエスカレーション確認
+3. **FactStructurerAgent** — 事実 / 感情 / 不明点を構築
+4. **ConfirmationAgent** — 読み返しと訂正受付
+5. **TeacherBriefAgent** — 先生向けレポート生成
 
-Orchestrated by **SessionOrchestrator** with explicit state machine.
+**SessionOrchestrator** が明示的な状態マシンでオーケストレーション。
 
-## Ethics
+## 倫理
 
-See `.cursor/rules/nakanaori-product.mdc` and `.aidlc-rule-details/extensions/child-safety/nakanaori/`.
+`.cursor/rules/nakanaori-product.mdc` および `.aidlc-rule-details/extensions/child-safety/nakanaori/` を参照。
 
-## Related Docs
+## 関連ドキュメント
 
-- [Demo scenario](./demo-scenario.md)
+- [デモシナリオ](./demo-scenario.md)
 - [DevOps](./devops.md)
-- [Hackathon submission](./hackathon-submission.md)
-- [Kebbi API contract](../clients/kebbi/api-contract.md)
+- [ハッカソン提出](./hackathon-submission.md)
+- [Kebbi API 契約](../clients/kebbi/api-contract.md)

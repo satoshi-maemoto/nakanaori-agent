@@ -1,12 +1,12 @@
-# Terraform (optional)
+# Terraform（任意）
 
-Infrastructure-as-code for GCP resources beyond `gcloud run deploy`.
+`gcloud run deploy` を超える GCP リソースの Infrastructure-as-Code。
 
-Planned resources:
+計画リソース:
 
-- Cloud Run services (api, web)
-- Secret Manager (`GEMINI_API_KEY`)
-- Firestore database (if not using in-memory MVP)
-- IAM service accounts
+- Cloud Run サービス（api、web）
+- Secret Manager（`GEMINI_API_KEY`）
+- Firestore データベース（in-memory MVP を使わない場合）
+- IAM サービスアカウント
 
-For hackathon MVP, use `infrastructure/cloud-run/` and GitHub Actions deploy workflow.
+ハッカソン MVP では `infrastructure/cloud-run/` と GitHub Actions デプロイ workflow を使用。

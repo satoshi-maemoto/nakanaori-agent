@@ -28,6 +28,11 @@ alwaysApply: true
 - Run `scripts/check-prompts.sh` before commit
 - Prompts live in `agents/nakanaori/prompts/`
 
+## Documentation Language
+
+- Project markdown (`aidlc-docs/`, `docs/`, `README.md`, `AGENTS.md`, etc.) is written **primarily in Japanese**
+- Keep identifiers, code, file paths, API routes, and JSON field names in English
+
 ## Kebbi
 
 - Implementation in sibling repo: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
