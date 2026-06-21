@@ -1,4 +1,5 @@
 import { ConfirmationAgent } from "./agents/confirmation.js";
+import { ChildNavigatorAgent, extractChildName } from "./agents/child-navigator.js";
 import { EmotionGuardAgent } from "./agents/emotion-guard.js";
 import { FactStructurerAgent } from "./agents/fact-structurer.js";
 import { ListenerAgent } from "./agents/listener.js";
@@ -18,6 +19,7 @@ export class MediationWorkflow {
   private readonly structurer = new FactStructurerAgent();
   private readonly confirmation = new ConfirmationAgent();
   private readonly briefAgent = new TeacherBriefAgent();
+  private readonly navigator = new ChildNavigatorAgent();
 
   createSession(
     sessionId: string,
@@ -29,17 +31,88 @@ export class MediationWorkflow {
       state: SessionStateName.LISTENING_A,
       child_a_label: childALabel,
       child_b_label: childBLabel,
+      child_a_name: null,
+      child_b_name: null,
       turns_a: [],
       turns_b: [],
       structured: null,
+      analysis_cache_key: null,
+      analysis_snapshot: null,
       escalated: false,
       escalation_reason: null,
     };
   }
 
+  private analysisCacheKey(session: SessionState): string {
+    const a = session.turns_a.map((t) => t.utterance).join("\u0000");
+    const b = session.turns_b.map((t) => t.utterance).join("\u0000");
+    return `${a}\u0001${b}`;
+  }
+
+  /** LLM-backed teacher insights (cached on session by turn content). */
+  async refreshSessionInsights(
+    session: SessionState,
+  ): Promise<{ insights: SessionInsights; session: SessionState }> {
+    const sessionWithNames = this.withDisplayLabels(session);
+
+    if (session.structured) {
+      const structured = StructuredFactsSchema.parse(session.structured);
+      return {
+        insights: this.briefAgent.buildInsights(structured),
+        session,
+      };
+    }
+
+    const cacheKey = this.analysisCacheKey(sessionWithNames);
+    if (
+      session.analysis_cache_key === cacheKey &&
+      session.analysis_snapshot
+    ) {
+      const structured = StructuredFactsSchema.parse(session.analysis_snapshot);
+      return {
+        insights: this.briefAgent.buildInsights(structured),
+        session,
+      };
+    }
+
+    const hasTurns =
+      sessionWithNames.turns_a.length > 0 || sessionWithNames.turns_b.length > 0;
+    if (!hasTurns) {
+      return {
+        insights: {
+          agreements: [],
+          disagreements: [],
+          unknowns: [],
+          teacher_hints: [],
+        },
+        session,
+      };
+    }
+
+    const structured = await this.structurer.analyzeSession(sessionWithNames);
+    const updated: SessionState = {
+      ...session,
+      analysis_cache_key: cacheKey,
+      analysis_snapshot: structured as unknown as Record<string, unknown>,
+    };
+    return {
+      insights: this.briefAgent.buildInsights(structured),
+      session: updated,
+    };
+  }
+
+  async getSessionInsights(session: SessionState): Promise<SessionInsights> {
+    const { insights } = await this.refreshSessionInsights(session);
+    return insights;
+  }
+
+  getSessionWelcome(): string {
+    return this.navigator.sessionWelcome();
+  }
+
   async processChildTurn(
     session: SessionState,
-    childId: string,
+    childId: "a" | "b",
     utterance: string,
     options?: { finishTurn?: boolean },
   ): Promise<[SessionState, string, boolean]> {
@@ -62,7 +135,6 @@ export class MediationWorkflow {
     }
 
     let updated = { ...session };
-    const label = childId === "a" ? session.child_a_label : session.child_b_label;
     let agentMessage: string;
 
     if (text) {
@@ -72,57 +144,76 @@ export class MediationWorkflow {
       } else {
         updated = { ...updated, turns_b: [...updated.turns_b, turn] };
       }
-      const response = await this.listener.listenTurn(label, text);
-      agentMessage = response.agent_message;
+
+      if (this.navigator.isCollectingName(session, childId)) {
+        const name = extractChildName(text);
+        updated =
+          childId === "a"
+            ? { ...updated, child_a_name: name }
+            : { ...updated, child_b_name: name };
+        agentMessage = this.navigator.afterNameReceived(name);
+      } else {
+        const displayName = this.navigator.displayName(updated, childId);
+        const turns = childId === "a" ? updated.turns_a : updated.turns_b;
+        const priorUtterances = turns.slice(0, -1).map((t) => t.utterance);
+        const response = await this.listener.listenTurn(displayName, text, {
+          priorUtterances,
+        });
+        agentMessage = response.agent_message;
+      }
+    } else if (finishTurn && childId === "a") {
+      agentMessage = this.navigator.handoffToNextChild(session, "b");
+    } else if (finishTurn && childId === "b") {
+      agentMessage = this.navigator.finishMessage(session, "b");
     } else {
-      agentMessage =
-        childId === "a"
-          ? `${session.child_b_label} の ばん だよ。`
-          : "おつかれさま。先生に つたえるね。";
+      agentMessage = this.navigator.greetingForChild(session, childId, true);
     }
 
     if (finishTurn) {
       updated = this.orchestrator.advanceAfterTurn(updated, childId);
 
       if (updated.state === SessionStateName.STRUCTURING) {
-        const structured = await this.structurer.structure(updated);
+        const structured = await this.structurer.structure(this.withDisplayLabels(updated));
         updated = {
           ...this.orchestrator.markReadyForTeacher(updated),
           structured: structured as unknown as Record<string, unknown>,
         };
         if (!text) {
-          agentMessage = "おつかれさま。先生に つたえるね。";
+          agentMessage = this.navigator.finishMessage(session, childId);
         }
       } else if (!text && childId === "a") {
-        agentMessage = `${session.child_b_label} の ばん だよ。`;
+        agentMessage = this.navigator.handoffToNextChild(updated, "b");
       }
     }
 
     return [updated, agentMessage, false];
   }
 
-  getSessionInsights(session: SessionState): SessionInsights {
-    const structured = session.structured
-      ? StructuredFactsSchema.parse(session.structured)
-      : this.structurer.buildPreviewStructure(session);
-    return this.briefAgent.buildInsights(structured);
+  /** 先生向け整理では、わかった名前をラベルに反映する */
+  private withDisplayLabels(session: SessionState): SessionState {
+    return {
+      ...session,
+      child_a_label: session.child_a_name ?? session.child_a_label,
+      child_b_label: session.child_b_name ?? session.child_b_label,
+    };
   }
 
   getTeacherBrief(session: SessionState): TeacherBrief {
+    const sessionWithNames = this.withDisplayLabels(session);
     let structured: StructuredFacts | null = null;
     if (session.structured) {
       structured = StructuredFactsSchema.parse(session.structured);
     }
     if (session.escalated) {
       return this.briefAgent.formatEscalationBrief(
-        session,
+        sessionWithNames,
         session.escalation_reason ?? "エスカレーション",
       );
     }
-    return this.briefAgent.generateBrief(session, structured);
+    return this.briefAgent.generateBrief(sessionWithNames, structured);
   }
 }
 
-export { ConfirmationAgent, EmotionGuardAgent, FactStructurerAgent, ListenerAgent, TeacherBriefAgent };
+export { ChildNavigatorAgent, ConfirmationAgent, EmotionGuardAgent, FactStructurerAgent, ListenerAgent, TeacherBriefAgent };
 export * from "./orchestrator.js";
 export * from "./schemas.js";

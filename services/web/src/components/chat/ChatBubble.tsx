@@ -1,13 +1,16 @@
 import { cn } from "../../lib/utils";
+import { childCopy } from "../../lib/child-copy";
 
 export type ChatMessage = {
   role: "child" | "robot" | "system";
   text: string;
+  childId?: "a" | "b";
 };
 
 export function ChatBubble({
   role,
   text,
+  childId,
   size = "default",
 }: ChatMessage & { size?: "default" | "large" }) {
   const isChild = role === "child";
@@ -19,7 +22,12 @@ export function ChatBubble({
         className={cn(
           "max-w-[90%] rounded-2xl leading-relaxed",
           large ? "px-5 py-3 text-lg md:text-xl" : "px-4 py-2 text-sm",
-          isChild && "bg-sky-600 text-white rounded-br-md",
+          isChild &&
+            childId === "b" &&
+            "bg-violet-600 text-white rounded-br-md",
+          isChild &&
+            childId !== "b" &&
+            "bg-sky-600 text-white rounded-br-md",
           role === "robot" &&
             "bg-white border border-slate-200 text-slate-800 rounded-bl-md shadow-sm",
           isSystem &&
@@ -33,7 +41,7 @@ export function ChatBubble({
               large ? "text-sm" : "text-xs",
             )}
           >
-            ロボット
+            {childCopy.robotName}
           </span>
         )}
         {text}

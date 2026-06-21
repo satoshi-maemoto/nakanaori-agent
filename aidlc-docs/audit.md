@@ -162,3 +162,21 @@
 **Context**: Construction — Enhancement ドキュメント化
 
 ---
+
+## Enhancement ドキュメント化 — ENH-UI-04 — 2026-06-21
+
+**Timestamp**: 2026-06-21T22:00:00Z
+**User Input**: "ここまでをドキュメント化"
+**AI Response**: ENH-UI-04 teacher-confirmation-guide/requirements.md、plan、aidlc-state、screen-inventory、api-contract、demo-scenario、enhancements README 更新
+**Context**: Construction — 子どもナビ / 先生確認ガイド / LLM teacher_hints / 消しゴム台本 / UI ドキュメント化
+
+---
+
+## Enhancement ドキュメント化 — ENH-UI-04 — 2026-06-21
+
+**Timestamp**: 2026-06-21T22:00:00Z
+**User Input**: "ここまでをドキュメント化"
+**AI Response**: ENH-UI-04 teacher-confirmation-guide/requirements.md、plan、aidlc-state、screen-inventory、api-contract、demo-scenario、enhancements README 更新
+**Context**: Construction — 子どもナビ / 先生確認ガイド / LLM teacher_hints / 消しゴム台本 / UI ドキュメント化
+
+---

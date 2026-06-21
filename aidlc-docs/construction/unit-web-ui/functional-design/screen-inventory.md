@@ -35,8 +35,9 @@ stateDiagram-v2
 |------|------|------------------|
 | Idle | 「はじめる」、やさしい説明（`child-copy.ts`） | セッション ID |
 | GenderSelect | おんな/おとこの ロボット選択 | 技術詳細 |
-| ChatA / ChatB | 大きな吹き出し・大 VRM・順番プログレス・**おくる** / **つぎの ばん** | 裁き・勝敗 UI |
+| ChatA / ChatB | 大きな吹き出し（**A=水色 / B=紫**）・大 VRM・順番プログレス・**おくる** / **つぎの ばん**・**会話のみスクロール** | 裁き・勝敗 UI |
 | LipSync | VRM 口パク + typing indicator | — |
+| NameTurn | 初回発話で名前 → ナカナオリが「〇〇さん」と呼ぶ | — |
 | Escalated | 穏やかな全画面「先生を呼ぶね」 | 通常チャット入力 |
 
 ## 先生画面（`/teacher`）状態遷移
@@ -61,15 +62,27 @@ stateDiagram-v2
 | プレーン `<p>` 羅列 | BriefCard（facts / feelings / unknowns 分離） |
 | disclaimer 1 ブロック | sticky AiDisclaimerBanner |
 | エスカレーション弱い | UrgentBriefLayout（オレンジ枠 + アイコン） |
+| 整理が抽象的 | **ConfirmationGuidePanel**（確認の進め方ヒーロー）+ LLM `teacher_hints` |
+| 途中経過なし | GET `/progress` + `insights`（LLM、キャッシュ付き） |
+
+### 先生画面レイアウト（ENH-UI-04）
+
+1. **確認の進め方** — 番号付きステップ（コア価値）
+2. 話の整理（食い違い・一致・不明）
+3. 会話履歴
+4. ブリーフ完成時: 事実・気持ちの整理
 
 ## デモフロー（消しゴム）
 
-`docs/demo-scenario.md` に沿った `/demo` ガイド:
+**台本（推奨）**: [docs/examples/eraser-story-dialogue.md](../../../../docs/examples/eraser-story-dialogue.md)  
+**送信単位**: 各子 **名前 → 2回まとめ送信 → つぎの ばん**（細切れ送信は非推奨）
+
+`docs/demo-scenario.md` に沿ったフロー:
 
 1. 子ども A 端末 → `/child`（男性 or 女性アバター選択可）
-2. シナリオ文言プリセット or ガイド吹き出し
-3. 子ども B 端末 → 別ブラウザ `/child`
-4. 先生 → `/teacher` でブリーフ確認
+2. 台本どおり入力（`turns.recommended` in JSON）
+3. 子ども B 端末 → 別ブラウザ `/child` または同一端末で B の番
+4. 先生 → `/teacher` で **確認の進め方** + 会話履歴を確認
 
 ## US トレース
 
@@ -94,5 +107,5 @@ stateDiagram-v2
 | セッション作成 | POST `/v1/sessions` | ChildView |
 | ターン | POST `/v1/sessions/:id/child-turn`（`finish_turn` 任意） | ChildView |
 | 一覧 | GET `/v1/sessions` | TeacherView |
-| 途中経過 | GET `/v1/sessions/:id/progress` | TeacherView |
+| 途中経過 | GET `/v1/sessions/:id/progress`（`insights` LLM） | TeacherView |
 | ブリーフ | GET `/v1/sessions/:id/teacher-brief` | TeacherView |

@@ -2,6 +2,15 @@
 
 Use this script for hackathon demo video and live pitch (決勝 8/19).
 
+## 詳細台本（推奨）
+
+**送信単位・矛盾の解説・先生デモの見せ方** は以下を正とする。
+
+- [examples/eraser-story-dialogue.md](./examples/eraser-story-dialogue.md) — 手順・矛盾表・3分短縮版
+- [examples/eraser-story-utterances.json](./examples/eraser-story-utterances.json) — `turns.recommended`
+
+各子: **名前 → 2回のまとめ「おくる」 → つぎの ばん**
+
 ## Cast
 
 - **子どもA**: 「Bが私の消しゴムを取った！」
@@ -46,7 +55,14 @@ System does **not** say who is right.
 
 ## Scene 5 — 先生ダッシュボード
 
-先生画面に 1 枚ブリーフ:
+先生画面（ENH-UI-04）:
+
+1. **確認の進め方** — LLM 生成 `teacher_hints` をヒーロー表示（番号付き）
+2. 話の整理 — 具体的な `disagreements` / `unknowns`
+3. 会話履歴 — 双方の生発話
+4. ブリーフ完成時 — 事実・気持ちの分離 + AI 免責
+
+従来の1枚ブリーフ要素:
 
 - タイムライン
 - 双方の事実・感情（分離表示）

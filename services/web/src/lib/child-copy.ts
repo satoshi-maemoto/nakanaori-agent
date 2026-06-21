@@ -9,10 +9,9 @@ export const childCopy = {
   inputPlaceholder: "はなしたい ことを かいて…",
   sendButton: "おくる",
   nextTurnButton: "つぎの ばん",
-  sessionStartMessage: "はなしを はじめるよ。 かいてね。",
+  robotName: "ナカナオリ",
   turnNow: (name: string) => `いま: ${name} の ばん`,
   escalateBanner: "せんせいを よんでね。 ここで まってて。",
   escalateSystem: "だいじょうぶ？ せんせいを よぶね。",
   loadingAvatar: "よみこみちゅう…",
-  robotLabel: "ロボット",
 } as const;

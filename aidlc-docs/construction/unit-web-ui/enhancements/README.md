@@ -7,6 +7,7 @@ Code Generation 完了後の **差分改善** をここに記録する。Incepti
 | ENH-UI-01 | [VRM 品質・表示修正](./vrm-quality/requirements.md) | ✅ 完了 | `vrm-quality/` + `functional-design/vrm-integration.md` 更新 |
 | ENH-UI-02 | [子ども UX + 先生デモセッション一覧](./child-teacher-demo/requirements.md) | ✅ 完了 | `child-teacher-demo/` + API 一覧 |
 | ENH-UI-03 | [子どもチャット + ローカル Gemini](./chat-gemini-local/requirements.md) | ✅ 完了 | IME / finish_turn / gemini-2.5 / .env |
+| ENH-UI-04 | [子どもナビ + 先生「確認の進め方」+ LLM 整理](./teacher-confirmation-guide/requirements.md) | ✅ 完了 | ChildNavigator / ConfirmationGuide / teacher_hints |
 
 ## Enhancement 実行パターン（unit-web-ui）
 

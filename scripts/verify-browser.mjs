@@ -48,25 +48,33 @@ async function main() {
 
     await page.getByRole("button", { name: "はじめる" }).click();
     await page.getByPlaceholder("はなしたい ことを かいて…").waitFor();
-    pass("Child: セッション開始");
+    await page.getByText("ナカナオリ").first().waitFor();
+    pass("Child: セッション開始 + 自己紹介");
 
     const sessionId = await page.getByTestId("session-id").textContent();
     if (!sessionId?.trim()) fail("Child: session-id", "empty");
     else pass(`Child: session captured (${sessionId.trim().slice(0, 8)}…)`);
 
     const input = page.getByPlaceholder("はなしたい ことを かいて…");
-    await input.fill("今日、ケンカになった");
+    await input.fill("たろう");
     await page.getByRole("button", { name: "おくる" }).click();
-    await page.getByText("ロボット").first().waitFor();
-    pass("Child: 子どもA 発話 + ロボット応答");
+    await page.getByText("たろう").first().waitFor();
+    pass("Child: 名前入力");
+
+    await input.fill("きょう こくごの じかん、けんたが ぼくの けしゴム 取った！ ピンクで うさぎの けしゴム。");
+    await page.getByRole("button", { name: "おくる" }).click();
+    await page.getByText("ナカナオリ").nth(1).waitFor();
+    pass("Child: 子どもA 本編（まとめ送信）");
 
     await page.getByRole("button", { name: "つぎの ばん" }).click();
-    await page.getByText(/子どもB.*の ばん|子ども B.*の ばん/).waitFor({ timeout: 8000 });
+    await page.getByText(/子どもB.*の ばん|なまえ/).waitFor({ timeout: 8000 });
     pass("Child: 子どもB に切替表示");
 
-    await input.fill("向こうが先に言った");
+    await input.fill("けんた");
     await page.getByRole("button", { name: "おくる" }).click();
-    await page.getByText("ロボット").nth(1).waitFor();
+    await input.fill("床に おちてた 水色の 星 けしゴム ひろっただけ。ゆうきくんと かし借り してる。");
+    await page.getByRole("button", { name: "おくる" }).click();
+    await page.getByText("ナカナオリ").nth(2).waitFor();
     await page.getByRole("button", { name: "つぎの ばん" }).click();
     pass("Child: 子どもB 発話 + ロボット応答");
 

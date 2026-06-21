@@ -19,6 +19,15 @@ function syncChildIdFromState(state: string): "a" | "b" | null {
   return null;
 }
 
+function displayChildName(
+  childId: "a" | "b",
+  names: { a: string | null; b: string | null },
+  labels: { a: string; b: string },
+): string {
+  const name = childId === "a" ? names.a : names.b;
+  return name ?? (childId === "a" ? labels.a : labels.b);
+}
+
 export default function ChildView() {
   const [gender, setGender] = useState<AvatarGender>(() => loadAvatarGender());
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -26,16 +35,37 @@ export default function ChildView() {
   const [childId, setChildId] = useState<"a" | "b">("a");
   const [childALabel, setChildALabel] = useState("子どもA");
   const [childBLabel, setChildBLabel] = useState("子どもB");
+  const [childAName, setChildAName] = useState<string | null>(null);
+  const [childBName, setChildBName] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [escalated, setEscalated] = useState(false);
   const composingRef = useRef(false);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     saveAvatarGender(gender);
   }, [gender]);
+
+  useEffect(() => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }, [messages]);
+
+  function syncNamesFromResponse(res: {
+    child_a_name?: string | null;
+    child_b_name?: string | null;
+    child_a_label?: string;
+    child_b_label?: string;
+  }) {
+    if (res.child_a_name !== undefined) setChildAName(res.child_a_name);
+    if (res.child_b_name !== undefined) setChildBName(res.child_b_name);
+    if (res.child_a_label) setChildALabel(res.child_a_label);
+    if (res.child_b_label) setChildBLabel(res.child_b_label);
+  }
 
   async function startSession() {
     setLoading(true);
@@ -46,7 +76,9 @@ export default function ChildView() {
       setChildId((session.active_child as "a" | "b") ?? "a");
       setChildALabel(session.child_a_label);
       setChildBLabel(session.child_b_label);
-      setMessages([{ role: "robot", text: childCopy.sessionStartMessage }]);
+      setChildAName(session.child_a_name ?? null);
+      setChildBName(session.child_b_name ?? null);
+      setMessages([{ role: "robot", text: session.welcome_message }]);
       setEscalated(false);
     } finally {
       setLoading(false);
@@ -58,15 +90,17 @@ export default function ChildView() {
     const text = input.trim();
     if (!text && !finishTurn) return;
 
+    const activeChildId = childId;
     setLoading(true);
     if (text) {
-      setMessages((m) => [...m, { role: "child", text }]);
+      setMessages((m) => [...m, { role: "child", text, childId: activeChildId }]);
       setInput("");
     }
 
     try {
-      const res = await postChildTurn(sessionId, childId, text, { finishTurn });
+      const res = await postChildTurn(sessionId, activeChildId, text, { finishTurn });
       setSessionState(res.state);
+      syncNamesFromResponse(res);
       const nextChild = syncChildIdFromState(res.state);
       if (nextChild) setChildId(nextChild);
       setSpeaking(true);
@@ -96,6 +130,9 @@ export default function ChildView() {
     !loading &&
     (sessionState === "listening_a" || sessionState === "listening_b");
 
+  const names = { a: childAName, b: childBName };
+  const labels = { a: childALabel, b: childBLabel };
+
   return (
     <AppShell title={childCopy.pageTitle} variant="child" largeTitle>
       <p className="mb-6 text-lg leading-relaxed text-slate-700 md:text-xl">
@@ -123,17 +160,21 @@ export default function ChildView() {
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col gap-5 lg:flex-row">
-          <div className="flex flex-col gap-4 lg:w-[48%]">
-            <div className="min-h-[280px] overflow-hidden rounded-2xl border-2 border-sky-100 bg-white/70 shadow-sm sm:min-h-[360px] lg:min-h-[440px] lg:max-h-[520px]">
+        <div className="flex max-h-[calc(100dvh-9rem)] flex-col gap-4 overflow-hidden lg:max-h-[calc(100dvh-10rem)] lg:flex-row lg:gap-5">
+          <div className="flex shrink-0 flex-col gap-3 lg:w-[48%] lg:gap-4">
+            <div className="h-[min(240px,32dvh)] overflow-hidden rounded-2xl border-2 border-sky-100 bg-white/70 shadow-sm sm:h-[min(280px,34dvh)] lg:h-[min(420px,50dvh)] lg:min-h-[300px]">
               <Suspense
                 fallback={
-                  <div className="flex h-full min-h-[280px] items-center justify-center text-lg text-slate-500">
+                  <div className="flex h-full items-center justify-center text-lg text-slate-500">
                     {childCopy.loadingAvatar}
                   </div>
                 }
               >
-                <AvatarCanvas gender={gender} speaking={speaking} className="h-full min-h-[280px]" />
+                <AvatarCanvas
+                  gender={gender}
+                  speaking={speaking}
+                  className="h-full w-full"
+                />
               </Suspense>
             </div>
             <AvatarGenderPicker
@@ -144,21 +185,27 @@ export default function ChildView() {
             />
             <TurnProgressBar
               state={sessionState}
-              childALabel={childALabel}
-              childBLabel={childBLabel}
+              childALabel={displayChildName("a", names, labels)}
+              childBLabel={displayChildName("b", names, labels)}
               size="large"
             />
             <p className="text-center text-lg font-medium text-slate-700">
-              {childCopy.turnNow(childId === "a" ? childALabel : childBLabel)}
+              {childCopy.turnNow(displayChildName(childId, names, labels))}
             </p>
           </div>
 
-          <div className="flex min-h-[360px] flex-1 flex-col rounded-2xl border border-slate-200 bg-white/90 p-4 shadow-sm md:p-5">
-            <div className="mb-4 flex-1 overflow-y-auto">
+          <div
+            className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white/90 shadow-sm"
+            data-testid="child-chat-panel"
+          >
+            <div
+              ref={chatScrollRef}
+              className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 md:px-5"
+            >
               <ChatLog messages={messages} size="large" />
             </div>
             {!escalated ? (
-              <div className="flex flex-col gap-3 border-t border-slate-100 pt-4">
+              <div className="shrink-0 flex flex-col gap-3 border-t border-slate-100 px-4 py-4 md:px-5">
                 <div className="flex gap-3">
                   <Input
                     value={input}

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { cn } from "../../lib/utils";
+import ConfirmationGuidePanel from "./ConfirmationGuidePanel";
 
 export type TeacherInsights = {
   agreements: string[];
@@ -98,52 +99,47 @@ export default function TeacherInsightsPanel({
   insights: TeacherInsights;
   variant?: "default" | "preview";
 }) {
-  const hasContent =
+  const hasContext =
     insights.disagreements.length > 0 ||
     insights.agreements.length > 0 ||
-    insights.unknowns.length > 0 ||
-    insights.teacher_hints.length > 0;
+    insights.unknowns.length > 0;
 
-  if (!hasContent) return null;
+  if (!hasContext && insights.teacher_hints.length === 0) return null;
 
   return (
-    <Card className="border-sky-100 bg-sky-50/40">
-      <CardHeader className="pb-2">
-        <h3 className="text-base font-semibold text-slate-800">
-          {variant === "preview" ? "これまでの整理（途中経過）" : "話の整理と確認ヒント"}
-        </h3>
-        <p className="text-xs text-slate-600">
-          裁くための結論ではなく、先生が確認するときのヒントです。最終判断は先生が行います。
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <InsightList
-          title="食い違い・矛盾の可能性"
-          items={insights.disagreements}
-          className="text-amber-900"
-          emptyText="現時点では大きな食い違いは見つかっていません"
-        />
-        <InsightList
-          title="双方が同じと言っていること"
-          items={insights.agreements}
-          className="text-emerald-900"
-        />
-        <InsightList
-          title="まだ分かっていないこと"
-          items={insights.unknowns}
-          className="text-slate-600"
-        />
-        {insights.teacher_hints.length > 0 && (
-          <div className="rounded-lg border border-sky-200 bg-white p-3 text-sm text-sky-950">
-            <strong>先生への確認ヒント</strong>
-            <ul className="mt-2 list-inside list-disc space-y-1">
-              {insights.teacher_hints.map((hint, i) => (
-                <li key={i}>{hint}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <ConfirmationGuidePanel hints={insights.teacher_hints} variant="hero" />
+
+      {hasContext && (
+        <Card className="border-slate-200 bg-slate-50/50">
+          <CardHeader className="pb-2">
+            <h3 className="text-base font-semibold text-slate-800">
+              {variant === "preview" ? "これまでの整理（参考）" : "話の整理（参考）"}
+            </h3>
+            <p className="text-xs text-slate-500">
+              会話履歴を並べた整理です。上の「確認の進め方」を優先してください。
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <InsightList
+              title="何が食い違っているか"
+              items={insights.disagreements}
+              className="text-amber-900"
+              emptyText="現時点では大きな食い違いは見つかっていません"
+            />
+            <InsightList
+              title="双方が同じと言っていること"
+              items={insights.agreements}
+              className="text-emerald-900"
+            />
+            <InsightList
+              title="まだ分かっていないこと"
+              items={insights.unknowns}
+              className="text-slate-600"
+            />
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }

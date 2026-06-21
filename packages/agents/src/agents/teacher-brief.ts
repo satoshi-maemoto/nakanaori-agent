@@ -53,7 +53,10 @@ export class TeacherBriefAgent {
       agreements: structured.agreements,
       disagreements: structured.disagreements,
       unknowns: structured.unknowns,
-      teacher_hints: this.buildTeacherHints(structured),
+      teacher_hints:
+        structured.teacher_hints.length > 0
+          ? structured.teacher_hints
+          : this.buildGenericHints(structured),
     };
   }
 
@@ -65,12 +68,16 @@ export class TeacherBriefAgent {
     if (session.structured) {
       return StructuredFactsSchema.parse(session.structured);
     }
+    if (session.analysis_snapshot) {
+      return StructuredFactsSchema.parse(session.analysis_snapshot);
+    }
     return {
       child_a: { label: session.child_a_label, facts: [], feelings: [], unknowns: [] },
       child_b: { label: session.child_b_label, facts: [], feelings: [], unknowns: [] },
       agreements: [],
       disagreements: [],
       unknowns: [],
+      teacher_hints: [],
     };
   }
 
@@ -94,41 +101,27 @@ export class TeacherBriefAgent {
     return events;
   }
 
-  private buildTeacherHints(structured: StructuredFacts): string[] {
+  private buildGenericHints(structured: StructuredFacts): string[] {
     const hints: string[] = [];
-
-    for (const disagreement of structured.disagreements) {
-      hints.push(
-        `食い違い: ${disagreement}。双方に「いつ・どこで・何があったか」をたずねてみてください`,
-      );
+    for (const d of structured.disagreements) {
+      hints.push(`食い違い「${d}」について、双方に同じ論点を順番に聞く`);
     }
-    for (const unknown of structured.unknowns) {
-      hints.push(`まだ分かっていないこと: ${unknown}。一緒に確認してみてください`);
+    for (const u of structured.unknowns) {
+      hints.push(`不明点「${u}」を、二人そろって確認する`);
     }
-    if (structured.agreements.length) {
-      hints.push(
-        `双方が同じと言っていること: ${structured.agreements.join("、")}。ここから話を進められます`,
-      );
+    if (!hints.length) {
+      hints.push("双方の気持ちを聞き、和解の方法を一緒に考える");
     }
-    const hasFeelings =
-      structured.child_a.feelings.length > 0 || structured.child_b.feelings.length > 0;
-    if (hasFeelings) {
-      hints.push("まずはお互いの気持ちを受け止めると、話しやすくなります");
-    }
-    if (!structured.disagreements.length && !structured.unknowns.length && !hasFeelings) {
-      hints.push("双方の気持ちを聞き、和解の方法を一緒に考えてみてください");
-    }
-
-    return [...new Set(hints)];
+    return hints;
   }
 
   private suggestQuestions(structured: StructuredFacts): string[] {
-    const questions: string[] = [];
-    if (structured.disagreements.length) {
-      questions.push("双方の認識の違いについて、事実を確認する");
+    if (structured.teacher_hints.length) {
+      return structured.teacher_hints.slice(0, 5);
     }
-    if (structured.unknowns.length) {
-      questions.push("不明点について、両者と一緒に確認する");
+    const questions: string[] = [];
+    for (const d of structured.disagreements) {
+      questions.push(`確認: ${d}`);
     }
     if (!questions.length) {
       questions.push("双方の気持ちを聞き、和解の方法を一緒に考える");

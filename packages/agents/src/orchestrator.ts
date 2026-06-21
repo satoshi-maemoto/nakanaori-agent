@@ -26,9 +26,15 @@ export interface SessionState {
   state: SessionStateName;
   child_a_label: string;
   child_b_label: string;
+  child_a_name: string | null;
+  child_b_name: string | null;
   turns_a: ChildTurn[];
   turns_b: ChildTurn[];
   structured: Record<string, unknown> | null;
+  /** Cache key for LLM analysis snapshot (turn content hash). */
+  analysis_cache_key: string | null;
+  /** Latest LLM structured analysis for in-progress teacher insights. */
+  analysis_snapshot: Record<string, unknown> | null;
   escalated: boolean;
   escalation_reason: string | null;
 }

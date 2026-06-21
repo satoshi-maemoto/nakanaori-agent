@@ -42,6 +42,7 @@ export const StructuredFactsSchema = z.object({
   agreements: z.array(z.string()).default([]),
   disagreements: z.array(z.string()).default([]),
   unknowns: z.array(z.string()).default([]),
+  teacher_hints: z.array(z.string()).default([]),
 });
 
 export type StructuredFacts = z.infer<typeof StructuredFactsSchema>;

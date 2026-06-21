@@ -7,14 +7,18 @@ type Props = {
 };
 
 export default function SessionProgressCard({ progress }: Props) {
+  const labelA = progress.child_a_name ?? progress.child_a_label;
+  const labelB = progress.child_b_name ?? progress.child_b_label;
   const turnsA = progress.turns_a.map((t) => t.utterance);
   const turnsB = progress.turns_b.map((t) => t.utterance);
-  const showInsights =
-    turnsA.length > 0 ||
-    turnsB.length > 0;
+  const showInsights = turnsA.length > 0 || turnsB.length > 0;
 
   return (
-    <div className="space-y-4" data-testid="session-progress">
+    <div className="space-y-5" data-testid="session-progress">
+      {showInsights && (
+        <TeacherInsightsPanel insights={progress.insights} variant="preview" />
+      )}
+
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span className="text-sm font-medium text-slate-800">
@@ -36,16 +40,12 @@ export default function SessionProgressCard({ progress }: Props) {
         )}
         <h3 className="mb-3 text-sm font-semibold text-slate-800">会話履歴</h3>
         <ConversationHistory
-          childALabel={progress.child_a_label}
-          childBLabel={progress.child_b_label}
+          childALabel={labelA}
+          childBLabel={labelB}
           turnsA={turnsA}
           turnsB={turnsB}
         />
       </div>
-
-      {showInsights && (
-        <TeacherInsightsPanel insights={progress.insights} variant="preview" />
-      )}
     </div>
   );
 }

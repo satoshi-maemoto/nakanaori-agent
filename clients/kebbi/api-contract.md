@@ -31,9 +31,16 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
   "state": "listening_a",
   "child_a_label": "子どもA",
   "child_b_label": "子どもB",
-  "active_child": "a"
+  "child_a_name": null,
+  "child_b_name": null,
+  "active_child": "a",
+  "escalated": false,
+  "urgent": false,
+  "welcome_message": "こんにちは、ナカナオリだよ。…なまえを 教えてくれる？"
 }
 ```
+
+`welcome_message`: 子ども UI の初回ロボット吹き出し（自己紹介 + 安心 + 名前確認）。
 
 ### GET /v1/sessions/{session_id}
 
@@ -79,7 +86,9 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 
 ### GET /v1/sessions/{session_id}/progress
 
-デモ用途中経過（発話一覧）。ブリーフ未準備時に先生 UI が表示。
+デモ用途中経過。**発話一覧 + LLM 整理（insights）**。ブリーフ未準備時に先生 UI が表示。
+
+`insights` は Gemini 有効時 LLM 生成（発話内容が変わるまで `analysis_snapshot` でキャッシュ）。
 
 **Response** `200`
 
@@ -87,15 +96,26 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 {
   "session_id": "uuid",
   "state": "listening_b",
-  "child_a_label": "子どもA",
+  "child_a_label": "ゆうき",
   "child_b_label": "子どもB",
+  "child_a_name": "ゆうき",
+  "child_b_name": null,
   "active_child": "b",
   "escalated": false,
   "urgent": false,
   "brief_ready": false,
   "turns_a": [{ "child_id": "a", "utterance": "…" }],
-  "turns_b": [],
-  "escalation_reason": null
+  "turns_b": [{ "child_id": "b", "utterance": "…" }],
+  "escalation_reason": null,
+  "insights": {
+    "agreements": ["双方とも消しゴムをめぐって話している"],
+    "disagreements": ["ゆうきは取られたと言い、けんたは拾っただけと言っている"],
+    "unknowns": ["話している消しゴムが同じ1つか"],
+    "teacher_hints": [
+      "二人に消しゴムを見せてもらい、同じものについて話しているか確かめる",
+      "取った／拾ったについて、手に取る直前の場所と順番を事実だけ聞く"
+    ]
+  }
 }
 ```
 
@@ -132,7 +152,11 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
   "state": "listening_b",
   "agent_message": "そうだったんだね。ゆっくり話してくれてありがとう。",
   "escalated": false,
-  "done_with_child": false
+  "done_with_child": false,
+  "child_a_name": "ゆうき",
+  "child_b_name": null,
+  "child_a_label": "子どもA",
+  "child_b_label": "子どもB"
 }
 ```
 
@@ -152,6 +176,14 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
   "timeline": [
     { "at": "2026-06-21T10:00:00Z", "event": "セッション開始" }
   ],
+  "conversation_a": {
+    "label": "ゆうき",
+    "utterances": ["きょう こくごの じかん、けんたが ぼくの けしゴム 取った！"]
+  },
+  "conversation_b": {
+    "label": "けんた",
+    "utterances": ["床に おちてた 水色の けしゴム ひろっただけ"]
+  },
   "child_a": {
     "label": "子どもA",
     "facts": ["消しゴムがなくなったと感じた"],
@@ -165,13 +197,19 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
     "unknowns": []
   },
   "agreements": [],
-  "disagreements": ["消しゴムを取った vs 拾った"],
-  "unknowns": ["消しゴムの所有者が確認されていない"],
+  "disagreements": ["ゆうきは取られたと言い、けんたは拾っただけと言っている"],
+  "unknowns": ["話している消しゴムが同じ1つか"],
   "suggested_questions": [
-    "消しゴムの所有者と、取った／拾ったという認識の違いを確認する"
+    "二人に消しゴムを見せてもらい、同じものについて話しているか確かめる"
+  ],
+  "teacher_hints": [
+    "取った／拾ったについて、手に取る直前の場所と順番を事実だけ聞く",
+    "いつ机に置き、いつ床を見たかをタイムラインに並べて確認する"
   ]
 }
 ```
+
+`teacher_hints`: 先生が真相確認に使う **具体的ステップ**（有罪認定・罰則提案は含めない）。Web UI では **確認の進め方** としてヒーロー表示。
 
 **禁止フィールド**（出現してはならない）: `guilty_party`, `verdict`, `winner`, `punishment_recommendation`
 
@@ -187,5 +225,6 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 
 ## Web 実装メモ
 
-- 子ども UI: セッション `active_child` に合わせた `child_id` で `POST child-turn` ループ
-- 先生 UI: セッション一覧が `ready_for_teacher` のとき `GET teacher-brief` をポーリングまたは更新
+- 子ども UI: セッション `active_child` に合わせた `child_id` で `POST child-turn` ループ；初回 `welcome_message` 表示；A/B 別バルーン色
+- 先生 UI: 一覧 + `GET progress`（`insights.teacher_hints` 優先表示）→ `ready_for_teacher` で `GET teacher-brief`
+- デモ台本: `docs/examples/eraser-story-dialogue.md`

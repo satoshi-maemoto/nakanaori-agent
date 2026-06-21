@@ -5,6 +5,9 @@ export type SessionState = {
   state: string;
   child_a_label: string;
   child_b_label: string;
+  child_a_name?: string | null;
+  child_b_name?: string | null;
+  welcome_message?: string;
   active_child?: string;
   escalated?: boolean;
   urgent?: boolean;
@@ -16,6 +19,10 @@ export type ChildTurnResponse = {
   agent_message: string;
   escalated: boolean;
   done_with_child: boolean;
+  child_a_name?: string | null;
+  child_b_name?: string | null;
+  child_a_label?: string;
+  child_b_label?: string;
 };
 
 export type TeacherBrief = {
@@ -53,6 +60,8 @@ export type SessionProgress = {
   state: string;
   child_a_label: string;
   child_b_label: string;
+  child_a_name?: string | null;
+  child_b_name?: string | null;
   active_child: string | null;
   escalated: boolean;
   urgent: boolean;
@@ -79,7 +88,7 @@ export async function getSessionProgress(sessionId: string): Promise<SessionProg
 export async function createSession(
   childA = "子どもA",
   childB = "子どもB",
-): Promise<SessionState> {
+): Promise<SessionState & { welcome_message: string }> {
   const res = await fetch(`${API_BASE}/v1/sessions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

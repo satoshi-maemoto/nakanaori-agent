@@ -16,6 +16,8 @@ function toResponse(session: SessionState) {
     state: session.state,
     child_a_label: session.child_a_label,
     child_b_label: session.child_b_label,
+    child_a_name: session.child_a_name,
+    child_b_name: session.child_b_name,
     active_child: workflow.orchestrator.activeChild(session),
     escalated: session.escalated,
     urgent: session.escalated,
@@ -59,7 +61,13 @@ app.post("/v1/sessions", async (c) => {
     body.child_b_label ?? "子どもB",
   );
   store.put(session);
-  return c.json(toResponse(session), 201);
+  return c.json(
+    {
+      ...toResponse(session),
+      welcome_message: workflow.getSessionWelcome(),
+    },
+    201,
+  );
 });
 
 app.get("/v1/sessions/:sessionId", (c) => {
@@ -85,12 +93,13 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
     utterance?: string;
     finish_turn?: boolean;
   }>();
-  if (!/^[ab]$/.test(body.child_id)) {
+  const childId = body.child_id;
+  if (childId !== "a" && childId !== "b") {
     return c.json({ detail: "invalid child_id" }, 400);
   }
 
   const active = workflow.orchestrator.activeChild(session);
-  if (active && body.child_id !== active) {
+  if (active && childId !== active) {
     const label =
       active === "a" ? session.child_a_label : session.child_b_label;
     return c.json({ detail: `いまは ${label} の番です` }, 400);
@@ -108,7 +117,7 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
   try {
     [updated, agentMessage, escalated] = await workflow.processChildTurn(
       session,
-      body.child_id,
+      childId,
       utterance,
       { finishTurn },
     );
@@ -128,30 +137,40 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
     agent_message: agentMessage,
     escalated: escalated || updated.escalated,
     done_with_child: done,
+    child_a_name: updated.child_a_name,
+    child_b_name: updated.child_b_name,
+    child_a_label: updated.child_a_label,
+    child_b_label: updated.child_b_label,
   });
 });
 
-app.get("/v1/sessions/:sessionId/progress", (c) => {
-  const session = store.get(c.req.param("sessionId"));
+app.get("/v1/sessions/:sessionId/progress", async (c) => {
+  let session = store.get(c.req.param("sessionId"));
   if (!session) return c.json({ detail: "session not found" }, 404);
 
   const briefReady =
     session.state === SessionStateName.READY_FOR_TEACHER ||
     session.state === SessionStateName.ESCALATED;
 
+  const { insights, session: refreshedSession } =
+    await workflow.refreshSessionInsights(session);
+  store.put(refreshedSession);
+
   return c.json({
-    session_id: session.session_id,
-    state: session.state,
-    child_a_label: session.child_a_label,
-    child_b_label: session.child_b_label,
-    active_child: workflow.orchestrator.activeChild(session),
-    escalated: session.escalated,
-    urgent: session.escalated,
+    session_id: refreshedSession.session_id,
+    state: refreshedSession.state,
+    child_a_label: refreshedSession.child_a_label,
+    child_b_label: refreshedSession.child_b_label,
+    child_a_name: refreshedSession.child_a_name,
+    child_b_name: refreshedSession.child_b_name,
+    active_child: workflow.orchestrator.activeChild(refreshedSession),
+    escalated: refreshedSession.escalated,
+    urgent: refreshedSession.escalated,
     brief_ready: briefReady,
-    turns_a: session.turns_a,
-    turns_b: session.turns_b,
-    escalation_reason: session.escalation_reason,
-    insights: workflow.getSessionInsights(session),
+    turns_a: refreshedSession.turns_a,
+    turns_b: refreshedSession.turns_b,
+    escalation_reason: refreshedSession.escalation_reason,
+    insights,
   });
 });
 

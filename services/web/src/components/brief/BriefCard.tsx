@@ -52,7 +52,9 @@ export default function BriefCard({ brief }: { brief: TeacherBrief }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
+      <TeacherInsightsPanel insights={insights} />
+
       <Card className={cn(brief.urgent && "border-2 border-orange-500 shadow-md")}>
         {brief.urgent && (
           <div className="bg-orange-100 px-5 py-2 text-sm font-medium text-orange-900">
@@ -114,8 +116,6 @@ export default function BriefCard({ brief }: { brief: TeacherBrief }) {
           )}
         </CardContent>
       </Card>
-
-      <TeacherInsightsPanel insights={insights} />
     </div>
   );
 }
