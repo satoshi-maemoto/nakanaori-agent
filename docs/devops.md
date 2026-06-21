@@ -7,9 +7,9 @@
 ```mermaid
 flowchart LR
     PR[PR_or_push] --> CI[ci.yml]
-    CI --> Lint[Ruff_and_TypeScript]
+    CI --> Lint[TypeScript_build]
     CI --> PromptCheck[check-prompts.sh]
-    CI --> Test[pytest]
+    CI --> Test[vitest]
     merge[merge_to_main] --> Deploy[deploy-staging.yml]
     Deploy --> Build[Docker_build]
     Build --> CloudRun[Cloud_Run_staging]
@@ -19,9 +19,9 @@ flowchart LR
 
 push と PR のたびに:
 
-1. Python lint（ruff）— `agents/`、`services/api/`
+1. Node lint + build — `@nakanaori/agents`、`nakanaori-api`
 2. プロンプト禁止語チェック — `scripts/check-prompts.sh`
-3. ユニットテスト — pytest
+3. ユニットテスト — Vitest（agents）
 4. TypeScript チェック — `services/web/`
 
 ## デプロイ（`/.github/workflows/deploy-staging.yml`）
@@ -30,7 +30,10 @@ push と PR のたびに:
 
 1. API Docker イメージをビルド → Artifact Registry
 2. Cloud Run（staging）に `nakanaori-api` をデプロイ
-3. web Docker イメージをビルド → `nakanaori-web` をデプロイ（同一 workflow に拡張予定）
+3. デプロイ済み API URL を取得
+4. Web Docker イメージを `VITE_API_BASE_URL` 付きでビルド → `nakanaori-web` をデプロイ
+
+API は CORS を有効化済み（Web 別オリジンから `/v1/*` を呼び出し可能）。
 
 ### 必要な GitHub Secrets
 
@@ -42,7 +45,7 @@ push と PR のたびに:
 
 ## プロンプトガバナンス
 
-- プロンプト: `agents/nakanaori/prompts/`
+- プロンプト: `packages/agents/src/prompts/`
 - CI が裁きラベルをブロック（悪い子、guilty、verdict 等）
 - プロンプト変更は PR レビュー必須
 
@@ -55,11 +58,8 @@ push と PR のたびに:
 ## ローカル開発
 
 ```bash
-# API
-cd services/api && uvicorn nakanaori_api.main:app --reload --port 8080
-
-# Web
-cd services/web && npm install && npm run dev
+npm install
+npm run dev --workspace=nakanaori-api
 ```
 
 ## 環境

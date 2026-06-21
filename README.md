@@ -15,8 +15,8 @@ _Staging デプロイ後に URL を記載_
 
 | コンポーネント | 技術 |
 |----------------|------|
-| エージェント | Google ADK + Gemini API |
-| API | FastAPI on Cloud Run |
+| エージェント | TypeScript + Google ADK（`@google/adk`）+ Gemini API |
+| API | Hono + Node.js on Cloud Run |
 | Web | React (先生ダッシュボード + 子ども UI) |
 | Kebbi | 別リポジトリ [`AIxR-CharaTomo-Kebbi`](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi) |
 
@@ -27,10 +27,12 @@ _Staging デプロイ後に URL を記載_
 ### API
 
 ```bash
-cd agents && pip install -e .
-cd ../services/api && pip install -e .
-uvicorn nakanaori_api.main:app --reload --port 8080
+npm install
+npm run build --workspace=@nakanaori/agents
+npm run dev --workspace=nakanaori-api
 ```
+
+`GEMINI_API_KEY` を設定すると ADK + Gemini が有効（未設定時はスタブ応答でデモ可能）。
 
 ### Web
 
@@ -68,7 +70,7 @@ curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 
 ## DevOps
 
-- CI: lint, プロンプト禁止語チェック, pytest
+- CI: lint, プロンプト禁止語チェック, Vitest
 - Staging: `main` への push で Cloud Run デプロイ
 
 [docs/devops.md](docs/devops.md)

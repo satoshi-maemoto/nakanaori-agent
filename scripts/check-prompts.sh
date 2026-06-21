@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Check Nakanaori Python sources for forbidden judgment labels.
+# Check agent TypeScript sources for forbidden judgment labels.
+# Prompt .md files may list forbidden terms in "Forbidden" sections — excluded.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-AGENTS_DIR="$ROOT/agents/nakanaori"
+AGENTS_SRC="$ROOT/packages/agents/src"
 
 FORBIDDEN=(
   '悪い子'
@@ -24,7 +25,7 @@ while IFS= read -r -d '' file; do
       found=1
     fi
   done
-done < <(find "$AGENTS_DIR" -type f -name '*.py' -print0)
+done < <(find "$AGENTS_SRC" -type f -name '*.ts' -print0)
 
 if [[ $found -ne 0 ]]; then
   echo "Prompt check FAILED"

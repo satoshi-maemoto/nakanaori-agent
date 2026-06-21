@@ -16,6 +16,7 @@ htmlcov/
 node_modules/
 dist/
 *.local
+*.tsbuildinfo
 
 # Environment
 .env
@@ -26,6 +27,9 @@ dist/
 # GCP
 *.json
 !package.json
+!package-lock.json
+!**/package.json
+!**/package-lock.json
 credentials/
 *-credentials.json
 

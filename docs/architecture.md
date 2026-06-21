@@ -41,8 +41,8 @@ flowchart TB
 
 | パス | 目的 |
 |------|------|
-| `agents/nakanaori/` | ADK エージェントとプロンプト |
-| `services/api/` | FastAPI REST サービス |
+| `packages/agents/` | ADK エージェント（TypeScript） |
+| `services/api/` | Hono REST サービス（Node.js） |
 | `services/web/` | React 先生 + 子ども UI |
 | `clients/kebbi/` | API 契約（実装は外部） |
 | `aidlc-docs/` | AI-DLC Inception/Construction 成果物 |

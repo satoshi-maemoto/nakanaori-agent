@@ -29,6 +29,8 @@ export default function ChildView() {
     try {
       const res = await postChildTurn(sessionId, childId, text);
       setMessages((m) => [...m, `ロボット: ${res.agent_message}`]);
+      if (res.state === "listening_a") setChildId("a");
+      else if (res.state === "listening_b") setChildId("b");
       if (res.escalated) {
         setMessages((m) => [...m, "（先生を呼んでください）"]);
       }

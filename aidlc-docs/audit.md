@@ -45,3 +45,48 @@
 **Context**: ドキュメント規約
 
 ---
+
+## Construction 開始承認 — 2026-06-21
+
+**Timestamp**: 2026-06-21T16:00:00Z
+**User Input**: "Construction 開始を承認し、unit-agent-core の Functional Design から進める"
+**AI Response**: Construction フェーズ開始；unit-agent-core Functional Design 計画・成果物（business-logic-model, business-rules, domain-entities）を生成
+**Context**: Construction — unit-agent-core Functional Design
+
+---
+
+## Functional Design 承認 — unit-agent-core — 2026-06-21
+
+**Timestamp**: 2026-06-21T17:00:00Z
+**User Input**: "承認します"
+**AI Response**: unit-agent-core Functional Design を承認記録；NFR Requirements 計画・成果物を生成
+**Context**: Construction — unit-agent-core NFR Requirements
+
+---
+
+## 技術スタック変更 — TypeScript — 2026-06-21
+
+**Timestamp**: 2026-06-21T18:00:00Z
+**User Input**: "Python実装になっているが、TypeScript にしたい"（tech-stack-decisions.md 参照）
+**AI Response**: unit-agent-core を TypeScript + @google/adk + Zod に変更；unit-api も Node/Hono 移行を tech-stack-decisions に追記
+**Context**: NFR Requirements — tech stack revision
+
+---
+
+## NFR + Code Generation 承認 — TypeScript 一括移行 — 2026-06-21
+
+**Timestamp**: 2026-06-21T19:00:00Z
+**User Input**: "承認します\n一気に進めて"
+**AI Response**: NFR Requirements 承認；packages/agents（@google/adk）+ services/api（Hono）TypeScript 実装；Python 削除；CI/Docker 更新
+**Context**: Construction — unit-agent-core + unit-api Code Generation
+
+---
+
+## Build and Test + unit-devops — 2026-06-21
+
+**Timestamp**: 2026-06-21T20:00:00Z
+**User Input**: "承認します\n一気に進めて"
+**AI Response**: deploy-staging に web デプロイ追加；API CORS 有効化；build-and-test 手順書生成；domain-entities パス更新；ローカル CI 全通過
+**Context**: Construction — unit-devops、Build and Test
+
+---

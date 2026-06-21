@@ -8,10 +8,14 @@
 - Code Generation 計画
 - Build and Test レポート
 
-**Construction 開始**は Inception 承認後:
+## 進行中ユニット
 
-```
-Using AI-DLC, unit-agent-core と unit-api の Construction を進めてください。
-```
+| ユニット | ステージ | 状態 |
+|----------|----------|------|
+| unit-agent-core | Code Generation | 完了（TypeScript + ADK） |
+| unit-api | Code Generation | 完了（Hono + Node） |
+| unit-devops | CI | 更新済み（Node CI）；web deploy 未 |
 
-ユニット順序は `aidlc-docs/inception/plans/execution-plan.md` を参照。
+**Construction 開始**: 2026-06-21（ユーザー承認済み）
+
+ユニット順序: `aidlc-docs/inception/plans/execution-plan.md`

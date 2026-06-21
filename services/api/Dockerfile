@@ -1,18 +1,35 @@
-FROM python:3.12-slim
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# Install agents package
-COPY agents/pyproject.toml agents/
-COPY agents/nakanaori agents/nakanaori/
-RUN pip install --no-cache-dir ./agents
+COPY package.json package-lock.json ./
+COPY packages/agents/package.json packages/agents/
+COPY services/api/package.json services/api/
 
-# Install API
-COPY services/api/pyproject.toml services/api/
-COPY services/api/nakanaori_api services/api/nakanaori_api/
-RUN pip install --no-cache-dir ./services/api
+RUN npm ci
 
+COPY packages/agents packages/agents
+COPY services/api services/api
+
+RUN npm run build --workspace=@nakanaori/agents && npm run build --workspace=nakanaori-api
+
+FROM node:22-slim
+
+WORKDIR /app
+
+ENV NODE_ENV=production
 ENV PORT=8080
+
+COPY package.json package-lock.json ./
+COPY packages/agents/package.json packages/agents/
+COPY services/api/package.json services/api/
+
+RUN npm ci --omit=dev
+
+COPY --from=builder /app/packages/agents/dist packages/agents/dist
+COPY --from=builder /app/packages/agents/package.json packages/agents/
+COPY --from=builder /app/services/api/dist services/api/dist
+
 EXPOSE 8080
 
-CMD ["sh", "-c", "uvicorn nakanaori_api.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
+CMD ["node", "services/api/dist/index.js"]
