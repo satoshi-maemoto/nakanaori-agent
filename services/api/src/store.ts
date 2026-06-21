@@ -9,3 +9,7 @@ export function put(session: SessionState): void {
 export function get(sessionId: string): SessionState | undefined {
   return sessions.get(sessionId);
 }
+
+export function listAll(): SessionState[] {
+  return [...sessions.values()];
+}

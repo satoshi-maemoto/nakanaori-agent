@@ -38,6 +38,33 @@ type ChildSide = {
   unknowns: string[];
 };
 
+export type SessionProgress = {
+  session_id: string;
+  state: string;
+  child_a_label: string;
+  child_b_label: string;
+  active_child: string | null;
+  escalated: boolean;
+  urgent: boolean;
+  brief_ready: boolean;
+  turns_a: Array<{ child_id: string; utterance: string }>;
+  turns_b: Array<{ child_id: string; utterance: string }>;
+  escalation_reason: string | null;
+};
+
+export async function listSessions(): Promise<SessionState[]> {
+  const res = await fetch(`${API_BASE}/v1/sessions`);
+  if (!res.ok) throw new Error(`listSessions failed: ${res.status}`);
+  const data = (await res.json()) as { sessions: SessionState[] };
+  return data.sessions;
+}
+
+export async function getSessionProgress(sessionId: string): Promise<SessionProgress> {
+  const res = await fetch(`${API_BASE}/v1/sessions/${sessionId}/progress`);
+  if (!res.ok) throw new Error(`session progress failed: ${res.status}`);
+  return res.json();
+}
+
 export async function createSession(
   childA = "子どもA",
   childB = "子どもB",

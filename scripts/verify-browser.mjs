@@ -43,50 +43,54 @@ async function main() {
     pass("Home: タイトル表示");
 
     await page.getByRole("link", { name: "子ども用" }).click();
-    await page.getByRole("heading", { name: /子ども用/ }).waitFor();
+    await page.getByRole("heading", { name: /はなしを きいてくれる ロボット/ }).waitFor();
     pass("Child: 画面遷移");
 
     await page.getByRole("button", { name: "はじめる" }).click();
-    await page.getByText(/セッション:/).waitFor();
-    const sessionLine = await page.getByText(/セッション:/).textContent();
-    const sessionId = sessionLine?.match(/セッション: ([\w-]+)/)?.[1];
-    if (!sessionId) fail("Child: セッション ID 取得", sessionLine ?? "empty");
-    else pass(`Child: セッション開始 (${sessionId.slice(0, 8)}…)`);
+    await page.getByPlaceholder("はなしたい ことを かいて…").waitFor();
+    pass("Child: セッション開始");
 
-    const input = page.getByPlaceholder("話したいことを入力...");
+    const sessionId = await page.getByTestId("session-id").textContent();
+    if (!sessionId?.trim()) fail("Child: session-id", "empty");
+    else pass(`Child: session captured (${sessionId.trim().slice(0, 8)}…)`);
+
+    const input = page.getByPlaceholder("はなしたい ことを かいて…");
     await input.fill("今日、ケンカになった");
-    await page.getByRole("button", { name: "送る" }).click();
-    await page.getByText("ロボット:").waitFor();
+    await page.getByRole("button", { name: "おくる" }).click();
+    await page.getByText("ロボット").first().waitFor();
     pass("Child: 子どもA 発話 + ロボット応答");
 
-    await page.getByText(/いま: 子どもB/).waitFor({ timeout: 5000 });
+    await page.getByText(/子どもB.*の ばん|子ども B.*の ばん/).waitFor({ timeout: 5000 });
     pass("Child: 子どもB に切替表示");
 
     await input.fill("向こうが先に言った");
-    await page.getByRole("button", { name: "送る" }).click();
-    await page.getByText("ロボット:").nth(1).waitFor();
+    await page.getByRole("button", { name: "おくる" }).click();
+    await page.getByText("ロボット").nth(1).waitFor();
     pass("Child: 子どもB 発話 + ロボット応答");
 
     await page.goto(`${BASE}/teacher`);
     await page.getByRole("heading", { name: "先生用ダッシュボード" }).waitFor();
     pass("Teacher: 画面遷移");
 
-    await page.getByPlaceholder("セッション ID").fill(sessionId ?? "");
-    await page.getByRole("button", { name: "ブリーフを見る" }).click();
-    await page.getByText("この整理はAIによるものです").waitFor({ timeout: 5000 });
+    await page.getByTestId("active-sessions").waitFor();
+    const prefix = sessionId.trim().slice(0, 8);
+    await page.getByTestId(`session-row-${prefix}`).click();
+    pass("Teacher: 進行中セッション一覧から選択");
+
+    await page.getByText("この整理はAIによるものです").waitFor({ timeout: 8000 });
     pass("Teacher: ai_disclaimer 付きブリーフ表示");
 
     const facts = await page.getByText("事実:").count();
     if (facts >= 2) pass("Teacher: 子どもA/B 事実セクション");
     else fail("Teacher: 事実セクション", `count=${facts}`);
 
-    // Escalation flow (new session)
     await page.goto(`${BASE}/child`);
     await page.getByRole("button", { name: "はじめる" }).click();
-    await page.getByText(/セッション:/).waitFor();
-    await input.fill("殴ってしまった");
-    await page.getByRole("button", { name: "送る" }).click();
-    await page.getByText("（先生を呼んでください）").waitFor({ timeout: 5000 });
+    const inputEsc = page.getByPlaceholder("はなしたい ことを かいて…");
+    await inputEsc.waitFor();
+    await inputEsc.fill("殴ってしまった");
+    await page.getByRole("button", { name: "おくる" }).click();
+    await page.getByText("せんせいを よんでね").waitFor({ timeout: 8000 });
     pass("Child: エスカレーション表示");
   } catch (e) {
     fail("Browser E2E", String(e));

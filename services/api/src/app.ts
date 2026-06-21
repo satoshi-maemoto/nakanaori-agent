@@ -42,6 +42,14 @@ app.get("/", (c) =>
 
 app.get("/health", (c) => c.json({ status: "ok" }));
 
+app.get("/v1/sessions", (c) => {
+  const items = store
+    .listAll()
+    .filter((s) => s.state !== SessionStateName.CLOSED)
+    .map(toResponse);
+  return c.json({ sessions: items });
+});
+
 app.post("/v1/sessions", async (c) => {
   const body = await c.req.json<{ child_a_label?: string; child_b_label?: string }>();
   const sessionId = randomUUID();
@@ -97,6 +105,29 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
     agent_message: agentMessage,
     escalated: escalated || updated.escalated,
     done_with_child: done,
+  });
+});
+
+app.get("/v1/sessions/:sessionId/progress", (c) => {
+  const session = store.get(c.req.param("sessionId"));
+  if (!session) return c.json({ detail: "session not found" }, 404);
+
+  const briefReady =
+    session.state === SessionStateName.READY_FOR_TEACHER ||
+    session.state === SessionStateName.ESCALATED;
+
+  return c.json({
+    session_id: session.session_id,
+    state: session.state,
+    child_a_label: session.child_a_label,
+    child_b_label: session.child_b_label,
+    active_child: workflow.orchestrator.activeChild(session),
+    escalated: session.escalated,
+    urgent: session.escalated,
+    brief_ready: briefReady,
+    turns_a: session.turns_a,
+    turns_b: session.turns_b,
+    escalation_reason: session.escalation_reason,
   });
 });
 

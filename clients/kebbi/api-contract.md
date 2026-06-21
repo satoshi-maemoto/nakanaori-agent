@@ -55,6 +55,50 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 
 **States**: `created`, `listening_a`, `listening_b`, `structuring`, `confirming_a`, `confirming_b`, `ready_for_teacher`, `escalated`, `closed`
 
+### GET /v1/sessions
+
+進行中セッション一覧（`closed` 以外）。先生デモ UI 用。
+
+**Response** `200`
+
+```json
+{
+  "sessions": [
+    {
+      "session_id": "uuid",
+      "state": "listening_a",
+      "child_a_label": "子どもA",
+      "child_b_label": "子どもB",
+      "active_child": "a",
+      "escalated": false,
+      "urgent": false
+    }
+  ]
+}
+```
+
+### GET /v1/sessions/{session_id}/progress
+
+デモ用途中経過（発話一覧）。ブリーフ未準備時に先生 UI が表示。
+
+**Response** `200`
+
+```json
+{
+  "session_id": "uuid",
+  "state": "listening_b",
+  "child_a_label": "子どもA",
+  "child_b_label": "子どもB",
+  "active_child": "b",
+  "escalated": false,
+  "urgent": false,
+  "brief_ready": false,
+  "turns_a": [{ "child_id": "a", "utterance": "…" }],
+  "turns_b": [],
+  "escalation_reason": null
+}
+```
+
 ### POST /v1/sessions/{session_id}/child-turn
 
 子どもの発話（テキスト）を送信。Phase 2: 別 STT エンドポイント経由の音声。

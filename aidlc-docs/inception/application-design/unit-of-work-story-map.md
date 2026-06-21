@@ -4,10 +4,10 @@
 
 | Story ID | タイトル | 主担当ユニット | 支援ユニット |
 |----------|----------|----------------|--------------|
-| US-01 | 子どもが順番にロボットに話す | unit-web-child, unit-kebbi-contract | unit-api, unit-agent-core |
+| US-01 | 子どもが順番にロボットに話す | unit-web-child, unit-web-ui, unit-kebbi-contract | unit-api, unit-agent-core |
 | US-02 | エージェントが事実と感情を整理 | unit-agent-core | unit-api |
 | US-03 | 子どもが要約を確認・訂正 | unit-agent-core | unit-api, unit-web-child, unit-kebbi-contract |
-| US-04 | 先生が1枚ブリーフを受け取る | unit-web-teacher | unit-api, unit-agent-core |
+| US-04 | 先生が1枚ブリーフを受け取る | unit-web-teacher, unit-web-ui | unit-api, unit-agent-core |
 | US-05 | 高リスク内容の即時エスカレーション | unit-agent-core | unit-api, unit-web-teacher |
 | US-06 | 先生がセッション一覧を見る | unit-web-teacher | unit-api |
 | US-07 | Kebbi を物理アバターとして利用 | unit-kebbi-contract | unit-api, unit-agent-core |
@@ -20,7 +20,8 @@
 |----------|------|
 | unit-agent-core | ListenerAgent プロンプト；EmotionGuard 事前チェック |
 | unit-api | POST child-turn、セッション状態遷移 |
-| unit-web-child | Web デモ経路のテキストチャット UI |
+| unit-web-child | Web デモ経路の会話 UI + VRM 黒子アバター |
+| unit-web-ui | VRM（CharaTomo-Web 同系）、チャット UX、デザインシステム |
 | unit-kebbi-contract | Kebbi HTTP クライアント + 実機デモ向けロボット UX |
 
 **デモ注記**: Web と Kebbi は**同一優先度** — ハッカソンデモで両方が子どもヒアリングを実装。
@@ -47,7 +48,8 @@
 |----------|------|
 | unit-agent-core | TeacherBriefAgent、`ai_disclaimer` |
 | unit-api | GET teacher-brief エンドポイント |
-| unit-web-teacher | ブリーフ表示 UI |
+| unit-web-teacher | ブリーフ 1 枚 UI（facts/feelings/unknowns 分離） |
+| unit-web-ui | BriefCard、disclaimer バナー、urgent スタイル |
 
 ### US-05: 高リスク内容の即時エスカレーション（P0）
 
@@ -56,6 +58,7 @@
 | unit-agent-core | EmotionGuardAgent、escalated 状態 |
 | unit-api | エスカレーション状態の保持 |
 | unit-web-teacher | ダッシュボードのエスカレーションフラグ |
+| unit-web-ui | エスカレーション全画面 UI（子ども側） |
 
 ### US-06: 先生がセッション一覧を見る（P1）
 
@@ -81,7 +84,7 @@
 | 出力に裁きラベルなし | unit-agent-core（+ unit-devops のプロンプト CI） |
 | CI/CD と staging デプロイ | unit-devops |
 | 7日保持ポリシー | unit-api（ポリシー文書；in-memory MVP は再起動でリセット） |
-| 子ども向け日本語のみ | unit-agent-core（プロンプト）、unit-web-child、unit-kebbi-contract |
+| 子ども向け日本語のみ | unit-agent-core（プロンプト）、unit-web-ui、unit-web-child、unit-kebbi-contract |
 
 ## 未割当ストーリー
 
@@ -93,6 +96,7 @@
 |----------|----------------|
 | unit-agent-core | US-02, US-05 |
 | unit-api | US-01, US-04, US-05 |
+| unit-web-ui | US-01, US-04, US-05（UI/UX + VRM） |
 | unit-web-teacher | US-04, US-05, US-06 |
 | unit-web-child | US-01, US-03 |
 | unit-kebbi-contract | US-01, US-07 |

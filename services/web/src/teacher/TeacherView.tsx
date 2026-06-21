@@ -1,61 +1,138 @@
-import { useState } from "react";
-import { createSession, getTeacherBrief, type TeacherBrief } from "../api";
+import { useCallback, useEffect, useState } from "react";
+import {
+  createSession,
+  getSessionProgress,
+  getTeacherBrief,
+  listSessions,
+  type SessionProgress,
+  type SessionState,
+  type TeacherBrief,
+} from "../api";
+import BriefCard from "../components/brief/BriefCard";
+import AppShell, { AiDisclaimerBanner } from "../components/layout/AppShell";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import ActiveSessionList from "./ActiveSessionList";
+import SessionProgressCard from "./SessionProgressCard";
 
 export default function TeacherView() {
+  const [sessions, setSessions] = useState<SessionState[]>([]);
   const [sessionId, setSessionId] = useState("");
   const [brief, setBrief] = useState<TeacherBrief | null>(null);
+  const [progress, setProgress] = useState<SessionProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  async function loadBrief() {
-    if (!sessionId.trim()) return;
-    setError(null);
+  const refreshSessions = useCallback(async () => {
     try {
-      const b = await getTeacherBrief(sessionId.trim());
-      setBrief(b);
+      const list = await listSessions();
+      setSessions(list);
     } catch (e) {
       setError(String(e));
-      setBrief(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    void refreshSessions();
+    const timer = window.setInterval(() => void refreshSessions(), 5000);
+    return () => window.clearInterval(timer);
+  }, [refreshSessions]);
+
+  async function loadSessionDetail(id: string) {
+    setSessionId(id);
+    setError(null);
+    setLoading(true);
+    setBrief(null);
+    setProgress(null);
+    try {
+      const p = await getSessionProgress(id);
+      setProgress(p);
+      if (p.brief_ready) {
+        const b = await getTeacherBrief(id);
+        setBrief(b);
+      }
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setLoading(false);
     }
   }
 
-  async function createAndShow() {
+  async function loadBriefFromInput() {
+    if (!sessionId.trim()) return;
+    await loadSessionDetail(sessionId.trim());
+  }
+
+  async function createDemoSession() {
     setError(null);
+    setLoading(true);
     try {
-      const { createSession } = await import("../api");
       const s = await createSession();
-      setSessionId(s.session_id);
+      await refreshSessions();
+      await loadSessionDetail(s.session_id);
     } catch (e) {
       setError(String(e));
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div className="teacher-view">
-      <h2>先生用ダッシュボード</h2>
-      <div>
-        <input
-          value={sessionId}
-          onChange={(e) => setSessionId(e.target.value)}
-          placeholder="セッション ID"
-        />
-        <button onClick={loadBrief}>ブリーフを見る</button>
-        <button onClick={createAndShow}>新規セッション ID を取得</button>
-      </div>
-      {error && <p>{error}</p>}
-      {brief && (
-        <div className={`brief-card ${brief.urgent ? "urgent" : ""}`}>
-          <div className="disclaimer">{brief.ai_disclaimer}</div>
-          <h3>子どもA — {brief.child_a.label}</h3>
-          <p><strong>事実:</strong> {brief.child_a.facts.join("、")}</p>
-          <p><strong>気持ち:</strong> {brief.child_a.feelings.join("、")}</p>
-          <h3>子どもB — {brief.child_b.label}</h3>
-          <p><strong>事実:</strong> {brief.child_b.facts.join("、")}</p>
-          <p><strong>気持ち:</strong> {brief.child_b.feelings.join("、")}</p>
-          <p><strong>不一致:</strong> {brief.disagreements.join("、")}</p>
-          <p><strong>不明点:</strong> {brief.unknowns.join("、")}</p>
-          <p><strong>確認の提案:</strong> {brief.suggested_questions.join("、")}</p>
+    <AppShell title="先生用ダッシュボード" variant="teacher">
+      <p className="mb-4 text-slate-600">
+        子ども双方の話を整理したブリーフを確認できます。最終判断は先生が行います。
+      </p>
+
+      <ActiveSessionList
+        sessions={sessions}
+        selectedId={sessionId || null}
+        onSelect={(id) => void loadSessionDetail(id)}
+        loading={loading}
+        onRefresh={() => void refreshSessions()}
+      />
+
+      <details className="mb-6 rounded-xl border border-slate-200 bg-white/80 px-4 py-3">
+        <summary className="cursor-pointer text-sm font-medium text-slate-700">
+          セッション ID を 直接入力（上級者向け）
+        </summary>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Input
+            className="max-w-md flex-1 font-mono text-sm"
+            value={sessionId}
+            onChange={(e) => setSessionId(e.target.value)}
+            placeholder="セッション ID"
+          />
+          <Button onClick={() => void loadBriefFromInput()} disabled={loading || !sessionId.trim()}>
+            表示
+          </Button>
+          <Button variant="secondary" onClick={() => void createDemoSession()} disabled={loading}>
+            新規セッション（デモ用）
+          </Button>
+        </div>
+      </details>
+
+      {error && (
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+          {error.includes("400") && !error.includes("listSessions")
+            ? "ブリーフの準備ができていません。下の進行状況を確認してください。"
+            : error}
         </div>
       )}
-    </div>
+
+      {loading && (
+        <p className="mb-4 text-sm text-slate-500">読み込み中…</p>
+      )}
+
+      {progress && !brief && (
+        <SessionProgressCard progress={progress} />
+      )}
+
+      {brief && (
+        <>
+          <AiDisclaimerBanner text={brief.ai_disclaimer} />
+          <BriefCard brief={brief} />
+        </>
+      )}
+    </AppShell>
   );
 }

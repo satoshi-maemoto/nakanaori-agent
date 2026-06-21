@@ -90,3 +90,57 @@
 **Context**: Construction — unit-devops、Build and Test
 
 ---
+
+## unit-web-ui 追加 — VRM + UI ブラッシュアップ — 2026-06-21
+
+**Timestamp**: 2026-06-21T21:00:00Z
+**User Input**: "UIブラッシュアップの新しいUnitを追加して\nアバターについては、 /Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Web と同様にVRMアバターを使うイメージです"
+**AI Response**: unit-web-ui を unit-of-work / dependency / story-map / aidlc-state に追加；unit-overview + Functional Design 計画を作成；CharaTomo-Web VRMViewer パターンを技術方針に記載
+**Context**: Construction — unit-web-ui ユニット定義
+
+---
+
+## unit-web-ui Functional Design 承認 — 2026-06-21
+
+**Timestamp**: 2026-06-21T22:00:00Z
+**User Input**: "@aidlc-docs/construction/plans/unit-web-ui-functional-design-plan.md \nQ2\nAで、男性モデルと女性モデルを選択可能にする\n\n他は承認します"
+**AI Response**: Q1=A（Tailwind+shadcn）, Q2=A（CharaTomo 男女 GLB 流用+UI 選択）, Q3=A（左アバター+右チャット）；functional-design 4 ファイル生成
+**Context**: Construction — unit-web-ui Functional Design
+
+---
+
+## unit-web-ui Code Generation — 2026-06-21
+
+**Timestamp**: 2026-06-21T23:00:00Z
+**User Input**: "構築に進んで"
+**AI Response**: NFR 要件；Tailwind v4 + VRM（VrmViewer/AvatarCanvas/男女選択）；ChildView/TeacherView リデザイン；verify-browser 11/11
+**Context**: Construction — unit-web-ui Code Generation
+
+---
+
+## Change Request — unit-web-ui ENH-UI-01 VRM 品質 — 2026-06-21
+
+**Timestamp**: 2026-06-21T23:30:00Z
+**User Input**: "読み込まれたが、表示時に髪が逆立っていてしばらくすると落ち着く\nTポーズで不自然なポーズ、CharaTomoのように自然に立ち、時折瞬きしたり少し動いたりするようにして人間らしさを出したい\nライティングも暗い"
+**AI Response**: VrmViewer.ts に CharaTomo 相当の maintainArmPose / idle 首 / 瞬き / 4 灯ライト / SpringBone warmup を実装；setup-vrm-models.sh + dev-stack 自動 GLB コピー
+**Context**: Construction — unit-web-ui Enhancement（実装完了）
+
+---
+
+## Enhancement ドキュメント化 — ENH-UI-01 — 2026-06-21
+
+**Timestamp**: 2026-06-21T23:45:00Z
+**User Input**: "すでに対応はできたが、今回のVRM関連のUI変更を @aidlc-docs/construction/unit-web-ui のエンハンスにして"
+**AI Response**: enhancements/vrm-quality/（requirements + implementation-summary）、vrm-integration.md 追記、unit-overview 受け入れ基準更新、NFR-UI-13 追加、enhancement plan + aidlc-state 更新
+**Context**: Construction — unit-web-ui Enhancement ドキュメント化
+
+---
+
+## Enhancement ENH-UI-02 — 子ども UX + 先生デモ — 2026-06-21
+
+**Timestamp**: 2026-06-21T24:00:00Z
+**User Input**: "さらに拡張\n子供用画面は、大きなアバターと、大きな文字、小学低学年でも読める漢字のみを使って\n先生画面はセッションIDが必要だが、それを得る手段がわからない\nデモなので現在進行中のセッションについて情報が観れると良い"
+**AI Response**: child-copy.ts + 大 UI ChildView；GET /v1/sessions + progress API；TeacherView 進行中一覧・自動更新；ENH-UI-02 ドキュメント
+**Context**: Construction — unit-web-ui + unit-api Enhancement
+
+---

@@ -4,9 +4,10 @@
 
 | ユニット | 依存先 | 依存種別 |
 |----------|--------|----------|
-| unit-api | unit-agent-core | Python パッケージ import（`nakanaori` workflow） |
-| unit-web-teacher | unit-api | HTTP REST（staging API URL） |
-| unit-web-child | unit-api | HTTP REST（staging API URL） |
+| unit-api | unit-agent-core | npm workspace import（`@nakanaori/agents`） |
+| unit-web-teacher | unit-api, unit-web-ui | HTTP REST；UI コンポーネント |
+| unit-web-child | unit-api, unit-web-ui | HTTP REST；VRM + UI コンポーネント |
+| unit-web-ui | unit-api | HTTP REST（機能連携）；CharaTomo-Web 参照（VRM パターン） |
 | unit-kebbi-contract | unit-api | HTTP REST（契約が API ルートと一致） |
 | unit-devops | unit-api, unit-web-* | Docker ビルド + デプロイ対象 |
 | unit-agent-core | — | なし（リーフライブラリ） |
@@ -18,17 +19,20 @@ flowchart TD
     DevOps[unit-devops]
     Agent[unit-agent-core]
     API[unit-api]
+    WebUI[unit-web-ui]
     Teacher[unit-web-teacher]
     Child[unit-web-child]
     Kebbi[unit-kebbi-contract]
+    CharaTomo[CharaTomo-Web VRM 参照]
 
     Agent --> API
-    API --> Teacher
-    API --> Child
+    API --> WebUI
+    WebUI --> Teacher
+    WebUI --> Child
     API --> Kebbi
     DevOps --> API
-    DevOps --> Teacher
-    DevOps --> Child
+    DevOps --> WebUI
+    CharaTomo -.-> WebUI
 ```
 
 ## 外部依存
@@ -41,12 +45,13 @@ flowchart TD
 | unit-kebbi-contract | AIxR-CharaTomo-Kebbi（sibling repo） | Android クライアントは monorepo 外 |
 | unit-web-teacher | — | 静的 SPA + nginx |
 | unit-web-child | — | 静的 SPA + nginx |
+| unit-web-ui | Three.js, @pixiv/three-vrm | CharaTomo-Web 同系 VRM；WebGL フォールバック |
 
 ## 並行化ルール
 
 `unit-api` が staging 対応後:
 
-- **トラック A**: `unit-web-teacher` + `unit-web-child`（同一 `services/web/` ビルド）
+- **トラック A**: `unit-web-ui`（デザイン + VRM）→ `unit-web-teacher` + `unit-web-child`
 - **トラック B**: `unit-kebbi-contract`（契約凍結 + sibling repo 実装）
 
 トラック A と B は**互いにブロックしない**；両方とも安定 API 契約のみに依存。

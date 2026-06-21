@@ -9,7 +9,9 @@
     "build": "npm run build --workspaces --if-present",
     "test": "npm run test --workspace=@nakanaori/agents",
     "lint": "npm run lint --workspaces --if-present",
-    "dev:api": "npm run dev --workspace=nakanaori-api"
+    "dev:api": "npm run dev --workspace=nakanaori-api",
+    "dev:stack": "bash scripts/dev-stack.sh",
+    "setup:vrm-models": "bash scripts/setup-vrm-models.sh"
   },
   "devDependencies": {
     "playwright": "^1.61.0"

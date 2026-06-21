@@ -14,7 +14,8 @@
 |----------|----------|------|
 | unit-agent-core | Code Generation | 完了（TypeScript + ADK） |
 | unit-api | Code Generation | 完了（Hono + Node） |
-| unit-devops | CI | 更新済み（Node CI）；web deploy 未 |
+| unit-devops | CI | 更新済み（Node CI + web deploy） |
+| unit-web-ui | Code Generation | **完了** — Tailwind + VRM + UI |
 
 **Construction 開始**: 2026-06-21（ユーザー承認済み）
 

@@ -1,58 +1,24 @@
-* {
-  box-sizing: border-box;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f5f7fa;
-  color: #1a1a2e;
+  font-family: var(--font-sans);
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
 }
 
-.home,
-.child-view,
-.teacher-view {
-  max-width: 720px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-}
-
-nav a {
-  margin-right: 1rem;
-}
-
-.chat-box {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  min-height: 200px;
-  margin-bottom: 1rem;
-}
-
-.brief-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.disclaimer {
-  background: #e8f4fc;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
-}
-
-.urgent {
-  border: 2px solid #e65100;
-}
-
-input,
-button {
-  font-size: 1rem;
-  padding: 0.5rem;
-}
-
-button {
-  cursor: pointer;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

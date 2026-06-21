@@ -18,6 +18,9 @@ dist/
 *.local
 *.tsbuildinfo
 
+# VRM models (large binaries — copy via scripts/setup-vrm-models.sh)
+services/web/public/models/*.glb
+
 # Environment
 .env
 .env.*
