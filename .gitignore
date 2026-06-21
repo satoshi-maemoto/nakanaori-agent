@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+*.local
+
+# Environment
+.env
+.env.*
+!.env.example
+!**/env.example
+
+# GCP
+*.json
+!package.json
+credentials/
+*-credentials.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AI-DLC downloaded cache (rules are committed in .aidlc-rule-details)
+.aidlc/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Logs
+*.log

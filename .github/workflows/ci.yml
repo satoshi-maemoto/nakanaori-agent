@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: agents
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install agents package
+        run: |
+          pip install -e ".[dev]"
+          pip install -e ../services/api
+
+      - name: Ruff check
+        run: pip install ruff && ruff check nakanaori ../services/api/nakanaori_api
+
+      - name: Prompt forbidden-word check
+        run: bash ../scripts/check-prompts.sh
+
+      - name: Pytest
+        run: pytest -q
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: services/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install and typecheck
+        run: |
+          npm install
+          npm run lint

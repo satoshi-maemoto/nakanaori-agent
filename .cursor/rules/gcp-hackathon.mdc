@@ -1,0 +1,44 @@
+---
+description: DevOps x AI Agent Hackathon 2026 — required GCP stack and submission requirements
+globs: agents/**,services/**,infrastructure/**,.github/**
+alwaysApply: false
+---
+
+# GCP Hackathon Requirements
+
+## Event
+
+- DevOps × AI Agent Hackathon 2026
+- Submission: 2026-07-10
+- Hashtag: `#findy_hackathon`
+
+## Required Google Cloud Tech
+
+- **Runtime**: Cloud Run (required)
+- **AI**: Gemini API + ADK (Agents Development Kit) (required)
+- Optional Phase 2: Speech-to-Text, Text-to-Speech
+
+## Submission Checklist
+
+1. Public GitHub repository URL
+2. Deployed project URL (working demo)
+3. Proto Pedia registration URL
+
+## DevOps Expectations
+
+- GitHub Actions CI on PR/push
+- Staging deploy to Cloud Run on main
+- Prompt forbidden-word check in CI
+- README must document deploy URL and demo steps
+
+## Architecture Defaults
+
+- API: `services/api/` → Cloud Run service `nakanaori-api`
+- Web: `services/web/` → Cloud Run service `nakanaori-web` (or combined for MVP)
+- Secrets: GCP Secret Manager for `GEMINI_API_KEY` (never commit)
+
+## Judging Alignment
+
+- Agent must be central (multi-step workflow, not single chat)
+- Show DevOps cycle: build → test → deploy → monitor
+- Demo scenario: see `docs/demo-scenario.md`

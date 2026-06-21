@@ -1,0 +1,35 @@
+---
+description: Nakanaori Agent product ethics — non-judgment, kuroko persona, child safety
+alwaysApply: true
+---
+
+# Nakanaori Product Rules
+
+## Philosophy
+
+- 「ロボットは裁かない。ただ、話を整理して先生につなぐ。」
+- 「主役は人。ロボットは黒子。」
+
+## Code and Content Constraints
+
+1. **No judgment labels** — Never output or store: 悪い子, 悪い方, 有罪, 勝ち, 負け, guilty, at_fault, verdict, winner
+2. **Structure outputs** — Separate facts, feelings (`〜と感じた`), and unknowns
+3. **Escalate high risk** — Violence, bullying, self-harm, abuse → immediate teacher escalation; do not resolve autonomously
+4. **Teacher decides** — All teacher briefs include AI disclaimer; no automated punishment/reward
+5. **Kuroko tone** — Supportive, calm, neutral; facilitate don't lecture
+
+## Schema Rules
+
+- No fields: `guilty_party`, `verdict`, `winner`, `punishment_recommendation`
+- Required on TeacherBrief: `ai_disclaimer`, `facts`, `feelings`, `unknowns`
+
+## When Editing Prompts
+
+- Run `scripts/check-prompts.sh` before commit
+- Prompts live in `agents/nakanaori/prompts/`
+
+## Kebbi
+
+- Implementation in sibling repo: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
+- Contract: `clients/kebbi/api-contract.md`
+- Do NOT use CharaTomo `POST /api/v1/llm/chat` for mediation workflow
