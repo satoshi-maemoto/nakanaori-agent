@@ -22,7 +22,7 @@ export default function AppShell({ title, variant = "home", largeTitle, children
       <header className="border-b border-slate-200/80 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Link to="/" className="text-sm font-semibold text-slate-800 hover:text-sky-700">
-            ナカナオリ
+            ナカナオリ・エージェント
           </Link>
           <nav className="flex gap-4 text-sm">
             <Link to="/child" className="text-slate-600 hover:text-sky-700">

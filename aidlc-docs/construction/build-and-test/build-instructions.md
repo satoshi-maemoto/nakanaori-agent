@@ -5,7 +5,9 @@
 - **Node.js**: 22.x
 - **npm**: workspaces（ルート `package.json`）
 - **環境変数**（API 実行時）:
+  - ルート `.env` — `cp .env.example .env` 後 `GEMINI_API_KEY` を設定
   - `GEMINI_API_KEY` または `GOOGLE_GENAI_API_KEY` — 省略時は LLM スタブ
+  - `GEMINI_MODEL` — 省略時 `gemini-2.5-flash`
   - `PORT` — デフォルト 8080
 
 ## 手順

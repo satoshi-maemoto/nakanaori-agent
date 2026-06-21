@@ -19,8 +19,10 @@ stateDiagram-v2
     GenderSelect --> SessionStart: 男性/女性選択
     Idle --> SessionStart: はじめる（前回選択 remembered）
     SessionStart --> ChatA: セッション作成 listening_a
-    ChatA --> ChatB: A ターン完了 listening_b
-    ChatB --> WaitingBrief: B ターン完了 ready_for_teacher
+    ChatA --> ChatA: おくる（finish_turn=false）
+    ChatA --> ChatB: つぎの ばん（finish_turn=true）
+    ChatB --> ChatB: おくる（finish_turn=false）
+    ChatB --> WaitingBrief: つぎの ばん（finish_turn=true）
     ChatA --> Escalated: 高リスク発話
     ChatB --> Escalated: 高リスク発話
     Escalated --> [*]: 先生を呼ぶ表示
@@ -33,7 +35,7 @@ stateDiagram-v2
 |------|------|------------------|
 | Idle | 「はじめる」、やさしい説明（`child-copy.ts`） | セッション ID |
 | GenderSelect | おんな/おとこの ロボット選択 | 技術詳細 |
-| ChatA / ChatB | 大きな吹き出し・大 VRM・順番プログレス | 裁き・勝敗 UI |
+| ChatA / ChatB | 大きな吹き出し・大 VRM・順番プログレス・**おくる** / **つぎの ばん** | 裁き・勝敗 UI |
 | LipSync | VRM 口パク + typing indicator | — |
 | Escalated | 穏やかな全画面「先生を呼ぶね」 | 通常チャット入力 |
 
@@ -90,7 +92,7 @@ stateDiagram-v2
 | 操作 | エンドポイント | 画面 |
 |------|----------------|------|
 | セッション作成 | POST `/v1/sessions` | ChildView |
-| ターン | POST `/v1/sessions/:id/child-turn` | ChildView |
+| ターン | POST `/v1/sessions/:id/child-turn`（`finish_turn` 任意） | ChildView |
 | 一覧 | GET `/v1/sessions` | TeacherView |
 | 途中経過 | GET `/v1/sessions/:id/progress` | TeacherView |
 | ブリーフ | GET `/v1/sessions/:id/teacher-brief` | TeacherView |

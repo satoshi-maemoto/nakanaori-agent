@@ -2,14 +2,24 @@ import { InMemoryRunner, LlmAgent } from "@google/adk";
 import type { z } from "zod";
 import { getGeminiModel } from "../config.js";
 
-async function extractTextFromEvents(
-  events: AsyncIterable<{ content?: { parts?: Array<{ text?: string }> } }>,
-): Promise<string> {
+type AdkEvent = {
+  content?: { parts?: Array<{ text?: string }> };
+  errorCode?: string;
+  errorMessage?: string;
+};
+
+async function extractTextFromEvents(events: AsyncIterable<AdkEvent>): Promise<string> {
   let lastText = "";
   for await (const event of events) {
+    if (event.errorCode) {
+      throw new Error(`Gemini API error ${event.errorCode}: ${event.errorMessage ?? "unknown"}`);
+    }
     for (const part of event.content?.parts ?? []) {
       if (part.text) lastText = part.text;
     }
+  }
+  if (!lastText.trim()) {
+    throw new Error("Empty LLM response");
   }
   return lastText;
 }

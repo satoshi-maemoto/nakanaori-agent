@@ -69,10 +69,16 @@ bash scripts/check-prompts.sh
 
 `GEMINI_API_KEY` または `GOOGLE_GENAI_API_KEY` を設定すると ADK + Gemini が有効。
 
+```bash
+cp .env.example .env   # GEMINI_API_KEY を記入
+bash scripts/dev-stack.sh
+```
+
+- AI: `@google/adk` + Gemini（`gemini-2.5-flash` デフォルト）
+
 ## GCP
 
 - ランタイム: Cloud Run Node.js 22（`asia-northeast1`）
-- AI: `@google/adk` + Gemini（`gemini-2.0-flash`）
 - シークレット: `GEMINI_API_KEY`（Secret Manager）
 
 ## 倫理（必須）

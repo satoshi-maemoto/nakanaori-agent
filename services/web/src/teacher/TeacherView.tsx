@@ -80,7 +80,7 @@ export default function TeacherView() {
   return (
     <AppShell title="先生用ダッシュボード" variant="teacher">
       <p className="mb-4 text-slate-600">
-        子ども双方の話を整理したブリーフを確認できます。最終判断は先生が行います。
+        会話履歴と、食い違い・不明点の整理、確認のヒントを確認できます。最終判断は先生が行います。
       </p>
 
       <ActiveSessionList

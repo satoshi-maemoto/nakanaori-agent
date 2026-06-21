@@ -60,12 +60,14 @@ async function main() {
     await page.getByText("ロボット").first().waitFor();
     pass("Child: 子どもA 発話 + ロボット応答");
 
-    await page.getByText(/子どもB.*の ばん|子ども B.*の ばん/).waitFor({ timeout: 5000 });
+    await page.getByRole("button", { name: "つぎの ばん" }).click();
+    await page.getByText(/子どもB.*の ばん|子ども B.*の ばん/).waitFor({ timeout: 8000 });
     pass("Child: 子どもB に切替表示");
 
     await input.fill("向こうが先に言った");
     await page.getByRole("button", { name: "おくる" }).click();
     await page.getByText("ロボット").nth(1).waitFor();
+    await page.getByRole("button", { name: "つぎの ばん" }).click();
     pass("Child: 子どもB 発話 + ロボット応答");
 
     await page.goto(`${BASE}/teacher`);

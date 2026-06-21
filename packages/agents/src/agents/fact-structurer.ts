@@ -5,6 +5,11 @@ import type { StructuredFacts } from "../schemas.js";
 import { StructuredFactsSchema } from "../schemas.js";
 
 export class FactStructurerAgent {
+  /** Rule-based preview for in-progress sessions (no LLM). */
+  buildPreviewStructure(session: SessionState): StructuredFacts {
+    return this.stubStructure(session);
+  }
+
   private stubStructure(session: SessionState): StructuredFacts {
     const factsA = session.turns_a.map((t) => t.utterance);
     const factsB = session.turns_b.map((t) => t.utterance);

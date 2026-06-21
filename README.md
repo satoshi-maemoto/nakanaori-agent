@@ -34,6 +34,12 @@ npm run dev --workspace=nakanaori-api
 
 `GEMINI_API_KEY` を設定すると ADK + Gemini が有効（未設定時はスタブ応答でデモ可能）。
 
+```bash
+cp .env.example .env
+# .env に GEMINI_API_KEY を記入
+bash scripts/dev-stack.sh
+```
+
 ### Web
 
 ```bash

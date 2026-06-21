@@ -25,6 +25,7 @@ services/web/public/models/*.glb
 .env
 .env.*
 !.env.example
+!**/.env.example
 !**/env.example
 
 # GCP

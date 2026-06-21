@@ -15,7 +15,7 @@
 | unit-agent-core | Code Generation | 完了（TypeScript + ADK） |
 | unit-api | Code Generation | 完了（Hono + Node） |
 | unit-devops | CI | 更新済み（Node CI + web deploy） |
-| unit-web-ui | Code Generation | **完了** — Tailwind + VRM + UI |
+| unit-web-ui | Code Generation + Enhancement | **完了** — ENH-UI-01〜03（VRM / 先生一覧 / チャット+Gemini） |
 
 **Construction 開始**: 2026-06-21（ユーザー承認済み）
 

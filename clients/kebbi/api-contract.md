@@ -108,9 +108,21 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 ```json
 {
   "child_id": "a",
-  "utterance": "Bが私の消しゴムを取った！"
+  "utterance": "Bが私の消しゴムを取った！",
+  "finish_turn": false
 }
 ```
+
+| フィールド | 説明 |
+|------------|------|
+| `child_id` | `"a"` または `"b"`（`active_child` と一致必須） |
+| `utterance` | 発話テキスト（`finish_turn: true` のみで空可） |
+| `finish_turn` | `true` で次の子へ番移行（デフォルト `false`） |
+
+**Errors** `400`
+
+- `いまは {label} の番です` — 相手の番への送信
+- `session not accepting turns` — ブリーフ準備完了後
 
 **Response** `200`
 

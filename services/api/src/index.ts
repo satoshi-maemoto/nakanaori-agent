@@ -1,3 +1,4 @@
+import "./load-env.js";
 import { serve } from "@hono/node-server";
 import { cors } from "hono/cors";
 import { app } from "./app.js";

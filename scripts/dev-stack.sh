@@ -5,6 +5,14 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+if [[ -f "$ROOT/.env" ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "$ROOT/.env"
+  set +a
+  echo "[dev-stack] loaded .env"
+fi
+
 cleanup() {
   jobs -p | xargs kill 2>/dev/null || true
 }
@@ -22,13 +30,24 @@ fi
 echo "[dev-stack] starting API on :8080..."
 npm run dev --workspace=nakanaori-api &
 
+echo "[dev-stack] waiting for API..."
+for _ in $(seq 1 60); do
+  if curl -sf "http://127.0.0.1:8080/health" >/dev/null 2>&1; then
+    break
+  fi
+  sleep 0.5
+done
+if ! curl -sf "http://127.0.0.1:8080/health" >/dev/null 2>&1; then
+  echo "[dev-stack] ERROR: API did not become ready" >&2
+  exit 1
+fi
+
 echo "[dev-stack] starting Web on :5173..."
 npm run dev --workspace=nakanaori-web -- --host 127.0.0.1 --port 5173 &
 
-echo "[dev-stack] waiting for servers..."
+echo "[dev-stack] waiting for Web..."
 for _ in $(seq 1 60); do
-  if curl -sf "http://127.0.0.1:8080/health" >/dev/null 2>&1 \
-    && curl -sf "http://127.0.0.1:5173/" >/dev/null 2>&1; then
+  if curl -sf "http://127.0.0.1:5173/" >/dev/null 2>&1; then
     echo "[dev-stack] Nakanaori dev stack ready"
     echo "  API:  http://127.0.0.1:8080/health"
     echo "  Web:  http://127.0.0.1:5173/"
@@ -38,5 +57,5 @@ for _ in $(seq 1 60); do
   sleep 0.5
 done
 
-echo "[dev-stack] ERROR: servers did not become ready in time" >&2
+echo "[dev-stack] ERROR: Web did not become ready in time" >&2
 exit 1

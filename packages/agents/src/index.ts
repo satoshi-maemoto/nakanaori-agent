@@ -8,7 +8,7 @@ import {
   SessionStateName,
   type SessionState,
 } from "./orchestrator.js";
-import type { StructuredFacts, TeacherBrief } from "./schemas.js";
+import type { SessionInsights, StructuredFacts, TeacherBrief } from "./schemas.js";
 import { StructuredFactsSchema } from "./schemas.js";
 
 export class MediationWorkflow {
@@ -41,37 +41,71 @@ export class MediationWorkflow {
     session: SessionState,
     childId: string,
     utterance: string,
+    options?: { finishTurn?: boolean },
   ): Promise<[SessionState, string, boolean]> {
-    const risk = this.guard.assessRisk(utterance);
-    if (this.guard.shouldEscalate(risk)) {
-      const escalated = this.orchestrator.markEscalated(
-        session,
-        risk.reason ?? "高リスク",
-      );
-      return [escalated, "大丈夫？先生を呼ぶね。", true];
+    const finishTurn = options?.finishTurn ?? false;
+    const text = utterance.trim();
+
+    if (!text && !finishTurn) {
+      throw new Error("utterance required");
     }
 
-    const turn = { child_id: childId, utterance };
+    if (text) {
+      const risk = this.guard.assessRisk(text);
+      if (this.guard.shouldEscalate(risk)) {
+        const escalated = this.orchestrator.markEscalated(
+          session,
+          risk.reason ?? "高リスク",
+        );
+        return [escalated, "大丈夫？先生を呼ぶね。", true];
+      }
+    }
+
     let updated = { ...session };
     const label = childId === "a" ? session.child_a_label : session.child_b_label;
-    if (childId === "a") {
-      updated = { ...updated, turns_a: [...updated.turns_a, turn] };
+    let agentMessage: string;
+
+    if (text) {
+      const turn = { child_id: childId, utterance: text };
+      if (childId === "a") {
+        updated = { ...updated, turns_a: [...updated.turns_a, turn] };
+      } else {
+        updated = { ...updated, turns_b: [...updated.turns_b, turn] };
+      }
+      const response = await this.listener.listenTurn(label, text);
+      agentMessage = response.agent_message;
     } else {
-      updated = { ...updated, turns_b: [...updated.turns_b, turn] };
+      agentMessage =
+        childId === "a"
+          ? `${session.child_b_label} の ばん だよ。`
+          : "おつかれさま。先生に つたえるね。";
     }
 
-    const response = await this.listener.listenTurn(label, utterance);
-    updated = this.orchestrator.advanceAfterTurn(updated, childId);
+    if (finishTurn) {
+      updated = this.orchestrator.advanceAfterTurn(updated, childId);
 
-    if (updated.state === SessionStateName.STRUCTURING) {
-      const structured = await this.structurer.structure(updated);
-      updated = {
-        ...this.orchestrator.markReadyForTeacher(updated),
-        structured: structured as unknown as Record<string, unknown>,
-      };
+      if (updated.state === SessionStateName.STRUCTURING) {
+        const structured = await this.structurer.structure(updated);
+        updated = {
+          ...this.orchestrator.markReadyForTeacher(updated),
+          structured: structured as unknown as Record<string, unknown>,
+        };
+        if (!text) {
+          agentMessage = "おつかれさま。先生に つたえるね。";
+        }
+      } else if (!text && childId === "a") {
+        agentMessage = `${session.child_b_label} の ばん だよ。`;
+      }
     }
 
-    return [updated, response.agent_message, false];
+    return [updated, agentMessage, false];
+  }
+
+  getSessionInsights(session: SessionState): SessionInsights {
+    const structured = session.structured
+      ? StructuredFactsSchema.parse(session.structured)
+      : this.structurer.buildPreviewStructure(session);
+    return this.briefAgent.buildInsights(structured);
   }
 
   getTeacherBrief(session: SessionState): TeacherBrief {

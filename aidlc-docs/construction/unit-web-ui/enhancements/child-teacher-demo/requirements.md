@@ -32,6 +32,8 @@
 | AC-TE-04 | ブリーフ未準備時は進行状況カード、準備完了で BriefCard | ✅ |
 | AC-TE-05 | セッション ID 直接入力は `<details>` 内（上級者向け） | ✅ |
 
+> **ENH-UI-03 追記**: 子どもチャットの IME / `finish_turn` は [chat-gemini-local/requirements.md](../chat-gemini-local/requirements.md) を参照。
+
 ## 実装ファイル
 
 ### API

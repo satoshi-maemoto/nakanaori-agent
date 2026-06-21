@@ -8,6 +8,7 @@ export const childCopy = {
   startButton: "はじめる",
   inputPlaceholder: "はなしたい ことを かいて…",
   sendButton: "おくる",
+  nextTurnButton: "つぎの ばん",
   sessionStartMessage: "はなしを はじめるよ。 かいてね。",
   turnNow: (name: string) => `いま: ${name} の ばん`,
   escalateBanner: "せんせいを よんでね。 ここで まってて。",

@@ -1,6 +1,7 @@
 import type { TeacherBrief } from "../../api";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { cn } from "../../lib/utils";
+import TeacherInsightsPanel, { ConversationHistory } from "./TeacherInsightsPanel";
 
 function SideBlock({
   title,
@@ -43,63 +44,78 @@ function Section({
 }
 
 export default function BriefCard({ brief }: { brief: TeacherBrief }) {
+  const insights = {
+    agreements: brief.agreements,
+    disagreements: brief.disagreements,
+    unknowns: brief.unknowns,
+    teacher_hints: brief.teacher_hints,
+  };
+
   return (
-    <Card className={cn(brief.urgent && "border-2 border-orange-500 shadow-md")}>
-      {brief.urgent && (
-        <div className="bg-orange-100 px-5 py-2 text-sm font-medium text-orange-900">
-          ⚠ 早めの確認が必要な内容が含まれています
-        </div>
-      )}
-      <CardHeader>
-        <h2 className="text-lg font-semibold">先生向けブリーフ</h2>
-        {brief.timeline?.length > 0 && (
-          <ul className="mt-2 text-xs text-slate-500">
-            {brief.timeline.map((t, i) => (
-              <li key={i}>
-                {t.at} — {t.event}
-              </li>
-            ))}
-          </ul>
-        )}
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid gap-4 md:grid-cols-2">
-          <SideBlock
-            title={`子どもA — ${brief.child_a.label}`}
-            facts={brief.child_a.facts}
-            feelings={brief.child_a.feelings}
-            unknowns={brief.child_a.unknowns}
-            tone="a"
-          />
-          <SideBlock
-            title={`子どもB — ${brief.child_b.label}`}
-            facts={brief.child_b.facts}
-            feelings={brief.child_b.feelings}
-            unknowns={brief.child_b.unknowns}
-            tone="b"
-          />
-        </div>
-        {brief.disagreements.length > 0 && (
-          <p className="text-sm text-slate-700">
-            <strong>食い違い:</strong> {brief.disagreements.join("、")}
-          </p>
-        )}
-        {brief.unknowns.length > 0 && (
-          <p className="text-sm text-slate-600">
-            <strong>全体の不明点:</strong> {brief.unknowns.join("、")}
-          </p>
-        )}
-        {brief.suggested_questions.length > 0 && (
-          <div className="rounded-lg bg-sky-50 p-3 text-sm text-sky-900">
-            <strong>確認の提案:</strong>
-            <ul className="mt-1 list-inside list-disc">
-              {brief.suggested_questions.map((q, i) => (
-                <li key={i}>{q}</li>
-              ))}
-            </ul>
+    <div className="space-y-4">
+      <Card className={cn(brief.urgent && "border-2 border-orange-500 shadow-md")}>
+        {brief.urgent && (
+          <div className="bg-orange-100 px-5 py-2 text-sm font-medium text-orange-900">
+            ⚠ 早めの確認が必要な内容が含まれています
           </div>
         )}
-      </CardContent>
-    </Card>
+        <CardHeader>
+          <h2 className="text-lg font-semibold">先生向けブリーフ</h2>
+          {brief.timeline?.length > 0 && (
+            <ul className="mt-2 text-xs text-slate-500">
+              {brief.timeline.map((t, i) => (
+                <li key={i}>
+                  {t.at} — {t.event}
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <section>
+            <h3 className="mb-3 text-sm font-semibold text-slate-800">会話履歴</h3>
+            <ConversationHistory
+              childALabel={brief.conversation_a.label}
+              childBLabel={brief.conversation_b.label}
+              turnsA={brief.conversation_a.utterances}
+              turnsB={brief.conversation_b.utterances}
+            />
+          </section>
+
+          <section>
+            <h3 className="mb-3 text-sm font-semibold text-slate-800">事実・気持ちの整理</h3>
+            <div className="grid gap-4 md:grid-cols-2">
+              <SideBlock
+                title={`子どもA — ${brief.child_a.label}`}
+                facts={brief.child_a.facts}
+                feelings={brief.child_a.feelings}
+                unknowns={brief.child_a.unknowns}
+                tone="a"
+              />
+              <SideBlock
+                title={`子どもB — ${brief.child_b.label}`}
+                facts={brief.child_b.facts}
+                feelings={brief.child_b.feelings}
+                unknowns={brief.child_b.unknowns}
+                tone="b"
+              />
+            </div>
+          </section>
+
+          {brief.suggested_questions.length > 0 && (
+            <div className="rounded-lg bg-slate-100 p-3 text-sm text-slate-800">
+              <strong>たずねてみるとよいこと:</strong>
+              <ul className="mt-1 list-inside list-disc">
+                {brief.suggested_questions.map((q, i) => (
+                  <li key={i}>{q}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <TeacherInsightsPanel insights={insights} />
+    </div>
   );
 }

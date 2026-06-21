@@ -115,6 +115,7 @@ Construction では **unit-web-ui を先に design system + VRM 基盤** → tea
 |----|------|------|
 | ENH-UI-01 | VRM 品質・表示修正（ポーズ / idle / 瞬き / ライト / GLB setup） | ✅ [enhancements/vrm-quality/](./enhancements/vrm-quality/requirements.md) |
 | ENH-UI-02 | 子ども大 UI + 低学年文言 / 先生進行中セッション一覧 | ✅ [enhancements/child-teacher-demo/](./enhancements/child-teacher-demo/requirements.md) |
+| ENH-UI-03 | IME 対応 / 複数発話 + つぎの番 / Gemini 2.5 / .env | ✅ [enhancements/chat-gemini-local/](./enhancements/chat-gemini-local/requirements.md) |
 
 ## Construction 予定ステージ
 
@@ -123,6 +124,7 @@ Construction では **unit-web-ui を先に design system + VRM 基盤** → tea
 3. Code Generation — design tokens → AvatarCanvas → ChildView / TeacherView リデザイン ✅
 4. Enhancement ENH-UI-01 — VRM 品質・表示修正 ✅
 5. Enhancement ENH-UI-02 — 子ども大 UI + 先生デモセッション一覧 ✅
+6. Enhancement ENH-UI-03 — チャット UX + ローカル Gemini ✅
 
 ## npm 依存（予定）
 

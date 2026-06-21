@@ -134,6 +134,8 @@ sequenceDiagram
 | 応答表示完了（タイマー 2s） | `speaking=false` |
 | エスカレーション | idle 維持、穏やか表情 |
 
+**チャット操作（ENH-UI-03）**: 「おくる」= 同番内複数発話；「つぎの ばん」= `finish_turn: true`。文言は `child-copy.ts`。
+
 ## WebGL フォールバック
 
 CharaTomo `character-manager.js` パターン:
@@ -185,3 +187,12 @@ CharaTomo `character-manager.js` パターン:
 ### ローディング UX
 
 `useVrmAvatar` は `loadVRM()` 完了（warmup 含む）まで `loading: true`。`AvatarCanvas` は「3Dモデル読み込み中…」オーバーレイを表示。
+
+### カメラ（追記 2026-06-21）
+
+| 項目 | 値 |
+|------|-----|
+| 注視点 | VRM `head` ボーンのワールド Y |
+| カメラ Y | `faceY - size.y * 0.03` |
+| 距離 | `max(size.y * 0.45, 0.75)` |
+| FOV | 30° |

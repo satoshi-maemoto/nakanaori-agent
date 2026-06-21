@@ -5,7 +5,7 @@
 | 領域 | 選定 | 理由 |
 |------|------|------|
 | 言語 | **TypeScript 5.x**（Node.js 22+） | Web と同一言語；ADK TS 公式サポート；型安全 |
-| LLM | Gemini `gemini-2.0-flash` | Inception 確定；低レイテンシ・コスト |
+| LLM | Gemini **`gemini-2.5-flash`**（実行時デフォルト） | Inception は 2.0-flash；**2026-06-21 ENH-UI-03** で 2.5 に更新（2.0 廃止） |
 | エージェント FW | Google ADK（**`@google/adk`**） | ハッカソン必須；[adk-js](https://github.com/google/adk-js) |
 | スキーマ | **Zod v3** | ADK TS の structured output；実行時検証 |
 | テスト | **Vitest** + モック | Web と CI 統一；LLM モック |
@@ -68,7 +68,7 @@ MediationWorkflow
 - **エージェント per 役割**（Functional Design Q5=B）
 - **構造化出力**: Zod schema → ADK response schema
 - **プロンプト**: `fs.readFileSync` で md 読み込み → `instruction`
-- **モデル**: 全エージェント `gemini-2.0-flash`
+- **モデル**: 全エージェント `gemini-2.5-flash`（`GEMINI_MODEL` で上書き可）
 - **ローカル開発**: `npx adk web`（任意）；ユニットテストは Vitest
 
 ## 依存関係（追加予定）
@@ -105,7 +105,7 @@ npm workspaces（ルート `package.json`）で monorepo 管理を推奨。
 | 変数 | 用途 | 設定場所 |
 |------|------|----------|
 | `GEMINI_API_KEY` | Gemini API 認証 | Cloud Run Secret / ローカル .env |
-| `GEMINI_MODEL` | モデル上書き（任意） | デフォルト `gemini-2.0-flash` |
+| `GEMINI_MODEL` | モデル上書き（任意） | デフォルト `gemini-2.5-flash` |
 
 ## LLM 呼び出し戦略
 

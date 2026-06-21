@@ -70,3 +70,12 @@ npm run setup:vrm-models
 - warmup は同期ループのため低スペック端末で初回表示が ~1.5s 遅延する可能性
 - `blink` / `aa` プリセットがモデルに無い場合は try/catch で無視
 - visibilitychange による rAF 停止は未移植（Phase 2 候補）
+
+## カメラ調整（2026-06-21 追記）
+
+| 項目 | 値 |
+|------|-----|
+| lookAt | `head` ボーン getWorldPosition |
+| cameraY | `faceY - size.y * 0.03` |
+| dist | `max(size.y * 0.45, 0.75)` |
+| fov | 30 |

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { createSession, postChildTurn } from "../api";
 import type { ChatMessage } from "../components/chat/ChatBubble";
 import { ChatLog } from "../components/chat/ChatBubble";
@@ -13,6 +13,12 @@ import { loadAvatarGender, saveAvatarGender } from "../lib/avatar-storage";
 
 const AvatarCanvas = lazy(() => import("../avatar/AvatarCanvas"));
 
+function syncChildIdFromState(state: string): "a" | "b" | null {
+  if (state === "listening_a") return "a";
+  if (state === "listening_b") return "b";
+  return null;
+}
+
 export default function ChildView() {
   const [gender, setGender] = useState<AvatarGender>(() => loadAvatarGender());
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -25,6 +31,7 @@ export default function ChildView() {
   const [loading, setLoading] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [escalated, setEscalated] = useState(false);
+  const composingRef = useRef(false);
 
   useEffect(() => {
     saveAvatarGender(gender);
@@ -46,17 +53,22 @@ export default function ChildView() {
     }
   }
 
-  async function sendMessage() {
-    if (!sessionId || !input.trim() || escalated) return;
-    setLoading(true);
+  async function submitTurn(finishTurn: boolean) {
+    if (!sessionId || escalated || loading) return;
     const text = input.trim();
-    setInput("");
-    setMessages((m) => [...m, { role: "child", text }]);
+    if (!text && !finishTurn) return;
+
+    setLoading(true);
+    if (text) {
+      setMessages((m) => [...m, { role: "child", text }]);
+      setInput("");
+    }
+
     try {
-      const res = await postChildTurn(sessionId, childId, text);
+      const res = await postChildTurn(sessionId, childId, text, { finishTurn });
       setSessionState(res.state);
-      if (res.state === "listening_a") setChildId("a");
-      else if (res.state === "listening_b") setChildId("b");
+      const nextChild = syncChildIdFromState(res.state);
+      if (nextChild) setChildId(nextChild);
       setSpeaking(true);
       setMessages((m) => [...m, { role: "robot", text: res.agent_message }]);
       window.setTimeout(() => setSpeaking(false), 2000);
@@ -65,11 +77,24 @@ export default function ChildView() {
         setMessages((m) => [...m, { role: "system", text: childCopy.escalateSystem }]);
       }
     } catch (e) {
-      setMessages((m) => [...m, { role: "system", text: `エラー: ${String(e)}` }]);
+      if (text) setInput((prev) => (prev ? prev : text));
+      setMessages((m) => [...m, { role: "system", text: String(e) }]);
     } finally {
       setLoading(false);
     }
   }
+
+  function handleInputKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key !== "Enter" || e.shiftKey) return;
+    if (e.nativeEvent.isComposing || composingRef.current) return;
+    e.preventDefault();
+    void submitTurn(false);
+  }
+
+  const canSend = Boolean(input.trim()) && !loading;
+  const canFinishTurn =
+    !loading &&
+    (sessionState === "listening_a" || sessionState === "listening_b");
 
   return (
     <AppShell title={childCopy.pageTitle} variant="child" largeTitle>
@@ -133,22 +158,39 @@ export default function ChildView() {
               <ChatLog messages={messages} size="large" />
             </div>
             {!escalated ? (
-              <div className="flex gap-3 border-t border-slate-100 pt-4">
-                <Input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={childCopy.inputPlaceholder}
-                  disabled={loading}
-                  className="h-14 text-lg"
-                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
-                />
+              <div className="flex flex-col gap-3 border-t border-slate-100 pt-4">
+                <div className="flex gap-3">
+                  <Input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder={childCopy.inputPlaceholder}
+                    disabled={loading}
+                    className="h-14 text-lg"
+                    onCompositionStart={() => {
+                      composingRef.current = true;
+                    }}
+                    onCompositionEnd={() => {
+                      composingRef.current = false;
+                    }}
+                    onKeyDown={handleInputKeyDown}
+                  />
+                  <Button
+                    size="xl"
+                    onClick={() => void submitTurn(false)}
+                    disabled={!canSend}
+                    className="shrink-0 px-6"
+                  >
+                    {childCopy.sendButton}
+                  </Button>
+                </div>
                 <Button
-                  size="xl"
-                  onClick={sendMessage}
-                  disabled={loading || !input.trim()}
-                  className="shrink-0 px-6"
+                  variant="secondary"
+                  size="lg"
+                  className="w-full"
+                  disabled={!canFinishTurn}
+                  onClick={() => void submitTurn(true)}
                 >
-                  {childCopy.sendButton}
+                  {childCopy.nextTurnButton}
                 </Button>
               </div>
             ) : (

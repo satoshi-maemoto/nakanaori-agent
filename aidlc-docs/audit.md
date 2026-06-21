@@ -144,3 +144,21 @@
 **Context**: Construction — unit-web-ui + unit-api Enhancement
 
 ---
+
+## Enhancement ENH-UI-03 — チャット + Gemini ローカル — 2026-06-21
+
+**Timestamp**: 2026-06-21T24:30:00Z
+**User Input**: "Geminiと実際に繋げる設定" / "envのサンプルファイル作って" / "macOS Chrome 日本語入力 Enter 送信" / "400エラー" / "ここまでをドキュメントに反映"
+**AI Response**: gemini-2.5-flash；.env.example + load-env；IME ガード；finish_turn + つぎの番；ADK エラー処理；dev-stack 起動順；ENH-UI-03 ドキュメント
+**Context**: Construction — unit-web-ui + unit-api + unit-agent-core Enhancement
+
+---
+
+## Enhancement ドキュメント化 — ENH-UI-03 — 2026-06-21
+
+**Timestamp**: 2026-06-21T24:45:00Z
+**User Input**: "ここまでをドキュメントに反映"
+**AI Response**: chat-gemini-local/requirements.md、plan、vrm-integration/screen-inventory/api-contract/tech-stack/build-instructions/AGENTS/README 更新、aidlc-state 更新
+**Context**: Construction — Enhancement ドキュメント化
+
+---

@@ -28,7 +28,11 @@ export class ListenerAgent {
       if (jsonMatch) {
         return ListenerResponseSchema.parse(JSON.parse(jsonMatch[0]));
       }
-      return { agent_message: text.trim(), needs_more: false };
+      const trimmed = text.trim();
+      if (!trimmed) {
+        throw new Error("Empty listener response");
+      }
+      return { agent_message: trimmed, needs_more: false };
     } catch {
       return {
         agent_message: "ごめんね、いまうまく聞けなかった。もう一度話してくれる？",

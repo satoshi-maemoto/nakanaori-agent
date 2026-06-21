@@ -80,19 +80,42 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
     return c.json({ detail: "session not accepting turns" }, 400);
   }
 
-  const body = await c.req.json<{ child_id: string; utterance: string }>();
+  const body = await c.req.json<{
+    child_id: string;
+    utterance?: string;
+    finish_turn?: boolean;
+  }>();
   if (!/^[ab]$/.test(body.child_id)) {
     return c.json({ detail: "invalid child_id" }, 400);
   }
-  if (!body.utterance?.trim()) {
+
+  const active = workflow.orchestrator.activeChild(session);
+  if (active && body.child_id !== active) {
+    const label =
+      active === "a" ? session.child_a_label : session.child_b_label;
+    return c.json({ detail: `いまは ${label} の番です` }, 400);
+  }
+
+  const utterance = body.utterance?.trim() ?? "";
+  const finishTurn = body.finish_turn === true;
+  if (!utterance && !finishTurn) {
     return c.json({ detail: "utterance required" }, 400);
   }
 
-  const [updated, agentMessage, escalated] = await workflow.processChildTurn(
-    session,
-    body.child_id,
-    body.utterance,
-  );
+  let updated: SessionState;
+  let agentMessage: string;
+  let escalated: boolean;
+  try {
+    [updated, agentMessage, escalated] = await workflow.processChildTurn(
+      session,
+      body.child_id,
+      utterance,
+      { finishTurn },
+    );
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return c.json({ detail: msg }, 400);
+  }
   store.put(updated);
 
   const done =
@@ -128,6 +151,7 @@ app.get("/v1/sessions/:sessionId/progress", (c) => {
     turns_a: session.turns_a,
     turns_b: session.turns_b,
     escalation_reason: session.escalation_reason,
+    insights: workflow.getSessionInsights(session),
   });
 });
 

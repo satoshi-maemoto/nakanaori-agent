@@ -46,17 +46,36 @@ export const StructuredFactsSchema = z.object({
 
 export type StructuredFacts = z.infer<typeof StructuredFactsSchema>;
 
+export const ConversationSideSchema = z.object({
+  label: z.string(),
+  utterances: z.array(z.string()).default([]),
+});
+
+export type ConversationSide = z.infer<typeof ConversationSideSchema>;
+
+export const SessionInsightsSchema = z.object({
+  agreements: z.array(z.string()).default([]),
+  disagreements: z.array(z.string()).default([]),
+  unknowns: z.array(z.string()).default([]),
+  teacher_hints: z.array(z.string()).default([]),
+});
+
+export type SessionInsights = z.infer<typeof SessionInsightsSchema>;
+
 export const TeacherBriefSchema = z.object({
   session_id: z.string(),
   urgent: z.boolean().default(false),
   ai_disclaimer: z.string(),
   timeline: z.array(TimelineEventSchema).default([]),
+  conversation_a: ConversationSideSchema,
+  conversation_b: ConversationSideSchema,
   child_a: ChildSideSchema,
   child_b: ChildSideSchema,
   agreements: z.array(z.string()).default([]),
   disagreements: z.array(z.string()).default([]),
   unknowns: z.array(z.string()).default([]),
   suggested_questions: z.array(z.string()).default([]),
+  teacher_hints: z.array(z.string()).default([]),
 });
 
 export type TeacherBrief = z.infer<typeof TeacherBriefSchema>;

@@ -23,12 +23,15 @@ export type TeacherBrief = {
   urgent: boolean;
   ai_disclaimer: string;
   timeline: Array<{ at: string; event: string }>;
+  conversation_a: { label: string; utterances: string[] };
+  conversation_b: { label: string; utterances: string[] };
   child_a: ChildSide;
   child_b: ChildSide;
   agreements: string[];
   disagreements: string[];
   unknowns: string[];
   suggested_questions: string[];
+  teacher_hints: string[];
 };
 
 type ChildSide = {
@@ -36,6 +39,13 @@ type ChildSide = {
   facts: string[];
   feelings: string[];
   unknowns: string[];
+};
+
+export type SessionInsights = {
+  agreements: string[];
+  disagreements: string[];
+  unknowns: string[];
+  teacher_hints: string[];
 };
 
 export type SessionProgress = {
@@ -50,6 +60,7 @@ export type SessionProgress = {
   turns_a: Array<{ child_id: string; utterance: string }>;
   turns_b: Array<{ child_id: string; utterance: string }>;
   escalation_reason: string | null;
+  insights: SessionInsights;
 };
 
 export async function listSessions(): Promise<SessionState[]> {
@@ -82,13 +93,21 @@ export async function postChildTurn(
   sessionId: string,
   childId: string,
   utterance: string,
+  options?: { finishTurn?: boolean },
 ): Promise<ChildTurnResponse> {
   const res = await fetch(`${API_BASE}/v1/sessions/${sessionId}/child-turn`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ child_id: childId, utterance }),
+    body: JSON.stringify({
+      child_id: childId,
+      utterance,
+      finish_turn: options?.finishTurn ?? false,
+    }),
   });
-  if (!res.ok) throw new Error(`child-turn failed: ${res.status}`);
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as { detail?: string };
+    throw new Error(body.detail ?? `child-turn failed: ${res.status}`);
+  }
   return res.json();
 }
 
