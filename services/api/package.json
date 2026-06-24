@@ -12,6 +12,7 @@
   "dependencies": {
     "@hono/node-server": "^1.13.8",
     "@nakanaori/agents": "*",
+    "@nakanaori/tts": "*",
     "dotenv": "^17.4.2",
     "hono": "^4.6.14"
   },

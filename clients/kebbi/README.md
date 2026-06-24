@@ -1,30 +1,33 @@
-# Kebbi クライアント（Sibling リポジトリ）
+# Kebbi クライアント（Private リポジトリ）
 
-Nuwa Kebbi Android クライアントは**このリポジトリには実装されていません**。
+Nuwa Kebbi Android クライアントは **この monorepo 外** の private repo に実装されています。
 
-## Sibling リポジトリ
+## リポジトリ
 
-- **GitHub**: [SystemFriend/AIxR-CharaTomo-Kebbi](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi)
-- **ローカルパス**: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
+| 項目 | 値 |
+|------|-----|
+| **GitHub** | https://github.com/satoshi-maemoto/nakanaori-kebbi （private） |
+| **ローカル** | `/Users/maemoto/Documents/GitHub/nakanaori-kebbi` |
+| **Package** | `com.nakanaori.kebbi` |
+| **参照実装** | [AIxR-CharaTomo-Kebbi](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi)（Nuwa ASR/TTS パターン） |
 
 ## 連携方針
 
-1. Nakanaori は**セッションベース REST API**を使用（この repo の `services/api/`）
-2. CharaTomo `POST /api/v1/llm/chat` は**使用しない** — 仲介ワークフローは一般チャットと異なる
-3. CharaTomo-Kebbi から参照するもの:
-   - Nuwa TTS / ASR パターン（`NuwaSpeechHelper`、再生とマイクの協調）
-   - HTTP クライアントパターン（`ChatApi.kt`、`VoiceApi.kt`）
-   - 発話中のロボット表情アニメーション
+1. Nakanaori **セッション REST API** + **`POST /v1/tts/synthesize`**
+2. CharaTomo `POST /api/v1/llm/chat` は **使用しない**
+3. TTS: Google Cloud（monorepo `packages/tts`）；未設定時 Kebbi は Nuwa ロボ TTS
+4. **アバター選択なし** — 中性的 1 声
 
 ## 同期ポリシー
 
-API 契約（`clients/kebbi/api-contract.md`）を変更する場合:
+`clients/kebbi/api-contract.md` を変更する場合:
 
-1. この repo の API ルートとスキーマを更新
-2. `AIxR-CharaTomo-Kebbi` を開き `NakanaoriApi.kt`（または同等）を実装・適応
-3. Kebbi エージェント向けノートは `AIxR-CharaTomo-Kebbi/AGENTS.md` を参照
+1. この repo の API ルートと `packages/tts` を更新
+2. `nakanaori-kebbi` の `NakanaoriApi.kt` / `TtsApi.kt` を適応
+3. Kebbi 向け手順は `nakanaori-kebbi/AGENTS.md`
 
-## Phase 2: 音声
+## 音声
 
-- Google Cloud Speech API または Kebbi Nuwa SDK 経由の STT/TTS
-- 追加時は `api-contract.md` に契約拡張を文書化
+- **STT**: Kebbi Nuwa SDK クラウド ASR（端末内）
+- **TTS**: `POST /v1/tts/synthesize` → ExoPlayer；フォールバック Nuwa TTS
+- **TTS 認証設定**（API 側）: [docs/google-cloud-tts-setup.md](../../docs/google-cloud-tts-setup.md)

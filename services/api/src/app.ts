@@ -7,6 +7,7 @@ import {
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import * as store from "./store.js";
+import { handleTtsSynthesize } from "./routes/tts.js";
 
 const workflow = new MediationWorkflow();
 
@@ -43,6 +44,8 @@ app.get("/", (c) =>
 );
 
 app.get("/health", (c) => c.json({ status: "ok" }));
+
+app.post("/v1/tts/synthesize", handleTtsSynthesize);
 
 app.get("/v1/sessions", (c) => {
   const items = store

@@ -37,6 +37,22 @@ curl -sf -X POST "http://localhost:8080/v1/sessions/$SID/child-turn" \
   -d '{"child_id":"a","utterance":"こんにちは"}'
 ```
 
+### 5. TTS スモーク（Google 認証設定時）
+
+設定手順: [docs/google-cloud-tts-setup.md](../../../docs/google-cloud-tts-setup.md)
+
+```bash
+curl -sf -X POST http://localhost:8080/v1/tts/synthesize \
+  -H "Content-Type: application/json" \
+  -d '{"text":"こんにちは、ナカナオリだよ。"}' | jq '.data.format'
+```
+
+未設定時は `503`（Kebbi は Nuwa ロボ TTS にフォールバック）。
+
+```bash
+npm test --workspace=@nakanaori/tts
+```
+
 ## Staging（Cloud Run）
 
 `main` マージ後 `deploy-staging.yml` が:
@@ -52,9 +68,15 @@ gcloud run services describe nakanaori-api --region asia-northeast1 --format 'va
 gcloud run services describe nakanaori-web --region asia-northeast1 --format 'value(status.url)'
 ```
 
-## Kebbi（sibling repo）
+## Kebbi（private repo）
 
 契約: `clients/kebbi/api-contract.md`  
-実装: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi` の `NakanaoriApi.kt`
+実装: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`（`NakanaoriApi.kt`, `TtsApi.kt`）
 
-同一 API エンドポイント（`/v1/sessions/*`）を叩く結合テスト。
+1. monorepo で `bash scripts/dev-stack.sh`（TTS 用 `.env` 推奨）
+2. Kebbi 設定 → API URL = PC の LAN IP（例 `http://192.168.1.10:8080`）
+3. 実機で起動 → ウェルカム TTS → 音声入力 → `agent_message` 再生
+4. 「おわり」で `finish_turn: true`
+5. 先生 Web `/teacher` で同一セッション確認
+
+参照: CharaTomo-Kebbi の Nuwa AAR 配置手順

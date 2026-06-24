@@ -217,11 +217,55 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 
 **Response** `200` `{ "status": "ok" }`
 
+### POST /v1/tts/synthesize
+
+ロボット応答（`welcome_message` / `agent_message`）を Google Cloud TTS で音声化。Kebbi と Web 共通。
+
+**Request**
+
+```json
+{
+  "text": "こんにちは、ナカナオリだよ。",
+  "gender": "female",
+  "options": {
+    "emotion_level": { "positive": 50, "negative": 50 },
+    "speaking_rate": 1.0
+  }
+}
+```
+
+- `gender`（任意）: Web 向け `"male"` | `"female"` — ロボット見た目に合わせた声（`ja-JP-Neural2-B` / `C`）。Kebbi は省略可（デフォルト声）。
+- `voice`（任意）: Google voice 名を直接指定（`gender` より優先）
+
+**Response** `200`
+
+```json
+{
+  "success": true,
+  "data": {
+    "audioUrl": "data:audio/mp3;base64,...",
+    "format": "mp3",
+    "service": "google_cloud"
+  }
+}
+```
+
+**Errors**
+
+- `400` — `text` 空
+- `503` — Google TTS 未設定（Kebbi は Nuwa ロボット TTS にフォールバック）
+- `502` — 合成失敗
+
+**Voice（MVP）**: Kebbi デフォルト `ja-JP-Neural2-C`。Web は `gender` で `female`→`Neural2-B`、`male`→`Neural2-C`（`GOOGLE_TTS_VOICE` / `voice` で上書き可）
+
 ## Kebbi 実装メモ
 
-- CharaTomo-Kebbi に `NakanaoriApi.kt` を追加（ベース URL は設定から、CharaTomo API URL とは別）
-- `agent_message` を Nuwa TTS にマッピング（`VoiceApi.kt` パターン参照）
-- TTS 再生中はマイク停止（Kebbi repo の `AGENTS.md` 参照）
+- **Private repo**: `nakanaori-kebbi`（`com.nakanaori.kebbi`）
+- `NakanaoriApi.kt` — ベース URL は設定から（CharaTomo API とは別）
+- `TtsApi.kt` — `POST /v1/tts/synthesize`；503 時は Nuwa ロボ TTS
+- Nuwa クラウド ASR → `POST child-turn`（テキスト `utterance`）
+- TTS 再生中はマイク停止；終了 500ms 後 ASR 再開
+- **アバター選択なし** — デフォルト音声（Web は男女ロボットで `gender` 指定）
 
 ## Web 実装メモ
 

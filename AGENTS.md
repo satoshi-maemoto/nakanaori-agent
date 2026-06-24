@@ -30,9 +30,16 @@
 3. `unit-web-ui` — `services/web/src/{avatar,components,theme}/` — VRM + UI ✅
 4. `unit-web-teacher` / `unit-web-child` — `services/web/src/teacher`、`child`
 5. `unit-devops` — `.github/workflows/`、`scripts/`
-6. `unit-kebbi-contract` — `clients/kebbi/api-contract.md`
+6. `unit-kebbi-contract` — `clients/kebbi/api-contract.md` + `packages/tts`
+7. `unit-kebbi-client` — private repo `nakanaori-kebbi`（Android）
 
-VRM 参照: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Web`（`vrm-viewer.js`）
+## Kebbi（Private リポジトリ）
+
+- **Path**: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`
+- **Contract**: `clients/kebbi/api-contract.md`
+- **TTS**: `packages/tts` + `POST /v1/tts/synthesize`
+- Do **not** use CharaTomo `POST /api/v1/llm/chat`
+- Nuwa AAR: `app/libs/`（CharaTomo-Kebbi と同手順）
 
 ## ローカル開発
 
@@ -71,6 +78,7 @@ bash scripts/check-prompts.sh
 
 ```bash
 cp .env.example .env   # GEMINI_API_KEY を記入
+# TTS を使う場合: docs/google-cloud-tts-setup.md
 bash scripts/dev-stack.sh
 ```
 

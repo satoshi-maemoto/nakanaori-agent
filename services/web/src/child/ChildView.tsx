@@ -10,6 +10,7 @@ import AvatarGenderPicker from "../avatar/AvatarGenderPicker";
 import type { AvatarGender } from "../avatar/model-config";
 import { childCopy } from "../lib/child-copy";
 import { loadAvatarGender, saveAvatarGender } from "../lib/avatar-storage";
+import { useRobotTts } from "../lib/use-robot-tts";
 import { cn } from "../lib/utils";
 
 const AvatarCanvas = lazy(() => import("../avatar/AvatarCanvas"));
@@ -111,6 +112,7 @@ export default function ChildView() {
   const [flowExpanded, setFlowExpanded] = useState(true);
   const composingRef = useRef(false);
   const chatScrollRef = useRef<HTMLDivElement>(null);
+  const { speak: speakRobot, stop: stopRobotTts } = useRobotTts(gender);
 
   const childMessageCount = messages.filter((m) => m.role === "child").length;
   const flowCompact = childMessageCount >= FLOW_AUTO_COLLAPSE_AFTER;
@@ -157,6 +159,8 @@ export default function ChildView() {
       setSessionComplete(false);
       setConfirmingFinish(false);
       setFlowExpanded(true);
+      setSpeaking(true);
+      void speakRobot(session.welcome_message).finally(() => setSpeaking(false));
     } finally {
       setLoading(false);
     }
@@ -181,9 +185,10 @@ export default function ChildView() {
       syncNamesFromResponse(res);
       const nextChild = syncChildIdFromState(res.state);
       if (nextChild) setChildId(nextChild);
+      const robotText = res.agent_message;
+      setMessages((m) => [...m, { role: "robot", text: robotText }]);
       setSpeaking(true);
-      setMessages((m) => [...m, { role: "robot", text: res.agent_message }]);
-      window.setTimeout(() => setSpeaking(false), 2000);
+      void speakRobot(robotText).finally(() => setSpeaking(false));
       if (res.escalated) {
         setEscalated(true);
         setMessages((m) => [...m, { role: "system", text: childCopy.escalateSystem }]);
@@ -278,7 +283,11 @@ export default function ChildView() {
             </div>
             <AvatarGenderPicker
               value={gender}
-              onChange={setGender}
+              onChange={(g) => {
+                stopRobotTts();
+                setSpeaking(false);
+                setGender(g);
+              }}
               disabled={loading || escalated || sessionComplete}
               size="large"
             />

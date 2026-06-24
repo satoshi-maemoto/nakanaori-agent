@@ -5,7 +5,7 @@
 - **プロジェクト名**: Nakanaori Agent（ナカナオリ・エージェント）
 - **プロジェクト種別**: Greenfield
 - **開始日**: 2026-06-21
-- **現在ステージ**: CONSTRUCTION — unit-web-ui ENH-UI-05 完了
+- **現在ステージ**: CONSTRUCTION — unit-kebbi-client + unit-tts-service 完了
 
 ## 作業ユニット
 
@@ -15,7 +15,9 @@
 4. `unit-web-ui` — Tailwind + VRM + 子ども/先生 UI + ENH-UI-01〜05（P0）✅
 5. `unit-web-teacher` — 先生ダッシュボード — unit-web-ui に統合実装 ✅
 6. `unit-web-child` — 子ども Web + VRM — unit-web-ui に統合実装 ✅
-7. `unit-kebbi-contract` — API 契約 + sibling repo（P0 デモ）
+7. `unit-kebbi-contract` — API 契約 + TTS + private repo（P0 デモ）✅
+8. `unit-tts-service` — `packages/tts` + `/v1/tts/synthesize` ✅
+9. `unit-kebbi-client` — `nakanaori-kebbi` Android ✅
 
 ## ステージ進捗
 
@@ -30,7 +32,9 @@
 - [x] unit-web-ui — ENH-UI-04 子どもナビ + 先生確認ガイド + LLM 整理
 - [x] unit-web-ui — ENH-UI-05 子ども番終了確認 + VRM resetLayout
 - [x] unit-api — ENH-UI-02 / ENH-UI-03 / ENH-UI-04 API 拡張
-- [ ] unit-kebbi-contract — sibling repo 実装
+- [x] unit-kebbi-contract — TTS API + 契約更新
+- [x] unit-tts-service — packages/tts + Google Cloud TTS
+- [x] unit-kebbi-client — nakanaori-kebbi Android
 
 ### OPERATIONS フェーズ
 
@@ -38,7 +42,8 @@
 
 ## 現在の状態
 
-- **次ステージ**: Kebbi 実装 / GCP デプロイ
+- **次ステージ**: GCP デプロイ / Kebbi 実機 E2E
+- **Kebbi repo**: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`
 - **技術スタック**: TypeScript, Tailwind v4, three + @pixiv/three-vrm, Hono, ADK, Gemini 2.5 Flash
 - **ローカル**: `.env.example` + `scripts/dev-stack.sh`（API 起動後 Web）
 - **デモ台本**: `docs/examples/eraser-story-dialogue.md`
@@ -53,4 +58,5 @@
 - 先生 UI: **確認の進め方**をヒーロー表示、LLM `teacher_hints`、会話履歴・食い違い整理（ENH-UI-04）
 - 先生デモ: 進行中セッション一覧 + LLM insights（ENH-UI-02/04）
 - LLM: `gemini-2.5-flash` デフォルト；FactStructurer が disagreements / teacher_hints を生成（ENH-UI-03/04）
-- レイアウト: lg+ 左アバター + 右チャット；2 発話後アバター縮小 + ながれ折りたたみ
+- TTS: Google Cloud `POST /v1/tts/synthesize`（`packages/tts`）；Kebbi + 将来 Web 共有
+- Kebbi: Nuwa ASR + ExoPlayer TTS；private repo `nakanaori-kebbi`
