@@ -32,7 +32,7 @@ flowchart TD
 | 段階 | 子どもが すること | ロボット / 画面 |
 |------|-------------------|-----------------|
 | 開始前 | 「はじめる」を 押す | ながれ 4ステップを 表示 |
-| 最初 | なまえを 送る | 「1回め / 2回め の ばん」と 説明 |
+| 最初 | なまえを 送る | 「1回め / 2回め の ばん」と 説明 → **「番を おわる」を おしてね」**（TTS） |
 | 話す | 「おくる」で 話を つづける | 聞き役（裁かない） |
 | 番を 終える | 「番を おわる」を 押す | 「もう おわって いい？」と 確認 |
 | A → B | 確認で「おわり」 | つぎの 子に 挨拶 |
@@ -77,6 +77,21 @@ flowchart TD
 | UI 文言 | `services/web/src/lib/child-copy.ts` |
 | VRM レイアウト同期 | `services/web/src/avatar/VrmViewer.ts`, `useVrmAvatar.ts` |
 | AI-DLC 要件 | `aidlc-docs/construction/unit-web-ui/enhancements/child-turn-flow/requirements.md` |
+
+---
+
+## Web と Kebbi — 番の終わり方
+
+同じ API でも、セッション作成時の `client` で **ロボットの案内文** が変わります（`POST /v1/sessions`）。
+
+| `client` | 送信元 | 番を終える操作 | 名前登録後のロボット案内（例） |
+|----------|--------|----------------|--------------------------------|
+| `web`（既定） | Web UI | **「番を おわる」** → 確認パネル → `finish_turn: true` | 「話し終わったら、**「番を おわる」を おしてね。**」 |
+| `kebbi` | Kebbi APK | **頭をなでる**（または「おわった」→ 頭なで） | 「話し終わったら、**あたまを なでてね。**」 |
+
+- Web は `createSession()` で `client` を省略（既定 `web`）。
+- Kebbi は `NakanaoriApi.createSession()` で `"client": "kebbi"` を送る。
+- 実装: `ChildNavigatorAgent.finishTurnHint()` / `afterNameReceived()`、`MediationWorkflow.createSession(..., clientChannel)`。
 
 ---
 

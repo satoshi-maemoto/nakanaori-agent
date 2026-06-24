@@ -119,6 +119,11 @@ TTS 認証（API 側）: [google-cloud-tts-setup.md](./google-cloud-tts-setup.md
 
 ## Kebbi 子ども向け体験（音声操作）
 
+### セッション作成
+
+`POST /v1/sessions` に `"client": "kebbi"` を含める（`NakanaoriApi.kt`）。  
+これにより名前登録後の案内が **「あたまを なでてね」** になり、Web 用の「番を おわる」案内は出ない。
+
 ### 声（Google TTS）
 
 Kebbi は `TtsApi.kt` から `options.profile: "kebbi_child"` を送信。サーバー側 `kebbiChildProfile()`（`Neural2-B` + 高め pitch）が適用される。Web の `gender: male/female` には影響しない。
@@ -127,7 +132,8 @@ Kebbi は `TtsApi.kt` から `options.profile: "kebbi_child"` を送信。サー
 
 | 段階 | 子ども | ロボット |
 |------|--------|----------|
-| 話し終わり（任意） | 「話し終わった」「おわった」 | 「あたまを なでてね」 |
+| 名前登録後 | — | 「…話し終わったら、**あたまを なでてね**」（`client: kebbi`） |
+| 話し終わり（任意） | 「話し終わった」「おわった」 | 同上を 促す TTS |
 | 番を変える | **頭をなでる** | `finish_turn: true` |
 | まだ話す | 「まだ」「まだ話す」 | 続けて聞く |
 
@@ -153,8 +159,8 @@ Kebbi は `TtsApi.kt` から `options.profile: "kebbi_child"` を送信。サー
 台本: [examples/eraser-story-dialogue.md](./examples/eraser-story-dialogue.md)
 
 1. Mac で `dev-stack`、Kebbi 設定で LAN API URL
-2. Kebbi A: 設定で **1回め（A）** → 起動 → ウェルカム後に話す → 「おわり」
-3. Kebbi B: **2回め（B）** → 別端末は新規セッション（または先生 Web と連携）
+2. Kebbi: 起動 → ウェルカム → 名前 → 話す → **頭をなでる** で番交代
+3. 子B の番: 手の案内 → 話す → **頭をなでる** → 終了メッセージ
 4. 先生 Web `http://localhost:5173/teacher` でブリーフ確認
 
 長押し（頭センサー）でセッション再試行。

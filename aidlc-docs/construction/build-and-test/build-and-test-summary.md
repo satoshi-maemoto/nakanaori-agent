@@ -1,15 +1,16 @@
 # Build and Test サマリー
 
-## ステータス（2026-06-24）
+## ステータス（2026-06-21）
 
 | 項目 | 状態 |
 |------|------|
 | ビルド（agents + api） | ✅ ローカル・CI 通過 |
-| ユニットテスト（Vitest） | ✅ 4 tests |
+| ユニットテスト（Vitest） | ✅ agents + tts |
 | プロンプト禁止語チェック | ✅ `scripts/check-prompts.sh` |
 | Web TypeScript チェック | ✅ CI `web` ジョブ |
-| TTS（Google Cloud） | ✅ `POST /v1/tts/synthesize` + Web 男女ボイス |
-| Kebbi クライアント（private） | ✅ 実機デモ可（設定・再接続・顔 hide） |
+| TTS（Google Cloud） | ✅ Web `avatarGender` + Kebbi `kebbi_child` |
+| Kebbi クライアント（private） | ✅ ENH-KEBBI-02（client / ハンドオフ prefetch） |
+| クライアントチャネル | ✅ Web vs Kebbi finish 案内分岐 |
 | 結合テスト（手動） | 📋 手順書あり |
 | Staging デプロイ | 📋 workflow 準備済（GCP secrets 要） |
 | E2E 自動化 | ⏸ MVP 外 |
@@ -37,5 +38,5 @@ bash scripts/check-prompts.sh
 
 1. GCP Secrets 設定後、`main` で staging デプロイ
 2. `GEMINI_API_KEY` 付きで実 LLM スモーク
-3. unit-web-* UI 完成度向上
+3. Kebbi 実機 E2E — 子B ハンドオフ・頭なで finish・Web 案内混入なし
 4. Kebbi sibling repo との契約テスト

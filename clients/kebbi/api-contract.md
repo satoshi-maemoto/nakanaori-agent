@@ -19,9 +19,21 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 ```json
 {
   "child_a_label": "子どもA",
-  "child_b_label": "子どもB"
+  "child_b_label": "子どもB",
+  "client": "kebbi"
 }
 ```
+
+- `client`（任意）: `"web"`（既定）または `"kebbi"`。番の終わり方の案内文を切り替える。
+
+**クライアント別コピー（`afterNameReceived` など）**
+
+| 項目 | `web` | `kebbi` |
+|------|-------|---------|
+| 番の終え方（UI） | 「番を おわる」ボタン | 頭をなでる / 音声「おわった」 |
+| 名前登録後の案内 | 「話し終わったら、『番を おわる』を おしてね。」 | 「話し終わったら、あたまを なでてね。」 |
+
+Web は `client` 省略可。Kebbi は `"client": "kebbi"` を **必須** で送ること（省略すると Web 用案内が TTS される）。
 
 **Response** `201`
 

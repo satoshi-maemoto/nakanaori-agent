@@ -5,7 +5,7 @@
 - **プロジェクト名**: Nakanaori Agent（ナカナオリ・エージェント）
 - **プロジェクト種別**: Greenfield
 - **開始日**: 2026-06-21
-- **現在ステージ**: CONSTRUCTION — unit-kebbi-client + unit-tts-service 完了
+- **現在ステージ**: CONSTRUCTION 完了 — ENH-KEBBI-02 反映済み；次は GCP デプロイ / Kebbi E2E
 
 ## 作業ユニット
 
@@ -35,6 +35,7 @@
 - [x] unit-kebbi-contract — TTS API + 契約更新
 - [x] unit-tts-service — packages/tts + Google Cloud TTS
 - [x] unit-kebbi-client — nakanaori-kebbi Android
+- [x] unit-kebbi-client — ENH-KEBBI-02 クライアントチャネル + 子B ハンドオフ UX
 
 ### OPERATIONS フェーズ
 
@@ -42,12 +43,12 @@
 
 ## 現在の状態
 
-- **次ステージ**: GCP デプロイ / Kebbi 実機 E2E
+- **次ステージ**: GCP デプロイ / Kebbi 実機 E2E（子B ハンドオフ・頭なで finish）
 - **Kebbi repo**: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`
 - **技術スタック**: TypeScript, Tailwind v4, three + @pixiv/three-vrm, Hono, ADK, Gemini 2.5 Flash
 - **ローカル**: `.env.example` + `scripts/dev-stack.sh`（API 起動後 Web）
 - **デモ台本**: `docs/examples/eraser-story-dialogue.md`
-- **子どもフロー**: `docs/examples/child-conversation-flow.md`
+- **子どもフロー**: `docs/examples/child-conversation-flow.md`（Web / Kebbi 比較表あり）
 
 ## 確定した決定事項
 
@@ -55,8 +56,9 @@
 - VRM: CharaTomo 同系 GLB、自然ポーズ + idle + 瞬き + head ボーンカメラ + **resetLayout**（ENH-UI-01/05）
 - 子ども UI: 大アバター、低学年文言、`child-copy.ts`、**おくる** / **番を おわる**（確認あり）、1回め/2回め表示、A/B バルーン色、チャット内スクロール（ENH-UI-03/05）
 - 子どもナビ: ナカナオリ自己紹介、名前収集、番終了・先生相談メッセージ（ENH-UI-04/05）
+- **クライアントチャネル**: `POST /v1/sessions` の `client`（`web` | `kebbi`）→ `SessionState.client_channel` → `finishTurnHint()` で案内分岐（ENH-KEBBI-02）
 - 先生 UI: **確認の進め方**をヒーロー表示、LLM `teacher_hints`、会話履歴・食い違い整理（ENH-UI-04）
 - 先生デモ: 進行中セッション一覧 + LLM insights（ENH-UI-02/04）
 - LLM: `gemini-2.5-flash` デフォルト；FactStructurer が disagreements / teacher_hints を生成（ENH-UI-03/04）
-- TTS: Google Cloud `POST /v1/tts/synthesize`（`packages/tts`）；Kebbi + 将来 Web 共有
-- Kebbi: Nuwa ASR + ExoPlayer TTS；private repo `nakanaori-kebbi`
+- TTS: Google Cloud `POST /v1/tts/synthesize`（`packages/tts`）；Web は `avatarGender`、Kebbi は `profile: kebbi_child`（独立）
+- Kebbi: Nuwa ASR + ExoPlayer TTS；頭なで `finish_turn`；ハンドオフ prefetch；private repo `nakanaori-kebbi`

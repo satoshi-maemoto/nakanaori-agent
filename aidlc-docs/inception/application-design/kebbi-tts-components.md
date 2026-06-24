@@ -18,6 +18,10 @@ Kebbi → API sessions → agents → agent_message → TTS synthesize → ExoPl
 
 ## 音声設定
 
-- Voice: `ja-JP-Neural2-C`（中性・落ち着き）
-- Gender: NEUTRAL
-- Encoding: MP3
+| 用途 | Voice | 備考 |
+|------|-------|------|
+| Web 既定 | `ja-JP-Neural2-C`（`GOOGLE_TTS_VOICE`） | 中性・落ち着き |
+| Web 男女 | `Neural2-B` / `Neural2-C` | `avatarGender` |
+| Kebbi 子ども | `ja-JP-Neural2-B`, rate 1.08, pitch +2.0 | `profile: kebbi_child` 明示時のみ |
+
+Encoding: MP3（data URI 返却）

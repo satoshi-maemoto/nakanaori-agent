@@ -16,6 +16,9 @@ export const SessionStateName = {
 export type SessionStateName =
   (typeof SessionStateName)[keyof typeof SessionStateName];
 
+/** UI channel for finish-turn hints (Web button vs Kebbi head pet). */
+export type ClientChannel = "web" | "kebbi";
+
 export interface ChildTurn {
   child_id: string;
   utterance: string;
@@ -37,6 +40,8 @@ export interface SessionState {
   analysis_snapshot: Record<string, unknown> | null;
   escalated: boolean;
   escalation_reason: string | null;
+  /** Defaults to Web copy when omitted (legacy sessions). */
+  client_channel?: ClientChannel;
 }
 
 export class SessionOrchestrator {

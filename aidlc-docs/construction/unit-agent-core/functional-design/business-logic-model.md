@@ -37,10 +37,10 @@ flowchart TD
 
 | 項目 | 内容 |
 |------|------|
-| 入力 | `session_id`, `child_a_label`, `child_b_label` |
-| 処理 | `SessionState` 生成、状態 `listening_a` |
-| 出力 | `SessionState` |
-| ルール | ラベル未指定時は「子どもA」「子どもB」 |
+| 入力 | `session_id`, `child_a_label`, `child_b_label`, `clientChannel`（任意、既定 `web`） |
+| 処理 | `SessionState` 生成、状態 `listening_a`、`client_channel` 保存 |
+| 出力 | `SessionState`, `welcome_message` |
+| ルール | ラベル未指定時は「子どもA」「子どもB」；Kebbi は `client: kebbi` を推奨 |
 
 ### UC-02: 子どもターン処理
 
@@ -73,6 +73,7 @@ flowchart TD
 
 | エージェント | 呼び出しタイミング | 入力 | 出力 |
 |--------------|-------------------|------|------|
+| ChildNavigatorAgent | 名前収集・番交代・finish 案内 | child_id, name, client_channel | agent_message |
 | EmotionGuardAgent | 毎ターン最初 | utterance | RiskAssessment |
 | ListenerAgent | エスカレーションなし | child_label, utterance, セッション文脈 | ListenerResponse |
 | FactStructurerAgent | 双方ヒアリング完了 | SessionState（全 turns） | StructuredFacts |

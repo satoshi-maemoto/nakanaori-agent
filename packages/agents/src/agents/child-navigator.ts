@@ -1,4 +1,4 @@
-import type { SessionState } from "../orchestrator.js";
+import type { ClientChannel, SessionState } from "../orchestrator.js";
 
 export const ROBOT_NAME = "ナカナオリ";
 
@@ -49,13 +49,19 @@ export class ChildNavigatorAgent {
     return `${ROBOT_NAME}だよ。なまえを 教えてくれる？`;
   }
 
-  afterNameReceived(name: string, childId: "a" | "b"): string {
-    const ordinal = turnOrdinalLabel(childId);
+  finishTurnHint(channel: ClientChannel): string {
+    if (channel === "kebbi") {
+      return "話し終わったら、あたまを なでてね。";
+    }
+    return "話し終わったら、「番を おわる」を おしてね。";
+  }
+
+  afterNameReceived(name: string, childId: "a" | "b", channel: ClientChannel = "web"): string {
     return (
       `${name}さん、よろしくね。` +
       `これから ${name}さんの ばん だよ。` +
       "きょうの こと、ゆっくり 話してね。" +
-      "話し終わったら、あたまを なでてね。"
+      this.finishTurnHint(channel)
     );
   }
 

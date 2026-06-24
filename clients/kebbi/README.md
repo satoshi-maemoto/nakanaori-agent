@@ -14,9 +14,10 @@ Nuwa Kebbi Android クライアントは **この monorepo 外** の private rep
 ## 連携方針
 
 1. Nakanaori **セッション REST API** + **`POST /v1/tts/synthesize`**
-2. CharaTomo `POST /api/v1/llm/chat` は **使用しない**
-3. TTS: Google Cloud（monorepo `packages/tts`）；未設定時 Kebbi は Nuwa ロボ TTS
-4. **アバター選択なし** — 中性的 1 声
+2. セッション作成時 **`"client": "kebbi"`** — Web 用「番を おわる」案内を避け、頭なで案内に切替（[api-contract.md](./api-contract.md)）
+3. CharaTomo `POST /api/v1/llm/chat` は **使用しない**
+4. TTS: Google Cloud（monorepo `packages/tts`）；未設定時 Kebbi は Nuwa ロボ TTS
+5. **アバター選択なし** — 中性的 1 声
 
 ## 同期ポリシー
 

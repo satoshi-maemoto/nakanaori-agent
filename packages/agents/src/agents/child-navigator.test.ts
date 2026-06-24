@@ -36,10 +36,18 @@ describe("ChildNavigatorAgent", () => {
     expect(nav.sessionWelcome()).not.toMatch(/1回め、2回め/);
   });
 
-  it("afterNameReceived explains finish button", () => {
-    expect(nav.afterNameReceived("たろう", "a")).toMatch(/1回めの ばん/);
-    expect(nav.afterNameReceived("たろう", "a")).toMatch(/話し終わったら/);
-    expect(nav.afterNameReceived("けんた", "b")).toMatch(/2回めの ばん/);
+  it("afterNameReceived explains finish for web", () => {
+    const web = nav.afterNameReceived("たろう", "a", "web");
+    expect(web).toMatch(/たろうさんの ばん/);
+    expect(web).toMatch(/番を おわる/);
+    expect(web).not.toMatch(/あたま/);
+  });
+
+  it("afterNameReceived explains head pet for kebbi", () => {
+    const kebbi = nav.afterNameReceived("けんた", "b", "kebbi");
+    expect(kebbi).toMatch(/けんたさんの ばん/);
+    expect(kebbi).toMatch(/あたまを なでて/);
+    expect(kebbi).not.toMatch(/番を おわる/);
   });
 
   it("finishMessage tells child to consult teacher", () => {

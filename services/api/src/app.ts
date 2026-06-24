@@ -56,12 +56,18 @@ app.get("/v1/sessions", (c) => {
 });
 
 app.post("/v1/sessions", async (c) => {
-  const body = await c.req.json<{ child_a_label?: string; child_b_label?: string }>();
+  const body = await c.req.json<{
+    child_a_label?: string;
+    child_b_label?: string;
+    client?: string;
+  }>();
+  const clientChannel = body.client === "kebbi" ? "kebbi" : "web";
   const sessionId = randomUUID();
   const session = workflow.createSession(
     sessionId,
     body.child_a_label ?? "子どもA",
     body.child_b_label ?? "子どもB",
+    clientChannel,
   );
   store.put(session);
   return c.json(

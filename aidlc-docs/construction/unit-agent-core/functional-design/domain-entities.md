@@ -22,6 +22,9 @@ erDiagram
 | state | SessionStateName | ワークフロー状態 |
 | child_a_label | string | 子どもA表示名（デフォルト「子どもA」） |
 | child_b_label | string | 子どもB表示名 |
+| child_a_name | string \| null | 子どもAの名前（収集後） |
+| child_b_name | string \| null | 子どもBの名前 |
+| client_channel | `"web"` \| `"kebbi"` | 番終了案内の UI チャネル（省略時 `web`） |
 | turns_a | list[ChildTurn] | 子どもAの発話履歴 |
 | turns_b | list[ChildTurn] | 子どもBの発話履歴 |
 | structured | dict \| null | StructuredFacts の JSON 表現 |
@@ -131,6 +134,8 @@ erDiagram
 | FactStructurerAgent | `packages/agents/src/agents/fact-structurer.ts` |
 | ConfirmationAgent | `packages/agents/src/agents/confirmation.ts` |
 | TeacherBriefAgent | `packages/agents/src/agents/teacher-brief.ts` |
+| ChildNavigatorAgent | `packages/agents/src/agents/child-navigator.ts` |
+| ClientChannel | `packages/agents/src/orchestrator.ts` |
 | StructuredFacts, TeacherBrief, ListenerResponse, RiskAssessment | `packages/agents/src/schemas.ts` |
 | ADK ランナー | `packages/agents/src/llm/adk-runner.ts` |
 | プロンプト | `packages/agents/src/prompts/*.md` |

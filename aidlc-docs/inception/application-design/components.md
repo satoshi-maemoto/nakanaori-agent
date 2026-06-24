@@ -5,6 +5,7 @@
 | コンポーネント | 責務 |
 |----------------|------|
 | SessionOrchestrator | ワークフロー状態マシン；次エージェント選択；セッションライフサイクル管理 |
+| ChildNavigatorAgent | ウェルカム・名前収集・番交代・**クライアント別 finish 案内**（Web / Kebbi） |
 | ListenerAgent | 個別ヒアリング；supportive プロンプト；発話収集 |
 | EmotionGuardAgent | エスカレーショントリガー監視；高リスク時にワークフロー停止 |
 | FactStructurerAgent | 双方から事実・感情・不明点の構造を構築 |
@@ -15,8 +16,9 @@
 
 | コンポーネント | 責務 |
 |----------------|------|
-| ApiService | Cloud Run 上の FastAPI；REST エンドポイント；認証（MVP はデモモード） |
+| ApiService | Cloud Run 上の Hono API；REST エンドポイント；`POST /v1/sessions` に `client` |
 | SessionStore | セッション状態の保持（MVP は in-memory；Firestore は後回し） |
+| TtsService | `packages/tts` + `POST /v1/tts/synthesize`（Web gender / Kebbi profile） |
 
 ## クライアントレイヤー
 

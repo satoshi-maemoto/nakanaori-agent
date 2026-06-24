@@ -7,6 +7,7 @@ import { TeacherBriefAgent } from "./agents/teacher-brief.js";
 import {
   SessionOrchestrator,
   SessionStateName,
+  type ClientChannel,
   type SessionState,
 } from "./orchestrator.js";
 import type { SessionInsights, StructuredFacts, TeacherBrief } from "./schemas.js";
@@ -25,6 +26,7 @@ export class MediationWorkflow {
     sessionId: string,
     childALabel = "子どもA",
     childBLabel = "子どもB",
+    clientChannel: ClientChannel = "web",
   ): SessionState {
     return {
       session_id: sessionId,
@@ -40,6 +42,7 @@ export class MediationWorkflow {
       analysis_snapshot: null,
       escalated: false,
       escalation_reason: null,
+      client_channel: clientChannel,
     };
   }
 
@@ -151,7 +154,11 @@ export class MediationWorkflow {
           childId === "a"
             ? { ...updated, child_a_name: name }
             : { ...updated, child_b_name: name };
-        agentMessage = this.navigator.afterNameReceived(name, childId);
+        agentMessage = this.navigator.afterNameReceived(
+          name,
+          childId,
+          updated.client_channel ?? "web",
+        );
       } else {
         const displayName = this.navigator.displayName(updated, childId);
         const turns = childId === "a" ? updated.turns_a : updated.turns_b;

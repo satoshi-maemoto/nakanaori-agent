@@ -102,10 +102,12 @@ adb shell curl -sf http://<PC-LAN-IP>:8080/health
 
 ### シナリオ
 
-1. ウェルカム TTS → マイク許可 → 連続 ASR
-2. 子ども発話 → `agent_message` 再生（API TTS または Nuwa フォールバック）
-3. 「おわり」で `finish_turn: true`
-4. 先生 Web `/teacher` でブリーフ確認（`ai_disclaimer` 必須）
+1. セッション作成 — Kebbi は API が `"client": "kebbi"` を受信していること（log / 名前登録後案内で確認）
+2. ウェルカム TTS → マイク許可 → 連続 ASR
+3. 子ども発話 → `agent_message` 再生（API TTS `kebbi_child` または Nuwa フォールバック）
+4. 番終了 — **頭をなでる**（または「おわった」→ 頭なで）で `finish_turn: true`
+5. 子B: ハンドオフ挨拶 → 腕提示 → 手案内 → ASR
+6. 先生 Web `/teacher` でブリーフ確認（`ai_disclaimer` 必須）
 
 ### ログ・診断
 
