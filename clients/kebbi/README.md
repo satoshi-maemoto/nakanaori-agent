@@ -31,3 +31,19 @@ Nuwa Kebbi Android クライアントは **この monorepo 外** の private rep
 - **STT**: Kebbi Nuwa SDK クラウド ASR（端末内）
 - **TTS**: `POST /v1/tts/synthesize` → ExoPlayer；フォールバック Nuwa TTS
 - **TTS 認証設定**（API 側）: [docs/google-cloud-tts-setup.md](../../docs/google-cloud-tts-setup.md)
+
+## 開発・デモ
+
+実機のセットアップ、API URL（LAN IP）、設定画面・顔表示の注意、トラブルシューティング:
+
+**[docs/kebbi-dev-guide.md](../../docs/kebbi-dev-guide.md)**
+
+```bash
+# Mac: API
+bash scripts/dev-stack.sh
+
+# Kebbi: ビルド・実機インストール・起動
+bash scripts/kebbi-deploy.sh
+```
+
+Kebbi 設定の API URL は **`http://<PC-LAN-IP>:8080`**（`127.0.0.1` は端末自身を指すため不可）。保存後「もどる」でセッション再接続。

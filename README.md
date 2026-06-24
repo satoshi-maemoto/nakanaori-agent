@@ -18,7 +18,7 @@ _Staging デプロイ後に URL を記載_
 | エージェント | TypeScript + Google ADK（`@google/adk`）+ Gemini API |
 | API | Hono + Node.js on Cloud Run |
 | Web | React (先生ダッシュボード + 子ども UI) |
-| Kebbi | 別リポジトリ [`AIxR-CharaTomo-Kebbi`](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi) |
+| Kebbi | private repo [`nakanaori-kebbi`](https://github.com/satoshi-maemoto/nakanaori-kebbi)（Nuwa Android） |
 
 詳細: [docs/architecture.md](docs/architecture.md)
 
@@ -47,6 +47,15 @@ cd services/web && npm install && npm run dev
 ```
 
 ブラウザ: http://localhost:5173
+
+### Kebbi 実機
+
+```bash
+bash scripts/dev-stack.sh          # Mac: API :8080
+bash scripts/kebbi-deploy.sh       # Kebbi: ビルド・インストール・起動
+```
+
+Kebbi 設定で API URL に **PC の LAN IP**（例 `http://192.168.11.4:8080`）を指定。詳細: [docs/kebbi-dev-guide.md](docs/kebbi-dev-guide.md)
 
 ### デモ（curl）
 

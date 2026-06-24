@@ -71,12 +71,48 @@ gcloud run services describe nakanaori-web --region asia-northeast1 --format 'va
 ## Kebbi（private repo）
 
 契約: `clients/kebbi/api-contract.md`  
-実装: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`（`NakanaoriApi.kt`, `TtsApi.kt`）
+実装: `nakanaori-kebbi`（`NakanaoriApi.kt`, `TtsApi.kt`）  
+詳細手順: [docs/kebbi-dev-guide.md](../../../docs/kebbi-dev-guide.md)
 
-1. monorepo で `bash scripts/dev-stack.sh`（TTS 用 `.env` 推奨）
-2. Kebbi 設定 → API URL = PC の LAN IP（例 `http://192.168.1.10:8080`）
-3. 実機で起動 → ウェルカム TTS → 音声入力 → `agent_message` 再生
-4. 「おわり」で `finish_turn: true`
-5. 先生 Web `/teacher` で同一セッション確認
+### 前提
 
-参照: CharaTomo-Kebbi の Nuwa AAR 配置手順
+- USB 接続 + `adb devices` で実機表示
+- Mac で `bash scripts/dev-stack.sh`（TTS 用 `.env` 推奨）
+- Mac LAN IP を確認: `ipconfig getifaddr en0`
+
+### デプロイ
+
+```bash
+bash scripts/kebbi-deploy.sh
+# または nakanaori-kebbi で bash scripts/kebbi-deploy.sh
+```
+
+### 設定（必須）
+
+1. 設定を開く（画面下 **⚙ 設定をひらく** / ロボット頭タップ / 「設定」と発話）
+2. API URL = `http://<PC-LAN-IP>:8080`（**`127.0.0.1` 不可**）
+3. 子ども A/B ラベル、**この Kebbi が 話す 子**（A または B）
+4. **保存** → **← もどる**（保存後にセッション再接続）
+
+接続確認:
+
+```bash
+adb shell curl -sf http://<PC-LAN-IP>:8080/health
+```
+
+### シナリオ
+
+1. ウェルカム TTS → マイク許可 → 連続 ASR
+2. 子ども発話 → `agent_message` 再生（API TTS または Nuwa フォールバック）
+3. 「おわり」で `finish_turn: true`
+4. 先生 Web `/teacher` でブリーフ確認（`ai_disclaimer` 必須）
+
+### ログ・診断
+
+```bash
+bash scripts/kebbi-logcat.sh
+bash scripts/kebbi-status.sh
+adb shell run-as com.nakanaori.kebbi cat shared_prefs/nakanaori_kebbi_settings.xml
+```
+
+参照: CharaTomo-Kebbi の Nuwa AAR 配置手順（`app/libs/`）

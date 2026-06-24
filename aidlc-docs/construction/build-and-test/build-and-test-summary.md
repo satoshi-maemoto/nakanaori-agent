@@ -1,6 +1,6 @@
 # Build and Test サマリー
 
-## ステータス（2026-06-21）
+## ステータス（2026-06-24）
 
 | 項目 | 状態 |
 |------|------|
@@ -8,6 +8,8 @@
 | ユニットテスト（Vitest） | ✅ 4 tests |
 | プロンプト禁止語チェック | ✅ `scripts/check-prompts.sh` |
 | Web TypeScript チェック | ✅ CI `web` ジョブ |
+| TTS（Google Cloud） | ✅ `POST /v1/tts/synthesize` + Web 男女ボイス |
+| Kebbi クライアント（private） | ✅ 実機デモ可（設定・再接続・顔 hide） |
 | 結合テスト（手動） | 📋 手順書あり |
 | Staging デプロイ | 📋 workflow 準備済（GCP secrets 要） |
 | E2E 自動化 | ⏸ MVP 外 |
@@ -29,6 +31,7 @@ bash scripts/check-prompts.sh
 - [unit-test-instructions.md](./unit-test-instructions.md)
 - [integration-test-instructions.md](./integration-test-instructions.md)
 - [docs/devops.md](../../../docs/devops.md)
+- [docs/kebbi-dev-guide.md](../../../docs/kebbi-dev-guide.md)
 
 ## 次のステップ
 

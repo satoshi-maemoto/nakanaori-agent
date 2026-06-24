@@ -21,7 +21,7 @@
 | `services/web/` | React 先生 + 子ども UI |
 | `clients/kebbi/` | API 契約（実装は外部） |
 | `aidlc-docs/` | Inception / Construction 成果物 |
-| `docs/` | アーキテクチャ、デモ、DevOps、ハッカソン |
+| `docs/` | アーキテクチャ、デモ、DevOps、ハッカソン、**Kebbi 実機**（`kebbi-dev-guide.md`） |
 
 ## 作業ユニット（Construction）
 
@@ -37,9 +37,11 @@
 
 - **Path**: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`
 - **Contract**: `clients/kebbi/api-contract.md`
+- **開発ガイド**: `docs/kebbi-dev-guide.md`（API URL・設定画面・顔 hide・再接続）
 - **TTS**: `packages/tts` + `POST /v1/tts/synthesize`
 - Do **not** use CharaTomo `POST /api/v1/llm/chat`
 - Nuwa AAR: `app/libs/`（CharaTomo-Kebbi と同手順）
+- 実機: `bash scripts/kebbi-deploy.sh`（`NAKANAORI_KEBBI_ROOT` でパス上書き可）
 
 ## ローカル開発
 

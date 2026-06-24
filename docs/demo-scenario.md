@@ -98,3 +98,13 @@ curl -s -X POST "$API_URL/v1/sessions/$SESSION_ID/child-turn" \
 # Teacher brief
 curl -s "$API_URL/v1/sessions/$SESSION_ID/teacher-brief"
 ```
+
+## Kebbi 実機デモ
+
+1. Mac: `bash scripts/dev-stack.sh`
+2. Kebbi: `bash scripts/kebbi-deploy.sh`（または VS Code **Kebbi: Deploy + Nakanaori Dev Stack**）
+3. 設定 → API URL = `http://<PC-LAN-IP>:8080` → 保存 → もどる
+4. 上記 Scene 2–3 を音声で実施（台本: [eraser-story-dialogue.md](./examples/eraser-story-dialogue.md)）
+5. 先生 Web `/teacher` でブリーフ確認
+
+詳細: [kebbi-dev-guide.md](./kebbi-dev-guide.md)

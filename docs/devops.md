@@ -62,6 +62,26 @@ npm install
 npm run dev --workspace=nakanaori-api
 ```
 
+一括起動（API + Web）:
+
+```bash
+bash scripts/dev-stack.sh
+```
+
+## Kebbi 実機（sibling repo）
+
+| スクリプト | 用途 |
+|-----------|------|
+| `scripts/kebbi-deploy.sh` | ビルド・インストール・`MainActivity` 起動 |
+| `scripts/kebbi-ensure-sdk.sh` | Android SDK / `local.properties` 確認 |
+| `scripts/kebbi-status.sh` | アプリ起動中か `adb` で確認 |
+| `scripts/kebbi-logcat.sh` | `NakanaoriKebbi` タグ logcat |
+| `scripts/kebbi-logcat-clear.sh` | logcat クリア |
+
+`NAKANAORI_KEBBI_ROOT` で `nakanaori-kebbi` のパスを上書き。
+
+手順・トラブルシューティング: [kebbi-dev-guide.md](./kebbi-dev-guide.md)
+
 ## 環境
 
 `infrastructure/cloud-run/env.example` を `.env` にコピー（コミット禁止）。
