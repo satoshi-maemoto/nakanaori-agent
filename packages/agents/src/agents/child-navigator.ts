@@ -36,7 +36,7 @@ export class ChildNavigatorAgent {
     if (name) {
       return (
         `${name}さん、${ROBOT_NAME}だよ。` +
-        `これから きみの ${ordinal}の ばん だよ。きみの はなしを きかせて。だいじょうぶ、ゆっくり でいいよ。`
+        `これから きみの ばん だよ。はなしを きかせて。だいじょうぶ、ゆっくり でいいよ。`
       );
     }
     if (firstContact) {
@@ -53,7 +53,7 @@ export class ChildNavigatorAgent {
     const ordinal = turnOrdinalLabel(childId);
     return (
       `${name}さん、よろしくね。` +
-      `これから ${name}さんの ${ordinal}の ばん だよ。` +
+      `これから ${name}さんの ばん だよ。` +
       "きょうの こと、ゆっくり 話してね。" +
       "話し終わったら、あたまを なでてね。"
     );
