@@ -73,6 +73,15 @@ bash scripts/check-prompts.sh
 | **Nakanaori: Dev Stack (API + Web)** | 1 ターミナルで両方起動 |
 | **Nakanaori: Open Browser (Child)** | サーバー起動 → 子ども UI を Chrome で開く |
 | **Nakanaori: Browser E2E (Playwright)** | サーバー起動 → `verify-browser.mjs` |
+| **Kebbi: Build debug APK** | `../nakanaori-kebbi` を `assembleDebug` |
+| **Kebbi: Install to device** | 接続済み実機へ `installDebug` |
+| **Kebbi: Build & Deploy** | ビルド・インストール・`MainActivity` 起動 |
+| **Kebbi: App status** | 実機でアプリ起動中か確認（`adb`） |
+| **Kebbi: Logcat (follow)** | `NakanaoriKebbi` タグの logcat を追跡 |
+| **Kebbi: Deploy + Logcat** | デプロイと logcat を同時起動 |
+| **Kebbi: Deploy + Nakanaori Dev Stack** | API+Web と Kebbi デプロイを同時起動 |
+
+Kebbi リポジトリは sibling `../nakanaori-kebbi` を参照。別パスなら `NAKANAORI_KEBBI_ROOT` を設定。
 
 `GEMINI_API_KEY` または `GOOGLE_GENAI_API_KEY` を設定すると ADK + Gemini が有効。
 
