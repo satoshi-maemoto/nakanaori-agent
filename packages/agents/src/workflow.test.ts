@@ -12,7 +12,7 @@ describe("MediationWorkflow", () => {
   it("welcome message introduces robot and explains one turn", () => {
     const wf = new MediationWorkflow();
     expect(wf.getSessionWelcome()).toMatch(/ナカナオリ/);
-    expect(wf.getSessionWelcome()).toMatch(/1回め、2回め/);
+    expect(wf.getSessionWelcome()).toMatch(/順番に 話して/);
   });
 
   it("collects child name on first utterance", async () => {
@@ -54,14 +54,16 @@ describe("MediationWorkflow", () => {
   it("teacher brief includes disclaimer", async () => {
     const wf = new MediationWorkflow();
     let session = wf.createSession("s2");
+    let msg: string;
     [session] = await wf.processChildTurn(session, "a", "たろう");
     [session] = await wf.processChildTurn(session, "a", "消しゴムがなくなった", {
       finishTurn: true,
     });
     [session] = await wf.processChildTurn(session, "b", "けんた");
-    [session] = await wf.processChildTurn(session, "b", "拾っただけ", {
+    [session, msg] = await wf.processChildTurn(session, "b", "拾っただけ", {
       finishTurn: true,
     });
+    expect(msg).toMatch(/せんせいに きいた ことを 伝えた/);
     const brief = wf.getTeacherBrief(session);
     expect(brief.ai_disclaimer).toContain("最終的な判断は先生");
     expect(brief.conversation_a.utterances).toContain("消しゴムがなくなった");

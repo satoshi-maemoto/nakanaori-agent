@@ -23,8 +23,8 @@ export class ChildNavigatorAgent {
   sessionWelcome(): string {
     return (
       `こんにちは、${ROBOT_NAME}だよ。` +
-      "きみと もうひとりの 子の はなしを きいて、せんせいに つなぐ ロボットだよ。" +
-      "ルールは かんたん。1回め、2回め の ばん。順番に 話してね。" +
+      "きみの はなしを きいて、せんせいに つなぐ ロボットだよ。" +
+      "ルールは かんたん。順番に 話してね。" +
       "だいじょうぶ、ゆっくり でいいよ。ひとりじゃないからね。" +
       "まず、なまえを 教えてくれる？"
     );
@@ -55,7 +55,7 @@ export class ChildNavigatorAgent {
       `${name}さん、よろしくね。` +
       `これから ${name}さんの ${ordinal}の ばん だよ。` +
       "きょうの こと、ゆっくり 話してね。" +
-      "話し終わったら「番を おわる」を 押してね。"
+      "話し終わったら、あたまを なでてね。"
     );
   }
 
@@ -63,10 +63,7 @@ export class ChildNavigatorAgent {
     const prevName =
       nextChildId === "b" ? session.child_a_name : session.child_b_name;
     const thanks = prevName ? `${prevName}さん、ありがとう。` : "ありがとう。";
-    const nextLabel =
-      nextChildId === "a" ? session.child_a_label : session.child_b_label;
-    const greeting = this.greetingForChild(session, nextChildId, true);
-    return `${thanks}つぎは ${nextLabel} の ばんだよ。${greeting}`;
+    return `${thanks}つぎの 子の ばんだよ。なまえを 教えてくれる？`;
   }
 
   displayName(session: SessionState, childId: "a" | "b"): string {
@@ -91,8 +88,8 @@ export class ChildNavigatorAgent {
     const name = this.displayName(session, childId);
     return (
       `${name}さん、おつかれさま。2人 とも 話を きいたよ。` +
-      "これから せんせいの ところ へ 行って、相談してね。" +
-      "ロボットは 先生に 話を 伝える 準備を したよ。"
+      "せんせいに きいた ことを 伝えたよ。" +
+      "せんせいの ところ へ 行って、相談してね。"
     );
   }
 }

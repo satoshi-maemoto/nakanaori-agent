@@ -178,9 +178,7 @@ export class MediationWorkflow {
           ...this.orchestrator.markReadyForTeacher(updated),
           structured: structured as unknown as Record<string, unknown>,
         };
-        if (!text) {
-          agentMessage = this.navigator.finishMessage(session, childId);
-        }
+        agentMessage = this.navigator.finishMessage(updated, childId);
       } else if (!text && childId === "a") {
         agentMessage = this.navigator.handoffToNextChild(updated, "b");
       }

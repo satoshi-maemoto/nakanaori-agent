@@ -229,13 +229,15 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
   "gender": "female",
   "options": {
     "emotion_level": { "positive": 50, "negative": 50 },
-    "speaking_rate": 1.0
+    "speaking_rate": 1.0,
+    "profile": "kebbi_child"
   }
 }
 ```
 
-- `gender`（任意）: Web 向け `"male"` | `"female"` — ロボット見た目に合わせた声（`ja-JP-Neural2-B` / `C`）。Kebbi は省略可（デフォルト声）。
-- `voice`（任意）: Google voice 名を直接指定（`gender` より優先）
+- `gender`（任意）: **Web 向け** `"male"` | `"female"` — ロボット見た目に合わせた声（`ja-JP-Neural2-B` / `C`）。Kebbi は送らない。
+- `options.profile`（任意）: **Kebbi 向け** `"kebbi_child"` — 明るい子ども向け声（`Neural2-B` + 高め pitch）。Web は送らない。
+- `voice`（任意）: Google voice 名を直接指定（`gender` / `profile` より優先）
 
 **Response** `200`
 
@@ -256,16 +258,16 @@ CharaTomo `/api/v1/llm/chat` **ではない**。
 - `503` — Google TTS 未設定（Kebbi は Nuwa ロボット TTS にフォールバック）
 - `502` — 合成失敗
 
-**Voice（MVP）**: Kebbi デフォルト `ja-JP-Neural2-C`。Web は `gender` で `female`→`Neural2-B`、`male`→`Neural2-C`（`GOOGLE_TTS_VOICE` / `voice` で上書き可）
+**Voice（MVP）**: Web は `gender` で `female`→`Neural2-B`、`male`→`Neural2-C`。Kebbi は `options.profile: "kebbi_child"` で明るい子ども向け声（Web の `gender` には影響しない）。
 
 ## Kebbi 実装メモ
 
 - **Private repo**: `nakanaori-kebbi`（`com.nakanaori.kebbi`）
 - `NakanaoriApi.kt` — ベース URL は設定から（CharaTomo API とは別）
-- `TtsApi.kt` — `POST /v1/tts/synthesize`；503 時は Nuwa ロボ TTS
+- `TtsApi.kt` — `POST /v1/tts/synthesize`（`options.profile: "kebbi_child"`）；503 時は Nuwa ロボ TTS
 - Nuwa クラウド ASR → `POST child-turn`（テキスト `utterance`）
 - TTS 再生中はマイク停止；終了 500ms 後 ASR 再開
-- **アバター選択なし** — デフォルト音声（Web は男女ロボットで `gender` 指定）
+- **アバター選択なし** — Kebbi は `profile: kebbi_child` 固定（Web は `gender` 指定）
 
 ## Web 実装メモ
 

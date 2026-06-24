@@ -18,8 +18,9 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-echo "[dev-stack] building agents + api..."
+echo "[dev-stack] building agents + tts + api..."
 npm run build --workspace=@nakanaori/agents --silent
+npm run build --workspace=@nakanaori/tts --silent
 npm run build --workspace=nakanaori-api --silent
 
 if [[ ! -f services/web/public/models/8329890252317737768.glb ]]; then

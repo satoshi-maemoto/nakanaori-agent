@@ -8,6 +8,7 @@ type TtsBody = {
   options?: {
     emotion_level?: { positive?: number; negative?: number };
     speaking_rate?: number;
+    profile?: "kebbi_child";
   };
 };
 
@@ -38,6 +39,7 @@ export async function handleTtsSynthesize(c: Context) {
       : undefined,
     voiceName: body.voice?.trim() || undefined,
     avatarGender: body.gender,
+    profile: body.options?.profile,
   };
 
   try {

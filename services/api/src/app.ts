@@ -134,12 +134,13 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
     updated.state === SessionStateName.READY_FOR_TEACHER ||
     updated.state === SessionStateName.ESCALATED;
 
-  return c.json({
+    return c.json({
     session_id: updated.session_id,
     state: updated.state,
     agent_message: agentMessage,
     escalated: escalated || updated.escalated,
     done_with_child: done,
+    active_child: workflow.orchestrator.activeChild(updated),
     child_a_name: updated.child_a_name,
     child_b_name: updated.child_b_name,
     child_a_label: updated.child_a_label,

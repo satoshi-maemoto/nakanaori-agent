@@ -13,7 +13,7 @@ Nuwa Kebbi 向け Android クライアント（private repo `nakanaori-kebbi`）
 | FR-K03 | `agent_message` / `welcome_message` を Google Cloud TTS で再生 |
 | FR-K04 | TTS 再生中はマイク停止；終了後 500ms で ASR 再開 |
 | FR-K05 | TTS 合成失敗時 Nuwa ロボット TTS にフォールバック |
-| FR-K06 | アバター・性別選択 UI なし；中性的 1 声固定 |
+| FR-K06 | アバター・性別選択 UI なし；Kebbi は `options.profile: "kebbi_child"` で子ども向け 1 声（Web `gender` とは独立） |
 | FR-T01 | `POST /v1/tts/synthesize` — MP3 data URI を返す |
 | FR-T02 | テキスト前処理（絵文字除去、選択肢マーカー、助詞 へ→え） |
 | FR-T03 | Web クライアントからも同一 TTS API を利用可能 |

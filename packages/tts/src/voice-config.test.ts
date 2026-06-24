@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { TTS_VOICE_BY_AVATAR_GENDER, voiceForAvatarGender } from "./voice-config.js";
+import {
+  KEBBI_CHILD_VOICE_PROFILE,
+  TTS_VOICE_BY_AVATAR_GENDER,
+  kebbiChildProfile,
+  voiceForAvatarGender,
+} from "./voice-config.js";
 
 describe("voiceForAvatarGender", () => {
   it("maps female robot to Neural2-B", () => {
@@ -15,5 +20,12 @@ describe("voiceForAvatarGender", () => {
       female: "ja-JP-Neural2-B",
       male: "ja-JP-Neural2-C",
     });
+  });
+});
+
+describe("kebbiChildProfile", () => {
+  it("returns bright child-facing defaults", () => {
+    expect(kebbiChildProfile()).toEqual(KEBBI_CHILD_VOICE_PROFILE);
+    expect(KEBBI_CHILD_VOICE_PROFILE.pitch).toBeGreaterThan(0);
   });
 });

@@ -77,3 +77,32 @@ flowchart TD
 | UI 文言 | `services/web/src/lib/child-copy.ts` |
 | VRM レイアウト同期 | `services/web/src/avatar/VrmViewer.ts`, `useVrmAvatar.ts` |
 | AI-DLC 要件 | `aidlc-docs/construction/unit-web-ui/enhancements/child-turn-flow/requirements.md` |
+
+---
+
+## Kebbi 版（音声のみ・ボタンなし）
+
+Web の「番を おわる」ボタンに相当する操作を **音声** で行う。
+
+```mermaid
+flowchart TD
+    Welcome[ウェルカム後] --> OfferArm[腕を前に出す]
+    OfferArm --> HandPrompt["この手を にぎって 話しても いいよ"]
+    HandPrompt --> Talk[子どもが話す]
+    Talk --> Talk
+    Talk --> FinishIntent["話し終わった 等"]
+    FinishIntent --> HeadPetPrompt["おわったら あたまを なでてね"]
+    HeadPetPrompt --> HeadPet[頭をなでる]
+    HeadPet --> NextChild[つぎの 子 / 先生へ]
+```
+
+| 段階 | 子ども（音声） | Kebbi |
+|------|----------------|-------|
+| 話す | 自由に発話 | ASR → `child-turn` |
+| 番を終えたい | 「話し終わった」「おわった」等 | 「あたまを なでてね」TTS |
+| 番を変える | **頭をなでる**（センサー） | `finish_turn: true` |
+| まだ話す | 「まだ」「まだ話す」 | 聞き続け |
+
+設定画面は **胸タップ**。頭の長押しはセッション再試行。
+
+実装: `nakanaori-kebbi` の `TurnVoiceController.kt`, `KebbiHandPresence.kt`

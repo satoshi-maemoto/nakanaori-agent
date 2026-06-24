@@ -13,7 +13,12 @@ export {
 } from "./prepare-tts-text.js";
 export {
   TTS_VOICE_BY_AVATAR_GENDER,
+  KEBBI_CHILD_VOICE_PROFILE,
+  kebbiChildProfile,
   voiceForAvatarGender,
   type TtsAvatarGender,
+  type TtsKebbiProfile,
+  type KebbiChildVoiceProfile,
 } from "./voice-config.js";
+export { resolveVoiceAudio, type ResolvedVoiceAudio } from "./resolve-voice-options.js";
 export { synthesizeSpeech } from "./google-tts-client.js";

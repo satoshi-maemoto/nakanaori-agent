@@ -1,5 +1,5 @@
 import { resolveGoogleApplicationCredentials } from "./resolve-google-credentials.js";
-import type { TtsAvatarGender } from "./voice-config.js";
+import type { TtsAvatarGender, TtsKebbiProfile } from "./voice-config.js";
 
 /** Display marker that must not be read aloud. */
 export const CHOICES_DISPLAY_MARKER = "---CT_CHOICES---";
@@ -85,6 +85,8 @@ export type SynthesizeOptions = {
   voiceName?: string;
   /** Web: map female/male robot to ja-JP Neural2 voices. */
   avatarGender?: TtsAvatarGender;
+  /** Kebbi: bright child-facing profile (explicit opt-in only). */
+  profile?: TtsKebbiProfile;
 };
 
 export type SynthesizeResult = {
