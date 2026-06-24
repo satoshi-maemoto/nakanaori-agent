@@ -30,10 +30,21 @@ describe("extractChildName", () => {
 describe("ChildNavigatorAgent", () => {
   const nav = new ChildNavigatorAgent();
 
-  it("welcome includes self intro and name ask", () => {
-    expect(nav.sessionWelcome()).toMatch(/ナカナオリ/);
+  it("welcome explains turn order", () => {
+    expect(nav.sessionWelcome()).toMatch(/1回め、2回め/);
     expect(nav.sessionWelcome()).toMatch(/なまえ/);
-    expect(nav.sessionWelcome()).toMatch(/だいじょうぶ/);
+  });
+
+  it("afterNameReceived explains finish button", () => {
+    expect(nav.afterNameReceived("たろう", "a")).toMatch(/1回めの ばん/);
+    expect(nav.afterNameReceived("たろう", "a")).toMatch(/番を おわる/);
+    expect(nav.afterNameReceived("けんた", "b")).toMatch(/2回めの ばん/);
+  });
+
+  it("finishMessage tells child to consult teacher", () => {
+    const session = { ...baseSession(), child_b_name: "けんた", state: SessionStateName.LISTENING_B };
+    expect(nav.finishMessage(session, "b")).toMatch(/せんせい/);
+    expect(nav.finishMessage(session, "b")).toMatch(/相談/);
   });
 
   it("handoff greets next child", () => {

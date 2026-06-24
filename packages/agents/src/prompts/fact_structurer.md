@@ -4,6 +4,35 @@ Structure mediation input into neutral categories for the homeroom teacher.
 
 ## Output JSON fields
 
+**Top-level keys are required:** `child_a`, `child_b`, `agreements`, `disagreements`, `unknowns`, `teacher_hints`
+
+Do NOT return a flat `{ facts, feelings, unknowns }` object at the top level.
+
+Example (fill with session content):
+
+```json
+{
+  "child_a": {
+    "label": "ゆうき",
+    "facts": ["ゆうきは〜と言った"],
+    "feelings": ["ゆうきは〜と感じた"],
+    "unknowns": []
+  },
+  "child_b": {
+    "label": "けんた",
+    "facts": ["けんたは〜と言った"],
+    "feelings": [],
+    "unknowns": []
+  },
+  "agreements": [],
+  "disagreements": ["ゆうきはピンクうさぎと言い、けんたは水色星と言っている"],
+  "unknowns": ["同じ消しゴムについて話しているか未確認"],
+  "teacher_hints": ["二人に消しゴムを見せてもらい、同じ1つか確かめる"]
+}
+```
+
+Field details:
+
 - **child_a** / **child_b**: `{ label, facts[], feelings[], unknowns[] }`
   - **facts**: Reported events in neutral wording (「Aは〜と言った」)
   - **feelings**: Emotional reports (「〜と感じた」)

@@ -2,6 +2,11 @@ import type { SessionState } from "../orchestrator.js";
 
 export const ROBOT_NAME = "ナカナオリ";
 
+/** 子どもA/B → 1回め / 2回め（セッション内の順番） */
+export function turnOrdinalLabel(childId: "a" | "b"): string {
+  return childId === "a" ? "1回め" : "2回め";
+}
+
 /** 名前の返答から呼び名を取り出す（低学年向けの短い入力想定） */
 export function extractChildName(utterance: string): string {
   let name = utterance.trim();
@@ -18,7 +23,8 @@ export class ChildNavigatorAgent {
   sessionWelcome(): string {
     return (
       `こんにちは、${ROBOT_NAME}だよ。` +
-      "きみの はなしを きいて、せんせいに つなぐ ロボットだよ。" +
+      "きみと もうひとりの 子の はなしを きいて、せんせいに つなぐ ロボットだよ。" +
+      "ルールは かんたん。1回め、2回め の ばん。順番に 話してね。" +
       "だいじょうぶ、ゆっくり でいいよ。ひとりじゃないからね。" +
       "まず、なまえを 教えてくれる？"
     );
@@ -26,21 +32,31 @@ export class ChildNavigatorAgent {
 
   greetingForChild(session: SessionState, childId: "a" | "b", firstContact: boolean): string {
     const name = this.childName(session, childId);
+    const ordinal = turnOrdinalLabel(childId);
     if (name) {
-      return `${name}さん、${ROBOT_NAME}だよ。きみの はなしを きかせて。だいじょうぶ、ゆっくり でいいよ。`;
+      return (
+        `${name}さん、${ROBOT_NAME}だよ。` +
+        `これから きみの ${ordinal}の ばん だよ。きみの はなしを きかせて。だいじょうぶ、ゆっくり でいいよ。`
+      );
     }
     if (firstContact) {
       return (
         `${ROBOT_NAME}だよ。きみの はなしを きいて、せんせいに つなぐ ロボットだよ。` +
-        "だいじょうぶ、ゆっくり でいいよ。" +
+        `${ordinal}の ばん だよ。だいじょうぶ、ゆっくり でいいよ。` +
         "なまえを 教えてくれる？"
       );
     }
     return `${ROBOT_NAME}だよ。なまえを 教えてくれる？`;
   }
 
-  afterNameReceived(name: string): string {
-    return `${name}さん、よろしくね。きょうの こと、ゆっくり 話してくれる？`;
+  afterNameReceived(name: string, childId: "a" | "b"): string {
+    const ordinal = turnOrdinalLabel(childId);
+    return (
+      `${name}さん、よろしくね。` +
+      `これから ${name}さんの ${ordinal}の ばん だよ。` +
+      "きょうの こと、ゆっくり 話してね。" +
+      "話し終わったら「番を おわる」を 押してね。"
+    );
   }
 
   handoffToNextChild(session: SessionState, nextChildId: "a" | "b"): string {
@@ -73,6 +89,10 @@ export class ChildNavigatorAgent {
 
   finishMessage(session: SessionState, childId: "a" | "b"): string {
     const name = this.displayName(session, childId);
-    return `${name}さん、おつかれさま。先生に つたえるね。`;
+    return (
+      `${name}さん、おつかれさま。2人 とも 話を きいたよ。` +
+      "これから せんせいの ところ へ 行って、相談してね。" +
+      "ロボットは 先生に 話を 伝える 準備を したよ。"
+    );
   }
 }

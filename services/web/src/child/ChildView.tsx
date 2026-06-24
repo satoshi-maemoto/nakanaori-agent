@@ -10,8 +10,12 @@ import AvatarGenderPicker from "../avatar/AvatarGenderPicker";
 import type { AvatarGender } from "../avatar/model-config";
 import { childCopy } from "../lib/child-copy";
 import { loadAvatarGender, saveAvatarGender } from "../lib/avatar-storage";
+import { cn } from "../lib/utils";
 
 const AvatarCanvas = lazy(() => import("../avatar/AvatarCanvas"));
+
+/** 1段組で「ながれ」を自動で畳む子ども発話数 */
+const FLOW_AUTO_COLLAPSE_AFTER = 2;
 
 function syncChildIdFromState(state: string): "a" | "b" | null {
   if (state === "listening_a") return "a";
@@ -28,6 +32,66 @@ function displayChildName(
   return name ?? (childId === "a" ? labels.a : labels.b);
 }
 
+function FlowStepsCard({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border border-sky-100 bg-sky-50/80 px-4 py-3",
+        className,
+      )}
+    >
+      <p className="mb-2 text-sm font-semibold text-sky-900">{childCopy.flowTitle}</p>
+      <ol className="space-y-1 text-sm leading-relaxed text-sky-950">
+        {childCopy.flowSteps.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+function FlowStepsCollapsible({
+  expanded,
+  onToggle,
+}: {
+  expanded: boolean;
+  onToggle: () => void;
+}) {
+  if (!expanded) {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between rounded-xl border border-sky-100 bg-sky-50/80 px-4 py-2.5 text-left text-sm text-sky-900"
+        data-testid="flow-steps-collapsed"
+      >
+        <span className="font-semibold">{childCopy.flowTitle}</span>
+        <span className="text-sky-700">{childCopy.flowCollapsedHint}</span>
+      </button>
+    );
+  }
+
+  return (
+    <div className="rounded-xl border border-sky-100 bg-sky-50/80 px-4 py-3">
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <p className="text-sm font-semibold text-sky-900">{childCopy.flowTitle}</p>
+        <button
+          type="button"
+          onClick={onToggle}
+          className="shrink-0 text-xs font-medium text-sky-700 underline-offset-2 hover:underline"
+        >
+          {childCopy.flowClose}
+        </button>
+      </div>
+      <ol className="space-y-1 text-sm leading-relaxed text-sky-950">
+        {childCopy.flowSteps.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 export default function ChildView() {
   const [gender, setGender] = useState<AvatarGender>(() => loadAvatarGender());
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -42,18 +106,28 @@ export default function ChildView() {
   const [loading, setLoading] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [escalated, setEscalated] = useState(false);
+  const [sessionComplete, setSessionComplete] = useState(false);
+  const [confirmingFinish, setConfirmingFinish] = useState(false);
+  const [flowExpanded, setFlowExpanded] = useState(true);
   const composingRef = useRef(false);
   const chatScrollRef = useRef<HTMLDivElement>(null);
+
+  const childMessageCount = messages.filter((m) => m.role === "child").length;
+  const flowCompact = childMessageCount >= FLOW_AUTO_COLLAPSE_AFTER;
 
   useEffect(() => {
     saveAvatarGender(gender);
   }, [gender]);
 
   useEffect(() => {
+    if (flowCompact) setFlowExpanded(false);
+  }, [flowCompact]);
+
+  useEffect(() => {
     const el = chatScrollRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [messages]);
+  }, [messages, confirmingFinish, sessionComplete]);
 
   function syncNamesFromResponse(res: {
     child_a_name?: string | null;
@@ -80,18 +154,22 @@ export default function ChildView() {
       setChildBName(session.child_b_name ?? null);
       setMessages([{ role: "robot", text: session.welcome_message }]);
       setEscalated(false);
+      setSessionComplete(false);
+      setConfirmingFinish(false);
+      setFlowExpanded(true);
     } finally {
       setLoading(false);
     }
   }
 
   async function submitTurn(finishTurn: boolean) {
-    if (!sessionId || escalated || loading) return;
+    if (!sessionId || escalated || sessionComplete || loading) return;
     const text = input.trim();
     if (!text && !finishTurn) return;
 
     const activeChildId = childId;
     setLoading(true);
+    setConfirmingFinish(false);
     if (text) {
       setMessages((m) => [...m, { role: "child", text, childId: activeChildId }]);
       setInput("");
@@ -109,6 +187,8 @@ export default function ChildView() {
       if (res.escalated) {
         setEscalated(true);
         setMessages((m) => [...m, { role: "system", text: childCopy.escalateSystem }]);
+      } else if (res.done_with_child) {
+        setSessionComplete(true);
       }
     } catch (e) {
       if (text) setInput((prev) => (prev ? prev : text));
@@ -125,22 +205,33 @@ export default function ChildView() {
     void submitTurn(false);
   }
 
-  const canSend = Boolean(input.trim()) && !loading;
+  function requestFinishTurn() {
+    if (!canFinishTurn) return;
+    setConfirmingFinish(true);
+  }
+
+  const canSend =
+    Boolean(input.trim()) && !loading && !confirmingFinish && !sessionComplete;
   const canFinishTurn =
     !loading &&
+    !confirmingFinish &&
+    !sessionComplete &&
     (sessionState === "listening_a" || sessionState === "listening_b");
 
   const names = { a: childAName, b: childBName };
   const labels = { a: childALabel, b: childBLabel };
+  const activeName = displayChildName(childId, names, labels);
+  const isLastTurn = childId === "b" && sessionState === "listening_b";
 
   return (
     <AppShell title={childCopy.pageTitle} variant="child" largeTitle>
-      <p className="mb-6 text-lg leading-relaxed text-slate-700 md:text-xl">
+      <p className="mb-4 text-lg leading-relaxed text-slate-700 md:text-xl">
         {childCopy.subtitle}
       </p>
 
       {!sessionId ? (
         <div className="mx-auto max-w-lg space-y-5">
+          <FlowStepsCard />
           <label className="block text-lg font-medium text-slate-800">
             {childCopy.genderLabel}
           </label>
@@ -160,9 +251,17 @@ export default function ChildView() {
           </Button>
         </div>
       ) : (
-        <div className="flex max-h-[calc(100dvh-9rem)] flex-col gap-4 overflow-hidden lg:max-h-[calc(100dvh-10rem)] lg:flex-row lg:gap-5">
-          <div className="flex shrink-0 flex-col gap-3 lg:w-[48%] lg:gap-4">
-            <div className="h-[min(240px,32dvh)] overflow-hidden rounded-2xl border-2 border-sky-100 bg-white/70 shadow-sm sm:h-[min(280px,34dvh)] lg:h-[min(420px,50dvh)] lg:min-h-[300px]">
+        <div className="flex max-h-[calc(100dvh-9rem)] flex-col gap-3 overflow-hidden lg:max-h-[calc(100dvh-10rem)] lg:flex-row lg:gap-5">
+          <div className="flex shrink-0 flex-col gap-2 lg:w-[48%] lg:gap-4">
+            <div
+              className={cn(
+                "overflow-hidden rounded-2xl border-2 border-sky-100 bg-white/70 shadow-sm",
+                flowCompact
+                  ? "h-[min(160px,24dvh)] sm:h-[min(200px,28dvh)]"
+                  : "h-[min(240px,32dvh)] sm:h-[min(280px,34dvh)]",
+                "lg:h-[min(420px,50dvh)] lg:min-h-[300px]",
+              )}
+            >
               <Suspense
                 fallback={
                   <div className="flex h-full items-center justify-center text-lg text-slate-500">
@@ -180,7 +279,7 @@ export default function ChildView() {
             <AvatarGenderPicker
               value={gender}
               onChange={setGender}
-              disabled={loading || escalated}
+              disabled={loading || escalated || sessionComplete}
               size="large"
             />
             <TurnProgressBar
@@ -190,12 +289,23 @@ export default function ChildView() {
               size="large"
             />
             <p className="text-center text-lg font-medium text-slate-700">
-              {childCopy.turnNow(displayChildName(childId, names, labels))}
+              {childCopy.turnNow(activeName, childId)}
             </p>
+            {!sessionComplete && !escalated ? (
+              <>
+                <div className="lg:hidden">
+                  <FlowStepsCollapsible
+                    expanded={flowExpanded}
+                    onToggle={() => setFlowExpanded((v) => !v)}
+                  />
+                </div>
+                <FlowStepsCard className="hidden lg:block" />
+              </>
+            ) : null}
           </div>
 
           <div
-            className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white/90 shadow-sm"
+            className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white/90 shadow-sm max-lg:min-h-[min(320px,42dvh)]"
             data-testid="child-chat-panel"
           >
             <div
@@ -204,7 +314,46 @@ export default function ChildView() {
             >
               <ChatLog messages={messages} size="large" />
             </div>
-            {!escalated ? (
+            {sessionComplete ? (
+              <div className="shrink-0 space-y-2 border-t border-emerald-100 bg-emerald-50 px-4 py-5 text-center md:px-5">
+                <p className="text-lg font-semibold leading-relaxed text-emerald-900">
+                  {childCopy.completeBanner}
+                </p>
+                <p className="text-base text-emerald-800">{childCopy.completeSub}</p>
+              </div>
+            ) : escalated ? (
+              <div className="rounded-xl bg-orange-50 p-5 text-center text-lg leading-relaxed text-orange-900">
+                {childCopy.escalateBanner}
+              </div>
+            ) : confirmingFinish ? (
+              <div
+                className="shrink-0 space-y-4 border-t border-amber-100 bg-amber-50 px-4 py-5 md:px-5"
+                data-testid="finish-confirm-panel"
+              >
+                <p className="whitespace-pre-line text-lg leading-relaxed text-amber-950">
+                  {childCopy.confirmFinish(activeName, isLastTurn)}
+                </p>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    className="flex-1"
+                    onClick={() => setConfirmingFinish(false)}
+                    disabled={loading}
+                  >
+                    {childCopy.confirmNo}
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="flex-1"
+                    onClick={() => void submitTurn(true)}
+                    disabled={loading}
+                  >
+                    {childCopy.confirmYes}
+                  </Button>
+                </div>
+              </div>
+            ) : (
               <div className="shrink-0 flex flex-col gap-3 border-t border-slate-100 px-4 py-4 md:px-5">
                 <div className="flex gap-3">
                   <Input
@@ -230,19 +379,16 @@ export default function ChildView() {
                     {childCopy.sendButton}
                   </Button>
                 </div>
+                <p className="text-center text-sm text-slate-500">{childCopy.sendHint}</p>
                 <Button
                   variant="secondary"
                   size="lg"
                   className="w-full"
                   disabled={!canFinishTurn}
-                  onClick={() => void submitTurn(true)}
+                  onClick={requestFinishTurn}
                 >
-                  {childCopy.nextTurnButton}
+                  {childCopy.finishTurnButton}
                 </Button>
-              </div>
-            ) : (
-              <div className="rounded-xl bg-orange-50 p-5 text-center text-lg leading-relaxed text-orange-900">
-                {childCopy.escalateBanner}
               </div>
             )}
           </div>

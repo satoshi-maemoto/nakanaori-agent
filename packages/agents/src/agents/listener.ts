@@ -23,7 +23,7 @@ export class ListenerAgent {
 
     if (prior.length >= 2 || utterance.length > 45) {
       return {
-        agent_message: `${childName}さん、話してくれてありがとう。他にも伝えたいことはある？なければ「つぎの ばん」で次の子に進めるよ。`,
+        agent_message: `${childName}さん、話してくれてありがとう。他にも伝えたいことはある？なければ「番を おわる」を 押してね。`,
         needs_more: false,
       };
     }

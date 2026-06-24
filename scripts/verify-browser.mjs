@@ -66,7 +66,9 @@ async function main() {
     await page.getByText("ナカナオリ").nth(1).waitFor();
     pass("Child: 子どもA 本編（まとめ送信）");
 
-    await page.getByRole("button", { name: "つぎの ばん" }).click();
+    await page.getByRole("button", { name: "番を おわる" }).click();
+    await page.getByTestId("finish-confirm-panel").waitFor();
+    await page.getByRole("button", { name: "おわり" }).click();
     await page.getByText(/子どもB.*の ばん|なまえ/).waitFor({ timeout: 8000 });
     pass("Child: 子どもB に切替表示");
 
@@ -75,8 +77,11 @@ async function main() {
     await input.fill("床に おちてた 水色の 星 けしゴム ひろっただけ。ゆうきくんと かし借り してる。");
     await page.getByRole("button", { name: "おくる" }).click();
     await page.getByText("ナカナオリ").nth(2).waitFor();
-    await page.getByRole("button", { name: "つぎの ばん" }).click();
-    pass("Child: 子どもB 発話 + ロボット応答");
+    await page.getByRole("button", { name: "番を おわる" }).click();
+    await page.getByTestId("finish-confirm-panel").waitFor();
+    await page.getByRole("button", { name: "おわり" }).click();
+    await page.getByText("せんせいの ところ").waitFor({ timeout: 8000 });
+    pass("Child: 子どもB 発話 + 完了メッセージ");
 
     await page.goto(`${BASE}/teacher`);
     await page.getByRole("heading", { name: "先生用ダッシュボード" }).waitFor();

@@ -9,7 +9,9 @@ Use this script for hackathon demo video and live pitch (決勝 8/19).
 - [examples/eraser-story-dialogue.md](./examples/eraser-story-dialogue.md) — 手順・矛盾表・3分短縮版
 - [examples/eraser-story-utterances.json](./examples/eraser-story-utterances.json) — `turns.recommended`
 
-各子: **名前 → 2回のまとめ「おくる」 → つぎの ばん**
+各子: **名前 → 2回のまとめ「おくる」 → 番を おわる → おわり（確認）**
+
+フロー詳細: [child-conversation-flow.md](./examples/child-conversation-flow.md)
 
 ## Cast
 

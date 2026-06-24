@@ -24,6 +24,20 @@ async function extractTextFromEvents(events: AsyncIterable<AdkEvent>): Promise<s
   return lastText;
 }
 
+/** Strip markdown fences and extract the first JSON object from LLM text. */
+export function extractJsonFromText(text: string): string {
+  const trimmed = text.trim();
+  const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fenced?.[1]?.trim()) {
+    return fenced[1].trim();
+  }
+  const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) {
+    throw new Error("No JSON in LLM response");
+  }
+  return jsonMatch[0];
+}
+
 export async function runLlmAgentText(
   name: string,
   instruction: string,
@@ -51,12 +65,8 @@ export async function runLlmAgentJson<T extends z.ZodType>(
 ): Promise<z.infer<T>> {
   const text = await runLlmAgentText(
     name,
-    `${instruction}\n\nRespond with valid JSON only.`,
+    `${instruction}\n\nRespond with valid JSON only. No markdown. Top-level keys must match the schema exactly.`,
     userMessage,
   );
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) {
-    throw new Error("No JSON in LLM response");
-  }
-  return schema.parse(JSON.parse(jsonMatch[0]));
+  return schema.parse(JSON.parse(extractJsonFromText(text)));
 }

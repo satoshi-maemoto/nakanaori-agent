@@ -9,10 +9,10 @@ describe("MediationWorkflow", () => {
     expect(session.child_a_name).toBeNull();
   });
 
-  it("welcome message introduces robot and asks name", () => {
+  it("welcome message introduces robot and explains one turn", () => {
     const wf = new MediationWorkflow();
     expect(wf.getSessionWelcome()).toMatch(/ナカナオリ/);
-    expect(wf.getSessionWelcome()).toMatch(/なまえ/);
+    expect(wf.getSessionWelcome()).toMatch(/1回め、2回め/);
   });
 
   it("collects child name on first utterance", async () => {

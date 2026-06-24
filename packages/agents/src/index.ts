@@ -151,7 +151,7 @@ export class MediationWorkflow {
           childId === "a"
             ? { ...updated, child_a_name: name }
             : { ...updated, child_b_name: name };
-        agentMessage = this.navigator.afterNameReceived(name);
+        agentMessage = this.navigator.afterNameReceived(name, childId);
       } else {
         const displayName = this.navigator.displayName(updated, childId);
         const turns = childId === "a" ? updated.turns_a : updated.turns_b;
