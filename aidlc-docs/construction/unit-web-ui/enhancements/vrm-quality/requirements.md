@@ -38,6 +38,7 @@
 | AC-VRM-08 | 暖色ライト 4 灯で CharaTomo より明るく表示 | ✅ |
 | AC-VRM-09 | LookAt 無効化、目ボーン固定（勝手に目が動かない） | ✅ |
 | AC-VRM-10 | `npm run build` 成功 | ✅ |
+| AC-VRM-11 | レイアウト変更時 `resetLayout` で aspect + カメラ復元 | ✅ ENH-UI-05 |
 
 ## スコープ外
 
@@ -49,8 +50,8 @@
 
 | パス | 変更内容 |
 |------|----------|
-| `services/web/src/avatar/VrmViewer.ts` | CharaTomo 相当 idle / 腕ポーズ / 瞬き / ライト / SpringBone warmup |
-| `services/web/src/avatar/useVrmAvatar.ts` | gender 単一 effect、loading オーバーレイ連動 |
+| `services/web/src/avatar/VrmViewer.ts` | CharaTomo 相当 idle / 腕ポーズ / 瞬き / ライト / SpringBone warmup / **resetLayout** |
+| `services/web/src/avatar/useVrmAvatar.ts` | gender 単一 effect、loading オーバーレイ、**レイアウト監視** |
 | `services/web/src/avatar/AvatarCanvas.tsx` | 読込中オーバーレイ |
 | `scripts/setup-vrm-models.sh` | CharaTomo GLB コピー |
 | `scripts/dev-stack.sh` | GLB 欠落時 auto setup |

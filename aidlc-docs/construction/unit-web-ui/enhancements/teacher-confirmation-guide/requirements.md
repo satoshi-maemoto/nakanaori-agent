@@ -140,7 +140,7 @@ teacher_hints: string[]  // 先生が真相確認に使う具体的ステップ
 | [docs/examples/eraser-story-dialogue.md](../../../../../docs/examples/eraser-story-dialogue.md) | 手順・矛盾の解説・デモ台詞 |
 | [docs/examples/eraser-story-utterances.json](../../../../../docs/examples/eraser-story-utterances.json) | `turns.recommended`（機械可読） |
 
-**推奨送信**: 各子 **名前 → 2回のまとめ送信 → つぎの ばん**  
+**推奨送信**: 各子 **名前 → 2回のまとめ送信 → 番を おわる → おわり**（ENH-UI-05 で UI 更新。旧「つぎの ばん」は同等操作）
 細切れ 6 回送信は `legacy_fragmented`（ロボットと噛み合いにくい）
 
 ---
@@ -194,7 +194,7 @@ teacher_hints: string[]  // 先生が真相確認に使う具体的ステップ
 ## デモ手順（3分）
 
 1. `bash scripts/dev-stack.sh`（`.env` に `GEMINI_API_KEY`）
-2. ブラウザ A → `/child` → [eraser-story-dialogue.md](../../../../../docs/examples/eraser-story-dialogue.md) の **推奨 3 回 + つぎの ばん**
+2. ブラウザ A → `/child` → [eraser-story-dialogue.md](../../../../../docs/examples/eraser-story-dialogue.md) の **推奨 3 回 + 番を おわる**
 3. ブラウザ B → 同セッション or 続き（B の番）
 4. `/teacher` → セッション選択 → **確認の進め方** を確認
 

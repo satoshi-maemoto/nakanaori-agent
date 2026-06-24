@@ -57,6 +57,17 @@ flowchart TD
 
 ---
 
+## 画面レイアウト（ENH-UI-05）
+
+| 条件 | 挙動 |
+|------|------|
+| セッション前 | 「ながれ」4 ステップを 常時表示 |
+| 子ども 2 発話後 | 「ながれ」を 折りたたみ（モバイル）、アバター高さを 縮小 |
+| B 終了後 | 入力不可 + 「せんせいに 相談」バナー |
+| ウィンドウ / 1↔2 列 | VRM `resetLayout` — aspect 同期、カメラは読込時位置を 復元 |
+
+---
+
 ## 実装参照
 
 | 領域 | ファイル |
@@ -64,3 +75,5 @@ flowchart TD
 | ロボット文言 | `packages/agents/src/agents/child-navigator.ts` |
 | 確認 UI | `services/web/src/child/ChildView.tsx` |
 | UI 文言 | `services/web/src/lib/child-copy.ts` |
+| VRM レイアウト同期 | `services/web/src/avatar/VrmViewer.ts`, `useVrmAvatar.ts` |
+| AI-DLC 要件 | `aidlc-docs/construction/unit-web-ui/enhancements/child-turn-flow/requirements.md` |

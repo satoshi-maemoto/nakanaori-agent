@@ -20,13 +20,17 @@ stateDiagram-v2
     Idle --> SessionStart: はじめる（前回選択 remembered）
     SessionStart --> ChatA: セッション作成 listening_a
     ChatA --> ChatA: おくる（finish_turn=false）
-    ChatA --> ChatB: つぎの ばん（finish_turn=true）
+    ChatA --> ConfirmA: 番を おわる
+    ConfirmA --> ChatA: まだ 話す
+    ConfirmA --> ChatB: おわり（finish_turn=true）
     ChatB --> ChatB: おくる（finish_turn=false）
-    ChatB --> WaitingBrief: つぎの ばん（finish_turn=true）
+    ChatB --> ConfirmB: 番を おわる
+    ConfirmB --> ChatB: まだ 話す
+    ConfirmB --> Complete: おわり（finish_turn=true）
     ChatA --> Escalated: 高リスク発話
     ChatB --> Escalated: 高リスク発話
     Escalated --> [*]: 先生を呼ぶ表示
-    WaitingBrief --> [*]: 完了メッセージ
+    Complete --> [*]: せんせいに 相談 バナー
 ```
 
 ### 画面状態と UI
@@ -35,7 +39,9 @@ stateDiagram-v2
 |------|------|------------------|
 | Idle | 「はじめる」、やさしい説明（`child-copy.ts`） | セッション ID |
 | GenderSelect | おんな/おとこの ロボット選択 | 技術詳細 |
-| ChatA / ChatB | 大きな吹き出し（**A=水色 / B=紫**）・大 VRM・順番プログレス・**おくる** / **つぎの ばん**・**会話のみスクロール** | 裁き・勝敗 UI |
+| ChatA / ChatB | 大きな吹き出し（**A=水色 / B=紫**）・VRM・順番プログレス・**おくる** / **番を おわる**・**会話のみスクロール** | 裁き・勝敗 UI |
+| ConfirmFinish | 「もう おわって いい？」— **おわり** / **まだ 話す** | 通常入力 |
+| Complete | 「せんせいに 相談してね」バナー（B 終了後） | チャット入力 |
 | LipSync | VRM 口パク + typing indicator | — |
 | NameTurn | 初回発話で名前 → ナカナオリが「〇〇さん」と呼ぶ | — |
 | Escalated | 穏やかな全画面「先生を呼ぶね」 | 通常チャット入力 |
@@ -75,7 +81,8 @@ stateDiagram-v2
 ## デモフロー（消しゴム）
 
 **台本（推奨）**: [docs/examples/eraser-story-dialogue.md](../../../../docs/examples/eraser-story-dialogue.md)  
-**送信単位**: 各子 **名前 → 2回まとめ送信 → つぎの ばん**（細切れ送信は非推奨）
+**フロー詳細**: [docs/examples/child-conversation-flow.md](../../../../docs/examples/child-conversation-flow.md)  
+**送信単位**: 各子 **名前 → 2回まとめ送信 → 番を おわる → おわり**（細切れ送信は非推奨）
 
 `docs/demo-scenario.md` に沿ったフロー:
 
@@ -97,8 +104,10 @@ stateDiagram-v2
 
 | ブレークポイント | 子どもレイアウト |
 |------------------|------------------|
-| `md+`（768px〜） | Q3-A: 左アバター + 右チャット |
-| `< md` | 上アバター（高さ ~280px）+ 下チャット |
+| `lg+`（1024px〜） | 左アバター（48%）+ 右チャット；ながれは常時表示 |
+| `< lg` | 上アバター + 下チャット；子ども 2 発話後はながれ折りたたみ + アバター縮小 |
+
+VRM はレイアウト変更時に `resetLayout` で aspect と読込時カメラ位置を復元（[vrm-integration.md](./vrm-integration.md)）。
 
 ## API 連携
 

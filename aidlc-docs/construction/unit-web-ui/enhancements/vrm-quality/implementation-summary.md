@@ -79,3 +79,13 @@ npm run setup:vrm-models
 | cameraY | `faceY - size.y * 0.03` |
 | dist | `max(size.y * 0.45, 0.75)` |
 | fov | 30 |
+
+### レイアウト同期（ENH-UI-05 追記）
+
+| 項目 | 内容 |
+|------|------|
+| トリガー | canvas / 親 ResizeObserver、`window.resize`、`lg` ブレークポイント |
+| API | `VrmViewer.resetLayout(w, h)` |
+| カメラ | aspect 更新 + **読込時** position / lookAt 復元 |
+| 距離 | 再計算しない（表示スケール維持） |
+| renderer | `setSize(w, h, false)`、stale inline style 削除 |

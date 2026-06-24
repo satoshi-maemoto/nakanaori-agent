@@ -54,6 +54,8 @@ CharaTomo `VRMViewer` から移植する公開 API:
 | `constructor(canvas, options)` | width, height, background |
 | `init()` | scene / camera / renderer |
 | `loadVRM(url)` | GLB 読込 + VRM  humanoid |
+| `resetLayout(width, height)` | レイアウト変更時: aspect 更新 + 読込時カメラ位置復元 + renderer 同期 |
+| `resize(width, height)` | `resetLayout` のエイリアス |
 | `startLipSync()` | 応答中の口パク |
 | `stopLipSync()` | 停止 |
 | `dispose()` | リソース解放 |
@@ -77,19 +79,31 @@ CharaTomo `VRMViewer` から移植する公開 API:
 
 ```typescript
 function useVrmAvatar(
-  canvasRef: RefObject<HTMLCanvasElement>,
   gender: AvatarGender,
   speaking: boolean,
-): { ready: boolean; fallback: boolean };
+): { canvasRef; useFallback; loading };
 ```
 
 | 責務 | 内容 |
 |------|------|
 | 初期化 | mount 時 WebGL チェック → `VrmViewer.init()` |
 | gender 変更 | `loadVRM(getVrmModelUrl(gender))` — CharaTomo `reloadVRMModel` 相当 |
+| レイアウト同期 | canvas + 親要素の `ResizeObserver`、`window.resize`、`lg` ブレークポイント → `resetLayout(w, h)` |
 | speaking | `true` → `startLipSync()`, `false` → `stopLipSync()` |
 | cleanup | unmount → `dispose()` |
 | fallback | WebGL 不可 → `{ fallback: true }`、2D 画像表示 |
+
+### resetLayout（ENH-UI-05）
+
+ウィンドウ幅・1 列 / 2 列切替・`flowCompact` によるアバター高さ変更時に呼ぶ。
+
+| 処理 | 内容 |
+|------|------|
+| `camera.aspect` | 新 viewport に合わせる |
+| カメラ位置 | **読込時**の `initialCameraPosition` / `initialCameraLookAt` を復元（距離は再計算しない） |
+| renderer | `setSize(w, h, false)` + canvas inline style 削除 |
+
+モデルの position / rotation は毎フレーム `lockTransform()` で維持。レイアウト変更時にモデルやアニメーション state はリセットしない。
 
 ## AvatarCanvas コンポーネント
 
@@ -134,7 +148,17 @@ sequenceDiagram
 | 応答表示完了（タイマー 2s） | `speaking=false` |
 | エスカレーション | idle 維持、穏やか表情 |
 
-**チャット操作（ENH-UI-03）**: 「おくる」= 同番内複数発話；「つぎの ばん」= `finish_turn: true`。文言は `child-copy.ts`。
+**チャット操作（ENH-UI-03 / ENH-UI-05）**: 「おくる」= 同番内複数発話；「**番を おわる**」= 確認パネル → `finish_turn: true`。文言は `child-copy.ts`。詳細: [child-conversation-flow.md](../../../../../docs/examples/child-conversation-flow.md)
+
+### レスポンシブレイアウト（ENH-UI-05）
+
+| 条件 | アバター領域 |
+|------|--------------|
+| 通常 | `h-[min(240px,32dvh)]`（sm: 280px） |
+| 子ども 2 発話後（`flowCompact`） | `h-[min(160px,24dvh)]`（sm: 200px）— チャット優先 |
+| `lg+` | `h-[min(420px,50dvh)]`、左 48% + 右チャット |
+
+子ども 2 発話後は「ながれ」パネルも自動折りたたみ（モバイル: 折りたたみ、デスクトップ: 常時表示可）。
 
 ## WebGL フォールバック
 

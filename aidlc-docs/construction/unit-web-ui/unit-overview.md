@@ -115,7 +115,9 @@ Construction では **unit-web-ui を先に design system + VRM 基盤** → tea
 |----|------|------|
 | ENH-UI-01 | VRM 品質・表示修正（ポーズ / idle / 瞬き / ライト / GLB setup） | ✅ [enhancements/vrm-quality/](./enhancements/vrm-quality/requirements.md) |
 | ENH-UI-02 | 子ども大 UI + 低学年文言 / 先生進行中セッション一覧 | ✅ [enhancements/child-teacher-demo/](./enhancements/child-teacher-demo/requirements.md) |
-| ENH-UI-03 | IME 対応 / 複数発話 + つぎの番 / Gemini 2.5 / .env | ✅ [enhancements/chat-gemini-local/](./enhancements/chat-gemini-local/requirements.md) |
+| ENH-UI-03 | IME 対応 / 複数発話 + finish_turn / Gemini 2.5 / .env | ✅ [enhancements/chat-gemini-local/](./enhancements/chat-gemini-local/requirements.md) |
+| ENH-UI-04 | 子どもナビ + 先生確認ガイド + LLM teacher_hints | ✅ [enhancements/teacher-confirmation-guide/](./enhancements/teacher-confirmation-guide/requirements.md) |
+| ENH-UI-05 | 番を おわる 確認 / 1回め2回め / VRM resetLayout | ✅ [enhancements/child-turn-flow/](./enhancements/child-turn-flow/requirements.md) |
 
 ## Construction 予定ステージ
 
@@ -125,6 +127,8 @@ Construction では **unit-web-ui を先に design system + VRM 基盤** → tea
 4. Enhancement ENH-UI-01 — VRM 品質・表示修正 ✅
 5. Enhancement ENH-UI-02 — 子ども大 UI + 先生デモセッション一覧 ✅
 6. Enhancement ENH-UI-03 — チャット UX + ローカル Gemini ✅
+7. Enhancement ENH-UI-04 — 子どもナビ + 先生確認ガイド ✅
+8. Enhancement ENH-UI-05 — 番終了確認 + VRM レイアウト同期 ✅
 
 ## npm 依存（予定）
 

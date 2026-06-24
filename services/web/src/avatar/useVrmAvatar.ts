@@ -3,7 +3,7 @@ import type { AvatarGender } from "./model-config";
 import { getVrmModelUrl } from "./model-config";
 import { isWebGLAvailable, VrmViewer } from "./VrmViewer";
 
-const MIN_CANVAS = 240;
+const MIN_SIZE = 1;
 
 export function useVrmAvatar(gender: AvatarGender, speaking: boolean) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -28,21 +28,29 @@ export function useVrmAvatar(gender: AvatarGender, speaking: boolean) {
     viewerRef.current = viewer;
     viewer.init();
 
-    const syncSize = () => {
-      const w = Math.max(canvas.clientWidth, MIN_CANVAS);
-      const h = Math.max(canvas.clientHeight, MIN_CANVAS);
-      viewer.resize(w, h);
+    const syncLayout = () => {
+      const w = Math.max(canvas.clientWidth, MIN_SIZE);
+      const h = Math.max(canvas.clientHeight, MIN_SIZE);
+      if (w <= MIN_SIZE || h <= MIN_SIZE) return;
+      viewer.resetLayout(w, h);
     };
-    syncSize();
+    syncLayout();
 
-    const ro = new ResizeObserver(syncSize);
+    const ro = new ResizeObserver(syncLayout);
     ro.observe(canvas);
+    const parent = canvas.parentElement;
+    if (parent) ro.observe(parent);
+
+    const mq = window.matchMedia("(min-width: 1024px)");
+    mq.addEventListener("change", syncLayout);
+    window.addEventListener("resize", syncLayout);
+    window.visualViewport?.addEventListener("resize", syncLayout);
 
     viewer
       .loadVRM(getVrmModelUrl(gender))
       .then(() => {
         if (cancelled) return;
-        syncSize();
+        syncLayout();
         setStatus("vrm");
       })
       .catch((err) => {
@@ -53,6 +61,9 @@ export function useVrmAvatar(gender: AvatarGender, speaking: boolean) {
     return () => {
       cancelled = true;
       ro.disconnect();
+      mq.removeEventListener("change", syncLayout);
+      window.removeEventListener("resize", syncLayout);
+      window.visualViewport?.removeEventListener("resize", syncLayout);
       viewer.dispose();
       viewerRef.current = null;
     };

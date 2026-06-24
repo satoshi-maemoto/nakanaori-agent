@@ -57,7 +57,7 @@ export class VrmViewer {
     this.camera.position.set(0, 1.35, 1.8);
     this.camera.lookAt(0, 1.35, 0);
     this.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    this.renderer.setSize(w, h);
+    this.renderer.setSize(w, h, false);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.setClearColor(0x000000, 0);
   }
@@ -125,6 +125,11 @@ export class VrmViewer {
         y: root.rotation.y,
         z: root.rotation.z,
       };
+
+      this.resetLayout(
+        this.canvas.clientWidth || 320,
+        this.canvas.clientHeight || 320,
+      );
 
       if (this.vrm) {
         if (this.vrm.lookAt) this.vrm.lookAt.autoUpdate = false;
@@ -363,10 +368,28 @@ export class VrmViewer {
     this.renderer.render(this.scene, this.camera);
   };
 
-  resize(width: number, height: number) {
+  /** Sync viewport size and restore load-time camera framing on layout change. */
+  resetLayout(width: number, height: number) {
+    if (width <= 0 || height <= 0) return;
+
     this.camera.aspect = width / height;
+    if (this.initialCameraPosition && this.initialCameraLookAt) {
+      this.camera.position.copy(this.initialCameraPosition);
+      this.camera.lookAt(this.initialCameraLookAt);
+    }
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
+    this.syncRendererSize(width, height);
+  }
+
+  private syncRendererSize(width: number, height: number) {
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setSize(width, height, false);
+    this.canvas.style.removeProperty("width");
+    this.canvas.style.removeProperty("height");
+  }
+
+  resize(width: number, height: number) {
+    this.resetLayout(width, height);
   }
 
   dispose() {
