@@ -31,11 +31,11 @@
 4. `unit-web-teacher` / `unit-web-child` — `services/web/src/teacher`、`child`
 5. `unit-devops` — `.github/workflows/`、`scripts/`
 6. `unit-kebbi-contract` — `clients/kebbi/api-contract.md` + `packages/tts`
-7. `unit-kebbi-client` — private repo `nakanaori-kebbi`（Android）
+7. `unit-kebbi-client` — sibling repo `nakanaori-kebbi`（Android）
 
-## Kebbi（Private リポジトリ）
+## Kebbi（sibling リポジトリ）
 
-- **Path**: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`
+- **Path**: `$NAKANAORI_KEBBI_ROOT`（未設定時は `../nakanaori-kebbi`）
 - **Contract**: `clients/kebbi/api-contract.md`
 - **開発ガイド**: `docs/kebbi-dev-guide.md`（API URL・設定画面・顔 hide・再接続）
 - **TTS**: `packages/tts` + `POST /v1/tts/synthesize`

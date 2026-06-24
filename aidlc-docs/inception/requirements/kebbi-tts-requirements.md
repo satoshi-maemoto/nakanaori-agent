@@ -2,7 +2,7 @@
 
 ## 概要
 
-Nuwa Kebbi 向け Android クライアント（private repo `nakanaori-kebbi`）と、Google Cloud TTS 合成 API（monorepo `packages/tts`）を追加する。
+Nuwa Kebbi 向け Android クライアント（sibling repo `nakanaori-kebbi`）と、Google Cloud TTS 合成 API（monorepo `packages/tts`）を追加する。
 
 ## 機能要件
 

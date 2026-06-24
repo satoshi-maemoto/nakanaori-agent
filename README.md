@@ -18,7 +18,7 @@ _Staging デプロイ後に URL を記載_
 | エージェント | TypeScript + Google ADK（`@google/adk`）+ Gemini API |
 | API | Hono + Node.js on Cloud Run |
 | Web | React (先生ダッシュボード + 子ども UI) |
-| Kebbi | private repo [`nakanaori-kebbi`](https://github.com/satoshi-maemoto/nakanaori-kebbi)（Nuwa Android） |
+| Kebbi | sibling repo `nakanaori-kebbi`（Nuwa Android · `$NAKANAORI_KEBBI_ROOT`） |
 
 詳細: [docs/architecture.md](docs/architecture.md)
 

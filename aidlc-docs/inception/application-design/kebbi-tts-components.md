@@ -6,11 +6,11 @@
 |----------------|------|------|
 | `@nakanaori/tts` | `packages/tts` | テキスト前処理、Google TTS クライアント |
 | TTS Route | `services/api` | `POST /v1/tts/synthesize` |
-| `NakanaoriKebbiApp` | private repo | Android エントリ |
-| `NakanaoriApi` | private repo | セッション REST |
-| `TtsApi` | private repo | TTS REST |
-| `NakanaoriViewModel` | private repo | セッション状態機械 |
-| `NuwaSpeechHelper` | private repo | ASR + ロボ TTS フォールバック |
+| `NakanaoriKebbiApp` | sibling repo `nakanaori-kebbi` | Android エントリ |
+| `NakanaoriApi` | sibling repo `nakanaori-kebbi` | セッション REST |
+| `TtsApi` | sibling repo `nakanaori-kebbi` | TTS REST |
+| `NakanaoriViewModel` | sibling repo `nakanaori-kebbi` | セッション状態機械 |
+| `NuwaSpeechHelper` | sibling repo `nakanaori-kebbi` | ASR + ロボ TTS フォールバック |
 
 ## データフロー
 

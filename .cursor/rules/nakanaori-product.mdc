@@ -35,6 +35,6 @@ alwaysApply: true
 
 ## Kebbi
 
-- Implementation in sibling repo: `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Kebbi`
+- Implementation in sibling repo: `$NAKANAORI_KEBBI_ROOT`（未設定時 `../nakanaori-kebbi`）
 - Contract: `clients/kebbi/api-contract.md`
 - Do NOT use CharaTomo `POST /api/v1/llm/chat` for mediation workflow

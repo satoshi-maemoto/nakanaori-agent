@@ -1,6 +1,6 @@
 # unit-kebbi-client — Code Generation Plan
 
-- [x] private repo `nakanaori-kebbi` scaffold
+- [x] sibling repo `nakanaori-kebbi` scaffold
 - [x] Nuwa / StreamAudioPlayer port
 - [x] NakanaoriApi + TtsApi
 - [x] NakanaoriViewModel + MainActivity

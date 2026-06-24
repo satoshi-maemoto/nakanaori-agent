@@ -68,7 +68,7 @@ gcloud run services describe nakanaori-api --region asia-northeast1 --format 'va
 gcloud run services describe nakanaori-web --region asia-northeast1 --format 'value(status.url)'
 ```
 
-## Kebbi（private repo）
+## Kebbi（sibling repo）
 
 契約: `clients/kebbi/api-contract.md`  
 実装: `nakanaori-kebbi`（`NakanaoriApi.kt`, `TtsApi.kt`）  

@@ -1,13 +1,12 @@
-# Kebbi クライアント（Private リポジトリ）
+# Kebbi クライアント（sibling リポジトリ）
 
-Nuwa Kebbi Android クライアントは **この monorepo 外** の private repo に実装されています。
+Nuwa Kebbi Android クライアントは **この monorepo 外** の sibling repo に実装されています。
 
 ## リポジトリ
 
 | 項目 | 値 |
 |------|-----|
-| **GitHub** | https://github.com/satoshi-maemoto/nakanaori-kebbi （private） |
-| **ローカル** | `/Users/maemoto/Documents/GitHub/nakanaori-kebbi` |
+| **ローカル clone** | `$NAKANAORI_KEBBI_ROOT`（未設定時 `../nakanaori-kebbi`） |
 | **Package** | `com.nakanaori.kebbi` |
 | **参照実装** | [AIxR-CharaTomo-Kebbi](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi)（Nuwa ASR/TTS パターン） |
 
@@ -24,8 +23,7 @@ Nuwa Kebbi Android クライアントは **この monorepo 外** の private rep
 `clients/kebbi/api-contract.md` を変更する場合:
 
 1. この repo の API ルートと `packages/tts` を更新
-2. `nakanaori-kebbi` の `NakanaoriApi.kt` / `TtsApi.kt` を適応
-3. Kebbi 向け手順は `nakanaori-kebbi/AGENTS.md`
+2. Kebbi クライアント側の `NakanaoriApi.kt` / `TtsApi.kt` を適応
 
 ## 音声
 

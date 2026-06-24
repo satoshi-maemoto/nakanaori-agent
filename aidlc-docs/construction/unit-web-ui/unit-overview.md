@@ -9,7 +9,7 @@
 | **リポジトリパス** | `services/web/`（`src/components/`, `src/avatar/`, `src/theme/`） |
 | **デプロイ** | Cloud Run `nakanaori-web`（既存 Vite ビルドに含む） |
 | **優先度** | P0（ハッカソンデモの見せ場） |
-| **参照実装** | `AIxR-CharaTomo-Web` — `/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Web/src/static/js/vrm-viewer.js` |
+| **参照実装** | [AIxR-CharaTomo-Web](https://github.com/SystemFriend/AIxR-CharaTomo-Web) — `src/static/js/vrm-viewer.js` |
 
 ## 背景
 

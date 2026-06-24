@@ -94,7 +94,7 @@
 ## unit-web-ui 追加 — VRM + UI ブラッシュアップ — 2026-06-21
 
 **Timestamp**: 2026-06-21T21:00:00Z
-**User Input**: "UIブラッシュアップの新しいUnitを追加して\nアバターについては、 /Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Web と同様にVRMアバターを使うイメージです"
+**User Input**: "UIブラッシュアップの新しいUnitを追加して\nアバターについては、 <path-to-AIxR-CharaTomo-Web> と同様にVRMアバターを使うイメージです"
 **AI Response**: unit-web-ui を unit-of-work / dependency / story-map / aidlc-state に追加；unit-overview + Functional Design 計画を作成；CharaTomo-Web VRMViewer パターンを技術方針に記載
 **Context**: Construction — unit-web-ui ユニット定義
 

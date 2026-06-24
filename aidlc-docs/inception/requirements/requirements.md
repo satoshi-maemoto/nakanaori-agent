@@ -80,8 +80,9 @@
 
 ### 制約
 
-- Kebbi Android クライアントは sibling repo `AIxR-CharaTomo-Kebbi` に存在
+- Kebbi Android クライアントは sibling repo `nakanaori-kebbi`（`$NAKANAORI_KEBBI_ROOT`）
 - CharaTomo `POST /api/v1/llm/chat` は使用しない — セッションベース API のみ
+- 参照実装: [AIxR-CharaTomo-Kebbi](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi)（Nuwa ASR/TTS パターンのみ）
 - GCP スタンドアロン構成（AIxR プラットフォーム拡張ではない）
 
 ### 確定した決定事項（2026-06-21）

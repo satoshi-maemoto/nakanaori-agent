@@ -7,7 +7,7 @@ Nuwa Kebbi 実機で **ナカナオリ・エージェント** を動かすため
 | リポジトリ | 役割 |
 |-----------|------|
 | **nakanaori-agent**（本 repo） | API・Web・TTS・契約 `clients/kebbi/api-contract.md` |
-| **nakanaori-kebbi**（private sibling） | Android クライアント `com.nakanaori.kebbi` |
+| **nakanaori-kebbi**（sibling） | Android クライアント `com.nakanaori.kebbi`（`$NAKANAORI_KEBBI_ROOT`） |
 
 参照実装: [AIxR-CharaTomo-Kebbi](https://github.com/SystemFriend/AIxR-CharaTomo-Kebbi)（Nuwa ASR/TTS パターン）。CharaTomo の `POST /api/v1/llm/chat` は **使わない**。
 

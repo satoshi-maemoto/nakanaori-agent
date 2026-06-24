@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="${CHARATOMO_MODELS:-/Users/maemoto/Documents/GitHub/AIxR-CharaTomo-Web/src/static/models}"
+SRC="${CHARATOMO_MODELS:-$ROOT/../AIxR-CharaTomo-Web/src/static/models}"
 DEST="$ROOT/services/web/public/models"
 
 if [[ ! -d "$SRC" ]]; then

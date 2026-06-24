@@ -1,6 +1,6 @@
 # unit-kebbi-client — Enhancement 一覧
 
-Private repo `nakanaori-kebbi` と monorepo 契約・エージェントの **Kebbi 向け差分改善**。
+Sibling repo `nakanaori-kebbi` と monorepo 契約・エージェントの **Kebbi 向け差分改善**。
 
 | ID | 名称 | 状態 | 成果物 |
 |----|------|------|--------|

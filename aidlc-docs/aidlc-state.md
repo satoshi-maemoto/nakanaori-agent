@@ -15,7 +15,7 @@
 4. `unit-web-ui` — Tailwind + VRM + 子ども/先生 UI + ENH-UI-01〜05（P0）✅
 5. `unit-web-teacher` — 先生ダッシュボード — unit-web-ui に統合実装 ✅
 6. `unit-web-child` — 子ども Web + VRM — unit-web-ui に統合実装 ✅
-7. `unit-kebbi-contract` — API 契約 + TTS + private repo（P0 デモ）✅
+7. `unit-kebbi-contract` — API 契約 + TTS + sibling repo（P0 デモ）✅
 8. `unit-tts-service` — `packages/tts` + `/v1/tts/synthesize` ✅
 9. `unit-kebbi-client` — `nakanaori-kebbi` Android ✅
 
@@ -44,7 +44,7 @@
 ## 現在の状態
 
 - **次ステージ**: GCP デプロイ / Kebbi 実機 E2E（子B ハンドオフ・頭なで finish）
-- **Kebbi repo**: `/Users/maemoto/Documents/GitHub/nakanaori-kebbi`
+- **Kebbi repo**: `$NAKANAORI_KEBBI_ROOT`（未設定時 `../nakanaori-kebbi`）
 - **技術スタック**: TypeScript, Tailwind v4, three + @pixiv/three-vrm, Hono, ADK, Gemini 2.5 Flash
 - **ローカル**: `.env.example` + `scripts/dev-stack.sh`（API 起動後 Web）
 - **デモ台本**: `docs/examples/eraser-story-dialogue.md`
@@ -61,4 +61,4 @@
 - 先生デモ: 進行中セッション一覧 + LLM insights（ENH-UI-02/04）
 - LLM: `gemini-2.5-flash` デフォルト；FactStructurer が disagreements / teacher_hints を生成（ENH-UI-03/04）
 - TTS: Google Cloud `POST /v1/tts/synthesize`（`packages/tts`）；Web は `avatarGender`、Kebbi は `profile: kebbi_child`（独立）
-- Kebbi: Nuwa ASR + ExoPlayer TTS；頭なで `finish_turn`；ハンドオフ prefetch；private repo `nakanaori-kebbi`
+- Kebbi: Nuwa ASR + ExoPlayer TTS；頭なで `finish_turn`；ハンドオフ prefetch；sibling repo `nakanaori-kebbi`

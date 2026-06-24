@@ -274,7 +274,7 @@ Web は `client` 省略可。Kebbi は `"client": "kebbi"` を **必須** で送
 
 ## Kebbi 実装メモ
 
-- **Private repo**: `nakanaori-kebbi`（`com.nakanaori.kebbi`）
+- **Sibling repo**: `nakanaori-kebbi`（`com.nakanaori.kebbi` · `$NAKANAORI_KEBBI_ROOT`）
 - `NakanaoriApi.kt` — ベース URL は設定から（CharaTomo API とは別）
 - `TtsApi.kt` — `POST /v1/tts/synthesize`（`options.profile: "kebbi_child"`）；503 時は Nuwa ロボ TTS
 - Nuwa クラウド ASR → `POST child-turn`（テキスト `utterance`）
