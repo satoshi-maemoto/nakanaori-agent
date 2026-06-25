@@ -1,5 +1,8 @@
 # ナカナオリ・エージェント
 
+[![CI](https://github.com/satoshi-maemoto/nakanaori-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/satoshi-maemoto/nakanaori-agent/actions/workflows/ci.yml)
+[![Deploy Staging](https://github.com/satoshi-maemoto/nakanaori-agent/actions/workflows/deploy-staging.yml/badge.svg)](https://github.com/satoshi-maemoto/nakanaori-agent/actions/workflows/deploy-staging.yml)
+
 学校という小さな社会で、子どもたちのケンカを **裁かずに** 話を整理し、先生が公正に対応できるよう支援する AI エージェント。
 
 **ロボットは裁かない。ただ、話を整理して先生につなぐ。**  
@@ -9,7 +12,20 @@
 
 ## デモ URL
 
-_Staging デプロイ後に URL を記載_
+| サービス | URL |
+|----------|-----|
+| Web（子ども） | _staging デプロイ後に記載_ → `/child` |
+| Web（先生） | _staging デプロイ後に記載_ → `/teacher` |
+| API health | _staging デプロイ後に記載_ → `/health` |
+
+初回デプロイ手順: [docs/hackathon-staging-deploy.md](docs/hackathon-staging-deploy.md)（**別 Cloud Run** — `nakanaori-api` / `nakanaori-web`）
+
+```bash
+export PROJECT_ID=your-gcp-project
+export GEMINI_API_KEY=your-key
+bash scripts/bootstrap-staging-gcp.sh
+# → GitHub Secrets に GCP_PROJECT_ID / GCP_SA_KEY を登録 → main push
+```
 
 ## 構成
 
@@ -66,21 +82,23 @@ bash scripts/kebbi-deploy.sh       # Kebbi: ビルド・インストール・起
 
 Kebbi 設定で API URL に **PC の LAN IP**（例 `http://192.168.11.4:8080`）を指定。詳細: [docs/kebbi-dev-guide.md](docs/kebbi-dev-guide.md)
 
-### デモ（curl）
+### デモ（curl — 順番取り合い）
+
+台本: [docs/examples/turn-order-story-dialogue.md](docs/examples/turn-order-story-dialogue.md)
 
 ```bash
 export API_URL=http://localhost:8080
 SESSION=$(curl -s -X POST "$API_URL/v1/sessions" \
   -H "Content-Type: application/json" \
-  -d '{"child_a_label":"子どもA","child_b_label":"子どもB"}' | jq -r .session_id)
+  -d '{"child_a_label":"ゆうき","child_b_label":"けんた"}' | jq -r .session_id)
 
 curl -s -X POST "$API_URL/v1/sessions/$SESSION/child-turn" \
   -H "Content-Type: application/json" \
-  -d '{"child_id":"a","utterance":"Bが私の消しゴムを取った！"}'
+  -d '{"child_id":"a","utterance":"左のブランコぼくが先なのにけんたが割り込んだ。"}'
 
 curl -s -X POST "$API_URL/v1/sessions/$SESSION/child-turn" \
   -H "Content-Type: application/json" \
-  -d '{"child_id":"b","utterance":"落ちてたから拾っただけ！"}'
+  -d '{"child_id":"b","utterance":"右のブランコぼくが先。ゆうきくん左の方怒鳴ってただけ。"}'
 
 curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 ```
@@ -102,10 +120,11 @@ curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 ## 提出物（ハッカソン）
 
 - [ ] 公開 GitHub リポジトリ
-- [ ] デプロイ URL
-- [ ] Proto Pedia 登録
+- [ ] デプロイ URL（[staging 手順](docs/hackathon-staging-deploy.md)）
+- [ ] Proto Pedia 登録（[文案](docs/proto-pedia-draft.md)）
+- [ ] 3分デモ動画（[台本](docs/demo-video-script.md)）
 
-[docs/hackathon-submission.md](docs/hackathon-submission.md)
+[docs/hackathon-submission.md](docs/hackathon-submission.md) · [docs/hackathon-appeal-plan.md](docs/hackathon-appeal-plan.md)
 
 ## ライセンス
 

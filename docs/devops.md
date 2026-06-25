@@ -26,14 +26,26 @@ push と PR のたびに:
 
 ## デプロイ（`/.github/workflows/deploy-staging.yml`）
 
+**方針**: AIxR-API とは **別 Cloud Run サービス**（`nakanaori-api` / `nakanaori-web`）。初回セットアップ: [hackathon-staging-deploy.md](./hackathon-staging-deploy.md) · `scripts/bootstrap-staging-gcp.sh`
+
 `main` への push 時:
 
-1. API Docker イメージをビルド → Artifact Registry
-2. Cloud Run（staging）に `nakanaori-api` をデプロイ
+1. API Docker イメージをビルド → Artifact Registry（`nakanaori/api`）
+2. Cloud Run に `nakanaori-api` をデプロイ（`GEMINI_API_KEY` は Secret Manager から注入）
 3. デプロイ済み API URL を取得
 4. Web Docker イメージを `VITE_API_BASE_URL` 付きでビルド → `nakanaori-web` をデプロイ
 
 API は CORS を有効化済み（Web 別オリジンから `/v1/*` を呼び出し可能）。
+
+### 秘密情報の置き場所（公開リポジトリ）
+
+| 種別 | 置き場所 | 例 |
+|------|----------|-----|
+| CI デプロイ権限 | **GitHub Actions Secrets** | `GCP_PROJECT_ID`, `GCP_SA_KEY` |
+| 実行時 API キー | **GCP Secret Manager** | `GEMINI_API_KEY` → Cloud Run `--set-secrets` |
+| ローカル開発 | **`.env`**（gitignore） | `.env.example` をコピー |
+
+`GEMINI_API_KEY` は GitHub Secret に **置かない**。
 
 ### 必要な GitHub Secrets
 
@@ -41,7 +53,6 @@ API は CORS を有効化済み（Web 別オリジンから `/v1/*` を呼び出
 |--------|------|
 | `GCP_PROJECT_ID` | GCP プロジェクト |
 | `GCP_SA_KEY` | デプロイ用サービスアカウント JSON |
-| `GEMINI_API_KEY` | Secret Manager または env 経由で Cloud Run に注入 |
 
 ## プロンプトガバナンス
 

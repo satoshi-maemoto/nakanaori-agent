@@ -37,6 +37,7 @@ services/web/public/models/*.glb
 !config/*.example.json
 credentials/
 *-credentials.json
+nakanaori-github-deploy-key.json
 
 # IDE
 .idea/

@@ -189,3 +189,21 @@
 **Context**: Construction — Chirp3 TTS + Kebbi 手のふれあい UX のドキュメント同期
 
 ---
+
+## ハッカソン訴求力向上 — 2026-06-21
+
+**Timestamp**: 2026-06-21T23:30:00Z
+**User Input**: "上記訴求点の向上をドキュメントに記載し、対応を始める"
+**AI Response**: 訴求力評価に基づき docs 整備開始 — hackathon-appeal-plan.md, hackathon-staging-deploy.md, demo-video-script.md, proto-pedia-draft.md, hackathon-submission.md 更新, README CI バッジ・順番取り合い curl, aidlc-docs/operations/hackathon-submission-plan.md, aidlc-state 更新
+**Context**: Operations — ハッカソン提出 P0（Deployed URL / Proto Pedia / 3分動画）のドキュメント基盤
+
+---
+
+## Staging 方針確定 — 別 Cloud Run — 2026-06-21
+
+**Timestamp**: 2026-06-21T23:45:00Z
+**User Input**: "別 Cloud Run サービス で進めて"
+**AI Response**: AIxR-API staging は使わず nakanaori-api / nakanaori-web を別 Cloud Run にデプロイする方針で docs 更新。scripts/bootstrap-staging-gcp.sh 追加、hackathon-staging-deploy.md 拡充、devops.md 秘密情報表修正、.gitignore に deploy key 追加
+**Context**: Operations — staging 初回デプロイ準備
+
+---

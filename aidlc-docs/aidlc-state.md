@@ -5,7 +5,7 @@
 - **プロジェクト名**: Nakanaori Agent（ナカナオリ・エージェント）
 - **プロジェクト種別**: Greenfield
 - **開始日**: 2026-06-21
-- **現在ステージ**: CONSTRUCTION 完了 — ENH-KEBBI-02 反映済み；次は GCP デプロイ / Kebbi E2E
+- **現在ステージ**: OPERATIONS — ハッカソン提出（訴求力向上）+ GCP staging デプロイ
 
 ## 作業ユニット
 
@@ -40,10 +40,14 @@
 ### OPERATIONS フェーズ
 
 - [ ] Cloud Run staging 初回デプロイ
+- [x] ハッカソン訴求力向上 — ドキュメント整備（appeal-plan / staging-deploy / video-script / proto-pedia）
+- [ ] ハッカソン P0 — Deployed URL + Proto Pedia + 3分動画
 
 ## 現在の状態
 
-- **次ステージ**: GCP デプロイ / Kebbi 実機 E2E（子B ハンドオフ・頭なで finish）
+- **次ステージ**: `bootstrap-staging-gcp.sh` → GitHub Secrets → main push → README URL 更新
+- **staging 方針**: AIxR-API とは **別 Cloud Run**（`nakanaori-api` / `nakanaori-web`）
+- **ハッカソン計画**: `aidlc-docs/operations/hackathon-submission-plan.md` · `docs/hackathon-appeal-plan.md`
 - **Kebbi repo**: `$NAKANAORI_KEBBI_ROOT`（未設定時 `../nakanaori-kebbi`）
 - **技術スタック**: TypeScript, Tailwind v4, three + @pixiv/three-vrm, Hono, ADK, Gemini 2.5 Flash
 - **ローカル**: `.env.example` + `scripts/dev-stack.sh`（API 起動後 Web）
