@@ -78,9 +78,9 @@ stateDiagram-v2
 3. 会話履歴
 4. ブリーフ完成時: 事実・気持ちの整理
 
-## デモフロー（消しゴム）
+## デモフロー（順番取り合い）
 
-**台本（推奨）**: [docs/examples/eraser-story-dialogue.md](../../../../docs/examples/eraser-story-dialogue.md)  
+**台本（推奨）**: [docs/examples/turn-order-story-dialogue.md](../../../../docs/examples/turn-order-story-dialogue.md)  
 **フロー詳細**: [docs/examples/child-conversation-flow.md](../../../../docs/examples/child-conversation-flow.md)  
 **送信単位**: 各子 **名前 → 2回まとめ送信 → 番を おわる → おわり**（細切れ送信は非推奨）
 

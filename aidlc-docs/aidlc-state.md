@@ -47,7 +47,7 @@
 - **Kebbi repo**: `$NAKANAORI_KEBBI_ROOT`（未設定時 `../nakanaori-kebbi`）
 - **技術スタック**: TypeScript, Tailwind v4, three + @pixiv/three-vrm, Hono, ADK, Gemini 2.5 Flash
 - **ローカル**: `.env.example` + `scripts/dev-stack.sh`（API 起動後 Web）
-- **デモ台本**: `docs/examples/eraser-story-dialogue.md`
+- **デモ台本**: `docs/examples/turn-order-story-dialogue.md`（順番取り合い）
 - **子どもフロー**: `docs/examples/child-conversation-flow.md`（Web / Kebbi 比較表あり）
 
 ## 確定した決定事項

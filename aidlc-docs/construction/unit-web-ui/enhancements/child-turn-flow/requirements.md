@@ -48,7 +48,7 @@
 
 - [child-conversation-flow.md](../../../../../docs/examples/child-conversation-flow.md)
 - [demo-scenario.md](../../../../../docs/demo-scenario.md)
-- [eraser-story-dialogue.md](../../../../../docs/examples/eraser-story-dialogue.md)
+- [turn-order-story-dialogue.md](../../../../../docs/examples/turn-order-story-dialogue.md)
 - Kebbi 実機 UX: [ENH-KEBBI-02](../../unit-kebbi-client/enhancements/client-channel-and-handoff/requirements.md)
 
 ## 検証

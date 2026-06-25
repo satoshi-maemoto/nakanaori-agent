@@ -156,9 +156,9 @@ Kebbi は `TtsApi.kt` から `options.profile: "kebbi_child"` を送信。サー
 - 首・肩の random walk を強化（`NuwaSpeechHelper`）
 - TTS 中に低確率で `playFaceAnimation("joy")`
 
-## デモ手順（消しゴム台本）
+## デモ手順（順番取り合い台本）
 
-台本: [examples/eraser-story-dialogue.md](./examples/eraser-story-dialogue.md)
+台本: [examples/turn-order-story-dialogue.md](./examples/turn-order-story-dialogue.md)
 
 1. Mac で `dev-stack`、Kebbi 設定で LAN API URL
 2. Kebbi: 起動 → ウェルカム → 名前 → 話す → **頭をなでる** で番交代

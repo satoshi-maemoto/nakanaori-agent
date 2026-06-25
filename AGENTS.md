@@ -94,7 +94,7 @@ bash scripts/dev-stack.sh
 ```
 
 - AI: `@google/adk` + Gemini（`gemini-2.5-flash` デフォルト）
-- デモ台本: `docs/examples/eraser-story-dialogue.md`
+- デモ台本: `docs/examples/turn-order-story-dialogue.md`（順番取り合い）、`docs/examples/violence-escalation-story-dialogue.md`（緊急）
 - 先生 UI コア: `ConfirmationGuidePanel`（`teacher_hints` ヒーロー）— ENH-UI-04 詳細は `aidlc-docs/construction/unit-web-ui/enhancements/teacher-confirmation-guide/requirements.md`
 
 ## GCP

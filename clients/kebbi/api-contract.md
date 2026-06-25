@@ -285,4 +285,4 @@ Web は `client` 省略可。Kebbi は `"client": "kebbi"` を **必須** で送
 
 - 子ども UI: セッション `active_child` に合わせた `child_id` で `POST child-turn` ループ；初回 `welcome_message` 表示；A/B 別バルーン色
 - 先生 UI: 一覧 + `GET progress`（`insights.teacher_hints` 優先表示）→ `ready_for_teacher` で `GET teacher-brief`
-- デモ台本: `docs/examples/eraser-story-dialogue.md`
+- デモ台本: `docs/examples/turn-order-story-dialogue.md`

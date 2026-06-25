@@ -53,7 +53,10 @@ flowchart TD
 
 ## デモ台本
 
-消しゴムの 例は [eraser-story-dialogue.md](./eraser-story-dialogue.md) を 参照。
+| ストーリー | 用途 |
+|------------|------|
+| [turn-order-story-dialogue.md](./turn-order-story-dialogue.md) | **通常仲介** — 順番取り合い（左 vs 右ブランコ） |
+| [violence-escalation-story-dialogue.md](./violence-escalation-story-dialogue.md) | **緊急** — 暴力ワードで即エスカレーション |
 
 ---
 
