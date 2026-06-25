@@ -36,8 +36,8 @@
 | コンセプト | 訴求 | ギャップ |
 |------------|------|----------|
 | つくる | CI / Vitest / AI-DLC / monorepo | ✅ 文書・実装済 |
-| まわす | プロンプトガバナンス、再デプロイ | ⚠️ 監視デモ弱い |
-| とどける | Cloud Run 公開 URL | ❌ **最優先** |
+| まわす | プロンプトガバナンス、再デプロイ、**構造化ログ・スモーク・Secret 運用** | ✅ 実装済（Logging Runbook: devops.md） |
+| とどける | Cloud Run 公開 URL | ✅ |
 
 ---
 
@@ -67,7 +67,7 @@
 | # | タスク | 状態 |
 |---|--------|------|
 | 10 | Kebbi + 先生ダッシュボード **ライブデモ** リハーサル | ☐ |
-| 11 | Cloud Logging で `escalated` / `state` の運用デモ（まわす） | ☐ |
+| 11 | Cloud Logging で `escalated` / `state` の運用デモ（まわす） | ✅ logger.ts + devops Runbook |
 | 12 | US-03 確認ループ（P1）— ストーリー補強 | ☐ |
 
 ---

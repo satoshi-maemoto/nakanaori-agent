@@ -64,20 +64,25 @@
 
 ---
 
-### 2:10–2:40 Scene C — DevOps（とどける）
+### 2:10–2:50 Scene C — DevOps（とどける + まわす）
 
-**画面**: GitHub → Actions（CI 緑）→ `deploy-staging.yml` → Cloud Run コンソール
+**画面 A（10秒）**: GitHub → Actions（CI 緑）→ `check-prompts.sh` 成功 → `deploy-staging.yml` → Cloud Run Revisions
+
+**画面 B（10秒）**: GCP **Cloud Logging** — クエリ `jsonPayload.event="session.escalated"` または暴力デモ直後の `session.child_turn`
+
+**画面 C（10秒）**: **Secret Manager** — `GEMINI_API_KEY`（審査用 ON / 普段 OFF の運用説明）
 
 **ナレーション**:
 
-> **DevOps × AI Agent** — PR で lint と禁止語チェック。main マージで Cloud Run に自動デプロイ。  
-> つくる・まわす・**とどける**。
+> **DevOps × AI Agent** — PR で lint と禁止語チェック。main マージで Cloud Run に自動デプロイ、**スモークテスト**で health 確認。  
+> エージェントの状態遷移とエスカレーションは **Cloud Logging** で追える。Gemini キーは Secret Manager で **運用 ON/OFF**。  
+> つくる・**まわす**・とどける。
 
-参照: [devops.md](./devops.md)
+参照: [devops.md](./devops.md)（Runbook · Logging クエリ）
 
 ---
 
-### 2:40–3:00 クロージング（任意: Kebbi）
+### 2:50–3:00 クロージング（任意: Kebbi）
 
 **画面**: Kebbi 実機 5秒 or エージェント構成図（[architecture.md](./architecture.md)）
 

@@ -7,6 +7,7 @@ import {
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import * as store from "./store.js";
+import { logAgentEvent } from "./logger.js";
 import { handleTtsSynthesize } from "./routes/tts.js";
 
 const workflow = new MediationWorkflow();
@@ -70,6 +71,14 @@ app.post("/v1/sessions", async (c) => {
     clientChannel,
   );
   store.put(session);
+  logAgentEvent({
+    event: "session.created",
+    session_id: sessionId,
+    state: session.state,
+    agent_name: "SessionOrchestrator",
+    client_channel: clientChannel,
+    escalated: false,
+  });
   return c.json(
     {
       ...toResponse(session),
@@ -120,6 +129,7 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
     return c.json({ detail: "utterance required" }, 400);
   }
 
+  const previousState = session.state;
   let updated: SessionState;
   let agentMessage: string;
   let escalated: boolean;
@@ -135,6 +145,32 @@ app.post("/v1/sessions/:sessionId/child-turn", async (c) => {
     return c.json({ detail: msg }, 400);
   }
   store.put(updated);
+
+  const agentName = updated.escalated || escalated
+    ? "EmotionGuard"
+    : finishTurn && updated.state === SessionStateName.STRUCTURING
+      ? "FactStructurer"
+      : utterance
+        ? "Listener"
+        : "SessionOrchestrator";
+
+  logAgentEvent({
+    event:
+      updated.escalated || escalated
+        ? "session.escalated"
+        : updated.state === SessionStateName.READY_FOR_TEACHER
+          ? "session.ready_for_teacher"
+          : "session.child_turn",
+    session_id: updated.session_id,
+    state: updated.state,
+    previous_state: previousState,
+    agent_name: agentName,
+    escalated: updated.escalated || escalated,
+    child_id: childId,
+    finish_turn: finishTurn,
+    escalation_reason: updated.escalation_reason,
+    client_channel: updated.client_channel,
+  });
 
   const done =
     updated.state === SessionStateName.READY_FOR_TEACHER ||
@@ -165,6 +201,19 @@ app.get("/v1/sessions/:sessionId/progress", async (c) => {
   const { insights, session: refreshedSession } =
     await workflow.refreshSessionInsights(session);
   store.put(refreshedSession);
+
+  if (
+    refreshedSession.analysis_cache_key !== session.analysis_cache_key &&
+    refreshedSession.analysis_snapshot
+  ) {
+    logAgentEvent({
+      event: "session.insights_refresh",
+      session_id: refreshedSession.session_id,
+      state: refreshedSession.state,
+      agent_name: "FactStructurer",
+      escalated: refreshedSession.escalated,
+    });
+  }
 
   return c.json({
     session_id: refreshedSession.session_id,

@@ -216,3 +216,12 @@
 **Context**: Operations — ハッカソン P0 Deployed URL 完了
 
 ---
+
+## DevOps「まわす」強化 — 2026-06-25
+
+**Timestamp**: 2026-06-25T17:00:00Z
+**User Input**: "お願い"（まわす強化の実装依頼）
+**AI Response**: services/api/src/logger.ts 構造化ログ、app.ts イベント記録、deploy-staging スモーク + GIT_SHA、scripts/smoke-staging.sh、docs/devops.md Runbook、demo-video-script Scene C 拡張
+**Context**: Operations — まわす訴求（Logging / Secret 運用 / deploy smoke）
+
+---

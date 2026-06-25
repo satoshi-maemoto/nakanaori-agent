@@ -43,7 +43,7 @@ jobs:
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars "SESSION_STORE=memory,LOG_LEVEL=INFO" \
+            --set-env-vars "SESSION_STORE=memory,LOG_LEVEL=INFO,GIT_SHA=${{ github.sha }}" \
             --set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest" \
             --quiet
 
@@ -107,3 +107,22 @@ jobs:
             --allow-unauthenticated \
             --port 8080 \
             --quiet
+
+      - name: Resolve service URLs
+        id: urls
+        run: |
+          API_URL=$(gcloud run services describe ${{ env.API_SERVICE }} \
+            --region ${{ env.REGION }} \
+            --format 'value(status.url)')
+          WEB_URL=$(gcloud run services describe ${{ env.WEB_SERVICE }} \
+            --region ${{ env.REGION }} \
+            --format 'value(status.url)')
+          echo "api=$API_URL" >> "$GITHUB_OUTPUT"
+          echo "web=$WEB_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Smoke test staging
+        run: |
+          chmod +x scripts/smoke-staging.sh
+          API_URL="${{ steps.urls.outputs.api }}" \
+          WEB_URL="${{ steps.urls.outputs.web }}" \
+          bash scripts/smoke-staging.sh
