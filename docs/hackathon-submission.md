@@ -12,7 +12,7 @@
 ## 必須提出物
 
 - [ ] **GitHub** — 公開リポジトリ URL
-- [ ] **Deployed URL** — 動作するデモ（Cloud Run）→ 手順: [hackathon-staging-deploy.md](./hackathon-staging-deploy.md)
+- [x] **Deployed URL** — 動作するデモ（Cloud Run）→ 手順: [hackathon-staging-deploy.md](./hackathon-staging-deploy.md)
 - [ ] **Proto Pedia** — プロジェクト登録 URL → 文案: [proto-pedia-draft.md](./proto-pedia-draft.md)
 
 ## 必須技術（README で確認）
@@ -57,8 +57,8 @@
 
 | # | タスク | 状態 |
 |---|--------|------|
-| 1 | GCP Secrets → staging 初回デプロイ | ☐ |
-| 2 | README に Deployed URL 記載 | ☐ |
+| 1 | GCP Secrets → staging 初回デプロイ | ✅ |
+| 2 | README に Deployed URL 記載 | ✅ |
 | 3 | Proto Pedia 登録 | ☐ |
 | 4 | 3分デモ動画 公開 | ☐ |
 | 5 | 本チェックリスト完了 | ☐ |

@@ -47,8 +47,8 @@
 
 | # | タスク | 担当ドキュメント | 状態 |
 |---|--------|------------------|------|
-| 1 | GCP Secrets 設定 → `main` push → staging デプロイ | [hackathon-staging-deploy.md](./hackathon-staging-deploy.md) · `scripts/bootstrap-staging-gcp.sh` | ☐ |
-| 2 | README 先頭に **Web / API の Deployed URL** を記載 | [README.md](../README.md) | ☐ |
+| 1 | GCP Secrets 設定 → `main` push → staging デプロイ | [hackathon-staging-deploy.md](./hackathon-staging-deploy.md) · `scripts/bootstrap-staging-gcp.sh` | ✅ |
+| 2 | README 先頭に **Web / API の Deployed URL** を記載 | [README.md](../README.md) | ✅ |
 | 3 | **Proto Pedia** 登録（文案: [proto-pedia-draft.md](./proto-pedia-draft.md)） | proto-pedia-draft.md | ☐ |
 | 4 | **3分デモ動画** 撮影・公開（台本: [demo-video-script.md](./demo-video-script.md)） | demo-video-script.md | ☐ |
 | 5 | 提出チェックリスト完了 | [hackathon-submission.md](./hackathon-submission.md) | ☐ |

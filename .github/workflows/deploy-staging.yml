@@ -71,6 +71,19 @@ jobs:
             --format 'value(status.url)')
           echo "url=$API_URL" >> "$GITHUB_OUTPUT"
 
+      - name: Download VRM models
+        env:
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          mkdir -p services/web/public/models
+          BUCKET="gs://${PROJECT_ID}-nakanaori-assets/models"
+          if gcloud storage ls "${BUCKET}/" >/dev/null 2>&1; then
+            gcloud storage cp "${BUCKET}/*.glb" services/web/public/models/
+            ls -lh services/web/public/models/
+          else
+            echo "::warning::VRM bucket not found (${BUCKET}). Run bootstrap-staging-gcp.sh locally after setup-vrm-models."
+          fi
+
       - name: Build and push Web image
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}

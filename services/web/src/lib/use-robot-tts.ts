@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
+import { API_BASE } from "../api";
 import type { AvatarGender } from "../avatar/model-config";
 import { synthesizeAndPlay, type TtsPlayback } from "./tts-player";
 
@@ -22,7 +23,7 @@ export function useRobotTts(gender: AvatarGender) {
 
       stop();
       try {
-        const playback = await synthesizeAndPlay("", trimmed, genderRef.current);
+        const playback = await synthesizeAndPlay(API_BASE, trimmed, genderRef.current);
         playbackRef.current = playback;
         await playback.finished;
         return true;

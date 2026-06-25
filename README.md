@@ -14,18 +14,12 @@
 
 | サービス | URL |
 |----------|-----|
-| Web（子ども） | _staging デプロイ後に記載_ → `/child` |
-| Web（先生） | _staging デプロイ後に記載_ → `/teacher` |
-| API health | _staging デプロイ後に記載_ → `/health` |
+| Web（トップ） | https://nakanaori-web-370062202060.asia-northeast1.run.app/ |
+| Web（子ども） | https://nakanaori-web-370062202060.asia-northeast1.run.app/child |
+| Web（先生） | https://nakanaori-web-370062202060.asia-northeast1.run.app/teacher |
+| API health | https://nakanaori-api-370062202060.asia-northeast1.run.app/health |
 
 初回デプロイ手順: [docs/hackathon-staging-deploy.md](docs/hackathon-staging-deploy.md)（**別 Cloud Run** — `nakanaori-api` / `nakanaori-web`）
-
-```bash
-export PROJECT_ID=your-gcp-project
-export GEMINI_API_KEY=your-key
-bash scripts/bootstrap-staging-gcp.sh
-# → GitHub Secrets に GCP_PROJECT_ID / GCP_SA_KEY を登録 → main push
-```
 
 ## 構成
 
@@ -120,7 +114,7 @@ curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 ## 提出物（ハッカソン）
 
 - [ ] 公開 GitHub リポジトリ
-- [ ] デプロイ URL（[staging 手順](docs/hackathon-staging-deploy.md)）
+- [x] デプロイ URL（[staging 手順](docs/hackathon-staging-deploy.md)）
 - [ ] Proto Pedia 登録（[文案](docs/proto-pedia-draft.md)）
 - [ ] 3分デモ動画（[台本](docs/demo-video-script.md)）
 

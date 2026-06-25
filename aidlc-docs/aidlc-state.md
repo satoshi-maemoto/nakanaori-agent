@@ -39,7 +39,7 @@
 
 ### OPERATIONS フェーズ
 
-- [ ] Cloud Run staging 初回デプロイ
+- [x] Cloud Run staging 初回デプロイ
 - [x] ハッカソン訴求力向上 — ドキュメント整備（appeal-plan / staging-deploy / video-script / proto-pedia）
 - [ ] ハッカソン P0 — Deployed URL + Proto Pedia + 3分動画
 

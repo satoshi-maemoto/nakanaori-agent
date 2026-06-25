@@ -153,9 +153,9 @@ curl -s "$(gcloud run services describe nakanaori-api --region asia-northeast1 -
 
 | サービス | URL |
 |----------|-----|
-| Web（子ども） | https://nakanaori-web-xxxxx.run.app/child |
-| Web（先生） | https://nakanaori-web-xxxxx.run.app/teacher |
-| API health | https://nakanaori-api-xxxxx.run.app/health |
+| Web（子ども） | https://nakanaori-web-370062202060.asia-northeast1.run.app/child |
+| Web（先生） | https://nakanaori-web-370062202060.asia-northeast1.run.app/teacher |
+| API health | https://nakanaori-api-370062202060.asia-northeast1.run.app/health |
 ```
 
 [hackathon-submission.md](./hackathon-submission.md) の Deployed URL チェックを `[x]` に。
@@ -180,7 +180,8 @@ curl -s "$(gcloud run services describe nakanaori-api --region asia-northeast1 -
 | `Permission denied` on secret | デプロイ SA に `secretmanager.admin`、実行 SA に `secretAccessor` |
 | Web が API に繋がらない | Web イメージの `VITE_API_BASE_URL` が API URL か確認（再デプロイ） |
 | teacher_hints 空 | Cloud Run の `GEMINI_API_KEY` secret 注入を確認 |
-| CORS エラー | API は `cors()` 有効済（`services/api/src/app.ts`） |
+| TTS 405 on staging | Web TTS が nginx に POST していた → `use-robot-tts` が `VITE_API_BASE_URL` を使用するよう修正済 |
+| VRM が 2D フォールバック | GLB が Docker に未同梱 → GCS `${PROJECT_ID}-nakanaori-assets/models/` から CI 取得。初回: `npm run setup:vrm-models` → bootstrap 再実行 |
 | フォーク PR で deploy 失敗 | 正常 — Secrets は fork に渡らない |
 
 ---

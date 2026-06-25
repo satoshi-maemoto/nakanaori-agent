@@ -15,6 +15,7 @@
 
 set -euo pipefail
 
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT_ID="${PROJECT_ID:?Set PROJECT_ID (e.g. export PROJECT_ID=your-gcp-project)}"
 REGION="${REGION:-asia-northeast1}"
 AR_REPO="${AR_REPO:-nakanaori}"
@@ -36,6 +37,7 @@ gcloud services enable \
   run.googleapis.com \
   artifactregistry.googleapis.com \
   secretmanager.googleapis.com \
+  storage.googleapis.com \
   --project="$PROJECT_ID"
 
 echo "==> Artifact Registry ($AR_REPO)..."
@@ -89,6 +91,32 @@ for role in "${DEPLOY_ROLES[@]}"; do
     --quiet >/dev/null
 done
 echo "    IAM roles bound (run.admin, artifactregistry.writer, serviceAccountUser, secretmanager.admin)"
+
+echo "==> VRM models bucket (Web Docker ビルド用)..."
+ASSETS_BUCKET="${PROJECT_ID}-nakanaori-assets"
+if gcloud storage buckets describe "gs://${ASSETS_BUCKET}" --project="$PROJECT_ID" &>/dev/null; then
+  echo "    bucket exists: gs://${ASSETS_BUCKET}"
+else
+  gcloud storage buckets create "gs://${ASSETS_BUCKET}" \
+    --location="$REGION" \
+    --project="$PROJECT_ID"
+  echo "    created gs://${ASSETS_BUCKET}"
+fi
+
+MODELS_DIR="$ROOT/services/web/public/models"
+if [[ -f "$MODELS_DIR/8329890252317737768.glb" && -f "$MODELS_DIR/8590256991748008892.glb" ]]; then
+  gcloud storage cp "$MODELS_DIR"/*.glb "gs://${ASSETS_BUCKET}/models/" --project="$PROJECT_ID"
+  echo "    uploaded VRM GLB to gs://${ASSETS_BUCKET}/models/"
+else
+  echo "    WARN: GLB not found — run: npm run setup:vrm-models && re-run this script"
+fi
+
+gcloud storage buckets add-iam-policy-binding "gs://${ASSETS_BUCKET}" \
+  --member="serviceAccount:${DEPLOY_SA_EMAIL}" \
+  --role="roles/storage.objectViewer" \
+  --project="$PROJECT_ID" \
+  --quiet >/dev/null
+echo "    ${DEPLOY_SA_EMAIL} → objectViewer on ${ASSETS_BUCKET}"
 
 echo "==> Cloud Run runtime — Secret Manager accessor..."
 PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"

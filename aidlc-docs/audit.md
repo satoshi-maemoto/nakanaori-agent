@@ -207,3 +207,12 @@
 **Context**: Operations — staging 初回デプロイ準備
 
 ---
+
+## Deployed URL 記載 — 2026-06-25
+
+**Timestamp**: 2026-06-25T16:30:00Z
+**User Input**: "https://nakanaori-web-370062202060.asia-northeast1.run.app/ がデモURLになるので記載"
+**AI Response**: README / hackathon-submission / proto-pedia-draft / appeal-plan / aidlc-state に staging URL 反映。API health も同一 suffix で確認済
+**Context**: Operations — ハッカソン P0 Deployed URL 完了
+
+---
