@@ -23,15 +23,17 @@ jobs:
       - name: Prompt forbidden-word check
         run: bash scripts/check-prompts.sh
 
-      - name: Lint and build agents + api
+      - name: Lint and build packages + api
         run: |
           npm run lint --workspace=@nakanaori/agents
-          npm run lint --workspace=nakanaori-api
+          npm run lint --workspace=@nakanaori/tts
           npm run build --workspace=@nakanaori/agents
+          npm run build --workspace=@nakanaori/tts
+          npm run lint --workspace=nakanaori-api
           npm run build --workspace=nakanaori-api
 
       - name: Vitest
-        run: npm run test --workspace=@nakanaori/agents
+        run: npm run test --workspace=@nakanaori/agents && npm run test --workspace=@nakanaori/tts
 
   web:
     runs-on: ubuntu-latest

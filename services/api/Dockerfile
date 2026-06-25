@@ -4,14 +4,18 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 COPY packages/agents/package.json packages/agents/
+COPY packages/tts/package.json packages/tts/
 COPY services/api/package.json services/api/
 
 RUN npm ci
 
 COPY packages/agents packages/agents
+COPY packages/tts packages/tts
 COPY services/api services/api
 
-RUN npm run build --workspace=@nakanaori/agents && npm run build --workspace=nakanaori-api
+RUN npm run build --workspace=@nakanaori/agents && \
+    npm run build --workspace=@nakanaori/tts && \
+    npm run build --workspace=nakanaori-api
 
 FROM node:22-slim
 
@@ -22,12 +26,15 @@ ENV PORT=8080
 
 COPY package.json package-lock.json ./
 COPY packages/agents/package.json packages/agents/
+COPY packages/tts/package.json packages/tts/
 COPY services/api/package.json services/api/
 
 RUN npm ci --omit=dev
 
 COPY --from=builder /app/packages/agents/dist packages/agents/dist
 COPY --from=builder /app/packages/agents/package.json packages/agents/
+COPY --from=builder /app/packages/tts/dist packages/tts/dist
+COPY --from=builder /app/packages/tts/package.json packages/tts/
 COPY --from=builder /app/services/api/dist services/api/dist
 
 EXPOSE 8080
