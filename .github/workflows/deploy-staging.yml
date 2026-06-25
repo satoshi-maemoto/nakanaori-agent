@@ -38,13 +38,29 @@ jobs:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         run: |
           IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/nakanaori/api:${{ github.sha }}"
+          SECRET_ARGS=(--remove-secrets GEMINI_API_KEY)
+          if gcloud secrets describe GEMINI_API_KEY --project="$PROJECT_ID" &>/dev/null; then
+            ENABLED=$(gcloud secrets versions list GEMINI_API_KEY \
+              --project="$PROJECT_ID" \
+              --filter="state=ENABLED" \
+              --format="value(name)" \
+              --limit=1)
+            if [[ -n "$ENABLED" ]]; then
+              SECRET_ARGS=(--set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest")
+              echo "GEMINI_API_KEY: mounting enabled secret (LLM mode)"
+            else
+              echo "::warning::GEMINI_API_KEY has no ENABLED version — deploying in stub mode (LLM off)."
+            fi
+          else
+            echo "::warning::GEMINI_API_KEY not in Secret Manager — deploying in stub mode (LLM off)."
+          fi
           gcloud run deploy ${{ env.API_SERVICE }} \
             --image "$IMAGE" \
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
             --set-env-vars "SESSION_STORE=memory,LOG_LEVEL=INFO,GIT_SHA=${{ github.sha }}" \
-            --set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest" \
+            "${SECRET_ARGS[@]}" \
             --quiet
 
   deploy-web:

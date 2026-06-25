@@ -177,6 +177,7 @@ curl -s "$(gcloud run services describe nakanaori-api --region asia-northeast1 -
 | 症状 | 対処 |
 |------|------|
 | deploy workflow 失敗 | Actions ログ、`GCP_SA_KEY` / Artifact Registry 権限 |
+| GEMINI secret DISABLED | **正常** — workflow は `::warning::` のうえ stub モードでデプロイ（`--remove-secrets`） |
 | `Permission denied` on secret | デプロイ SA に `secretmanager.admin`、実行 SA に `secretAccessor` |
 | Web が API に繋がらない | Web イメージの `VITE_API_BASE_URL` が API URL か確認（再デプロイ） |
 | teacher_hints 空 | Cloud Run の `GEMINI_API_KEY` secret 注入を確認 |

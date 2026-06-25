@@ -31,7 +31,7 @@ push と PR のたびに:
 `main` への push 時:
 
 1. API Docker イメージをビルド → Artifact Registry（`nakanaori/api`）
-2. Cloud Run に `nakanaori-api` をデプロイ（`GEMINI_API_KEY` は Secret Manager から注入）
+2. Cloud Run に `nakanaori-api` をデプロイ（`GEMINI_API_KEY` は Secret Manager に **ENABLED** 版があるときのみ注入；無効/未設定時は stub モード）
 3. デプロイ済み API URL を取得
 4. Web Docker イメージを `VITE_API_BASE_URL` 付きでビルド → `nakanaori-web` をデプロイ
 
