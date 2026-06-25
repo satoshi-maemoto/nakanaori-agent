@@ -180,3 +180,12 @@
 **Context**: Construction — client_channel + Kebbi ハンドオフ UX を AI-DLC 成果物に反映
 
 ---
+
+## ドキュメント反映 — ENH-TTS-01 + ENH-KEBBI-03 — 2026-06-21
+
+**Timestamp**: 2026-06-21T14:30:00Z
+**User Input**: "ここまでをドキュメントに反映"
+**AI Response**: ENH-TTS-01 Chirp 3 HD 音声移行、ENH-KEBBI-03 手長押し聞き取りポーズを AI-DLC / docs / clients に反映。kebbi-tts-components、unit-tts-service-plan、aidlc-state、kebbi-tts-requirements、integration-test、kebbi-dev-guide、google-cloud-tts-setup、AGENTS.md 等を更新
+**Context**: Construction — Chirp3 TTS + Kebbi 手のふれあい UX のドキュメント同期
+
+---

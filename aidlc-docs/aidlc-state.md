@@ -33,7 +33,7 @@
 - [x] unit-web-ui — ENH-UI-05 子ども番終了確認 + VRM resetLayout
 - [x] unit-api — ENH-UI-02 / ENH-UI-03 / ENH-UI-04 API 拡張
 - [x] unit-kebbi-contract — TTS API + 契約更新
-- [x] unit-tts-service — packages/tts + Google Cloud TTS
+- [x] unit-tts-service — packages/tts + Google Cloud TTS + ENH-TTS-01 Chirp 3 HD
 - [x] unit-kebbi-client — nakanaori-kebbi Android
 - [x] unit-kebbi-client — ENH-KEBBI-02 クライアントチャネル + 子B ハンドオフ UX
 
@@ -60,5 +60,6 @@
 - 先生 UI: **確認の進め方**をヒーロー表示、LLM `teacher_hints`、会話履歴・食い違い整理（ENH-UI-04）
 - 先生デモ: 進行中セッション一覧 + LLM insights（ENH-UI-02/04）
 - LLM: `gemini-2.5-flash` デフォルト；FactStructurer が disagreements / teacher_hints を生成（ENH-UI-03/04）
-- TTS: Google Cloud `POST /v1/tts/synthesize`（`packages/tts`）；Web は `avatarGender`、Kebbi は `profile: kebbi_child`（独立）
+- **Kebbi UX**: `client: kebbi`、頭なで番交代、手のふれあい聞き取りポーズ（ENH-KEBBI-02/03）
+- TTS: Google Cloud Chirp 3 HD — Web `Zephyr`/`Rasalgethi`（`avatarGender`）、Kebbi `Callirrhoe`（`kebbi_child`）；pitch 非対応（ENH-TTS-01）
 - Kebbi: Nuwa ASR + ExoPlayer TTS；頭なで `finish_turn`；ハンドオフ prefetch；sibling repo `nakanaori-kebbi`

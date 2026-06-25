@@ -247,8 +247,8 @@ Web は `client` 省略可。Kebbi は `"client": "kebbi"` を **必須** で送
 }
 ```
 
-- `gender`（任意）: **Web 向け** `"male"` | `"female"` — ロボット見た目に合わせた声（`ja-JP-Neural2-B` / `C`）。Kebbi は送らない。
-- `options.profile`（任意）: **Kebbi 向け** `"kebbi_child"` — 明るい子ども向け声（`Neural2-B` + 高め pitch）。Web は送らない。
+- `gender`（任意）: **Web 向け** `"male"` | `"female"` — Chirp 3 HD（`Zephyr` / `Rasalgethi`）。Kebbi は送らない。
+- `options.profile`（任意）: **Kebbi 向け** `"kebbi_child"` — `Callirrhoe` + `speaking_rate: 1.08`。Web は送らない。
 - `voice`（任意）: Google voice 名を直接指定（`gender` / `profile` より優先）
 
 **Response** `200`
@@ -270,7 +270,7 @@ Web は `client` 省略可。Kebbi は `"client": "kebbi"` を **必須** で送
 - `503` — Google TTS 未設定（Kebbi は Nuwa ロボット TTS にフォールバック）
 - `502` — 合成失敗
 
-**Voice（MVP）**: Web は `gender` で `female`→`Neural2-B`、`male`→`Neural2-C`。Kebbi は `options.profile: "kebbi_child"` で明るい子ども向け声（Web の `gender` には影響しない）。
+**Voice（MVP）**: Web は `gender` で `female`→`Chirp3-HD-Zephyr`、`male`→`Chirp3-HD-Rasalgethi`。Kebbi は `options.profile: "kebbi_child"` → `Chirp3-HD-Callirrhoe`（pitch 非対応、rate 1.08）。
 
 ## Kebbi 実装メモ
 

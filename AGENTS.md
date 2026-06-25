@@ -38,7 +38,7 @@
 - **Path**: `$NAKANAORI_KEBBI_ROOT`（未設定時は `../nakanaori-kebbi`）
 - **Contract**: `clients/kebbi/api-contract.md`
 - **開発ガイド**: `docs/kebbi-dev-guide.md`（API URL・設定画面・顔 hide・再接続）
-- **TTS**: `packages/tts` + `POST /v1/tts/synthesize`
+- **TTS**: `packages/tts` + `POST /v1/tts/synthesize` — Chirp 3 HD（Web `Zephyr`/`Rasalgethi`、Kebbi `Callirrhoe`）
 - Do **not** use CharaTomo `POST /api/v1/llm/chat`
 - Nuwa AAR: `app/libs/`（CharaTomo-Kebbi と同手順）
 - 実機: `bash scripts/kebbi-deploy.sh`（`NAKANAORI_KEBBI_ROOT` でパス上書き可）

@@ -13,7 +13,8 @@ Nuwa Kebbi 向け Android クライアント（sibling repo `nakanaori-kebbi`）
 | FR-K03 | `agent_message` / `welcome_message` を Google Cloud TTS で再生 |
 | FR-K04 | TTS 再生中はマイク停止；終了後 ~150ms で ASR 再開（`ASSISTANT_AUDIO_END_DELAY_MS`） |
 | FR-K05 | TTS 合成失敗時 Nuwa ロボット TTS にフォールバック |
-| FR-K06 | アバター・性別選択 UI なし；Kebbi は `options.profile: "kebbi_child"` で子ども向け 1 声（Web `gender` とは独立） |
+| FR-K06 | Kebbi は `options.profile: "kebbi_child"` → `ja-JP-Chirp3-HD-Callirrhoe`（rate 1.08；Web `gender` とは独立） |
+| FR-T04 | Web `gender` → Chirp 3 HD（female=`Zephyr`、male=`Rasalgethi`）；Chirp3 は pitch 非対応 |
 | FR-K07 | セッション作成時 `"client": "kebbi"` — 番終了案内を頭なで用に切替（Web 案内を TTS しない） |
 | FR-K08 | 子B ハンドオフ: 挨拶 TTS と手案内を並列 prefetch；UI イベントは合成完了を待たない |
 | FR-T01 | `POST /v1/tts/synthesize` — MP3 data URI を返す |

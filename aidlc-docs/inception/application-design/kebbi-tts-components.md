@@ -18,10 +18,14 @@ Kebbi → API sessions → agents → agent_message → TTS synthesize → ExoPl
 
 ## 音声設定
 
-| 用途 | Voice | 備考 |
-|------|-------|------|
-| Web 既定 | `ja-JP-Neural2-C`（`GOOGLE_TTS_VOICE`） | 中性・落ち着き |
-| Web 男女 | `Neural2-B` / `Neural2-C` | `avatarGender` |
-| Kebbi 子ども | `ja-JP-Neural2-B`, rate 1.08, pitch +2.0 | `profile: kebbi_child` 明示時のみ |
+| 用途 | Voice ID | 指定方法 |
+|------|----------|----------|
+| Web 女性 | `ja-JP-Chirp3-HD-Zephyr` | `gender: "female"` |
+| Web 男性 / 既定 | `ja-JP-Chirp3-HD-Rasalgethi` | `gender: "male"` または未指定 |
+| Kebbi 子ども | `ja-JP-Chirp3-HD-Callirrhoe` | `options.profile: "kebbi_child"`（rate 1.08） |
 
 Encoding: MP3（data URI 返却）
+
+**Chirp 3 HD**: pitch 非対応 — `voiceSupportsPitch()` が false のとき API に pitch を送らない。Neural2 等を明示 `voice` で指定した場合のみ pitch 利用可。
+
+**料金**（2026）: Chirp 3 HD $30/100万文字（無料枠 100万/月）。旧 Neural2 は $16/100万文字。

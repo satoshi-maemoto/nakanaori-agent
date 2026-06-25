@@ -15,8 +15,8 @@ Nuwa Kebbi Android クライアントは **この monorepo 外** の sibling rep
 1. Nakanaori **セッション REST API** + **`POST /v1/tts/synthesize`**
 2. セッション作成時 **`"client": "kebbi"`** — Web 用「番を おわる」案内を避け、頭なで案内に切替（[api-contract.md](./api-contract.md)）
 3. CharaTomo `POST /api/v1/llm/chat` は **使用しない**
-4. TTS: Google Cloud（monorepo `packages/tts`）；未設定時 Kebbi は Nuwa ロボ TTS
-5. **アバター選択なし** — 中性的 1 声
+4. TTS: Google Cloud Chirp 3 HD（`packages/tts`）；Kebbi は `kebbi_child` → `Callirrhoe`；未設定時 Nuwa ロボ TTS
+5. **アバター選択なし** — Kebbi は子ども向け 1 声（Web の男女声とは独立）
 
 ## 同期ポリシー
 
@@ -26,6 +26,12 @@ Nuwa Kebbi Android クライアントは **この monorepo 外** の sibling rep
 2. Kebbi クライアント側の `NakanaoriApi.kt` / `TtsApi.kt` を適応
 
 ## 音声
+
+| 用途 | Voice ID | API 指定 |
+|------|----------|----------|
+| Kebbi | `ja-JP-Chirp3-HD-Callirrhoe` | `options.profile: "kebbi_child"` |
+| Web 女性 | `ja-JP-Chirp3-HD-Zephyr` | `gender: "female"` |
+| Web 男性 | `ja-JP-Chirp3-HD-Rasalgethi` | `gender: "male"` |
 
 - **STT**: Kebbi Nuwa SDK クラウド ASR（端末内）
 - **TTS**: `POST /v1/tts/synthesize` → ExoPlayer；フォールバック Nuwa TTS

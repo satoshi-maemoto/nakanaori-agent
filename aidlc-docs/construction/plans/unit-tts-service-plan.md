@@ -7,4 +7,7 @@
 - [x] `.env.example` GOOGLE_APPLICATION_CREDENTIALS
 - [x] api-contract.md TTS section
 - [x] `resolveVoiceAudio()` — Web `avatarGender` vs Kebbi `profile: kebbi_child`
-- [x] `kebbi_child` — `ja-JP-Neural2-B`, rate 1.08, pitch +2.0（明示指定時のみ）
+- [x] ENH-TTS-01 — Chirp 3 HD: Zephyr / Rasalgethi / Callirrhoe
+- [x] `voiceSupportsPitch()` — Chirp3 では pitch 省略
+
+Enhancement: [unit-tts-service/enhancements/](../unit-tts-service/enhancements/README.md)

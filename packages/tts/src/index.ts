@@ -13,9 +13,11 @@ export {
 } from "./prepare-tts-text.js";
 export {
   TTS_VOICE_BY_AVATAR_GENDER,
+  DEFAULT_CHIRP3_VOICE,
   KEBBI_CHILD_VOICE_PROFILE,
   kebbiChildProfile,
   voiceForAvatarGender,
+  voiceSupportsPitch,
   type TtsAvatarGender,
   type TtsKebbiProfile,
   type KebbiChildVoiceProfile,

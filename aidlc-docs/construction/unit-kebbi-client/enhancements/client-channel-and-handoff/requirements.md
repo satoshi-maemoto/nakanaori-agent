@@ -25,7 +25,7 @@
 | AC-CLI-03 | Web: 「話し終わったら、『番を おわる』を おしてね。」 | ✅ |
 | AC-CLI-04 | Kebbi: 「話し終わったら、あたまを なでてね。」（`client: kebbi` 必須） | ✅ |
 | AC-CLI-05 | Kebbi `NakanaoriApi.createSession()` が `"client": "kebbi"` を送る | ✅ |
-| AC-TTS-01 | Kebbi TTS は `profile: kebbi_child`（Web `gender` と独立） | ✅ |
+| AC-TTS-01 | Kebbi TTS は `profile: kebbi_child` → `Chirp3-HD-Callirrhoe`（Web `gender` と独立）— [ENH-TTS-01](../../unit-tts-service/enhancements/chirp3-hd-voices/requirements.md) | ✅ |
 | AC-KUX-01 | 子B ハンドオフ: `TurnHandoff` を TTS 完了前に emit | ✅ |
 | AC-KUX-02 | 手の案内 TTS を挨拶再生中に prefetch / キャッシュ | ✅ |
 | AC-KUX-03 | 頭なでで ASR 停止 → `finish_turn: true` | ✅ |

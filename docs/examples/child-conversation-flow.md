@@ -117,7 +117,8 @@ flowchart TD
 | 番を終えたい | 「話し終わった」「おわった」等 | 「あたまを なでてね」TTS |
 | 番を変える | **頭をなでる**（センサー） | `finish_turn: true` |
 | まだ話す | 「まだ」「まだ話す」 | 聞き続け |
+| 手を握って話す（任意） | 差し出し腕を **長押し** | 首を手側へ傾けて聞く；離すと中央復帰 |
 
 設定画面は **胸タップ**。頭の長押しはセッション再試行。
 
-実装: `nakanaori-kebbi` の `TurnVoiceController.kt`, `KebbiHandPresence.kt`
+実装: `nakanaori-kebbi` の `TurnVoiceController.kt`, `KebbiHandPresence.kt`, `NuwaSpeechHelper.kt`（手長押し聞き取りポーズ）

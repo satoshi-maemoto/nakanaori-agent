@@ -8,7 +8,7 @@
 | ユニットテスト（Vitest） | ✅ agents + tts |
 | プロンプト禁止語チェック | ✅ `scripts/check-prompts.sh` |
 | Web TypeScript チェック | ✅ CI `web` ジョブ |
-| TTS（Google Cloud） | ✅ Web `avatarGender` + Kebbi `kebbi_child` |
+| TTS（Google Cloud） | ✅ Chirp 3 HD — Zephyr / Rasalgethi / Callirrhoe |
 | Kebbi クライアント（sibling） | ✅ ENH-KEBBI-02（client / ハンドオフ prefetch） |
 | クライアントチャネル | ✅ Web vs Kebbi finish 案内分岐 |
 | 結合テスト（手動） | 📋 手順書あり |

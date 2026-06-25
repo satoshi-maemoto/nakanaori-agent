@@ -65,7 +65,7 @@ export async function synthesizeSpeech(
     audioConfig: {
       audioEncoding: protos.google.cloud.texttospeech.v1.AudioEncoding.MP3,
       speakingRate: speakingRateFromEmotion(resolved.speakingRateBase, options),
-      pitch: resolved.pitch,
+      ...(resolved.pitch !== undefined ? { pitch: resolved.pitch } : {}),
     },
   };
 

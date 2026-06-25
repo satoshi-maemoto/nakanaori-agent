@@ -23,8 +23,8 @@ export class ChildNavigatorAgent {
   sessionWelcome(): string {
     return (
       `こんにちは、${ROBOT_NAME}だよ。` +
-      "きみの はなしを きいて、せんせいに つなぐ ロボットだよ。" +
-      "ルールは かんたん。順番に 話してね。" +
+      "きみの 話を きいて、せんせいに つなぐ ロボットだよ。" +
+      "ルールはかんたん。順番に 話してね。" +
       "だいじょうぶ、ゆっくり でいいよ。ひとりじゃないからね。" +
       "まず、なまえを 教えてくれる？"
     );
@@ -51,9 +51,9 @@ export class ChildNavigatorAgent {
 
   finishTurnHint(channel: ClientChannel): string {
     if (channel === "kebbi") {
-      return "話し終わったら、あたまを なでてね。";
+      return "ぜんぶ 話し終わったら、あたまを なでてね。";
     }
-    return "話し終わったら、「番を おわる」を おしてね。";
+    return "ぜんぶ 話し終わったら、「番を おわる」を おしてね。";
   }
 
   afterNameReceived(name: string, childId: "a" | "b", channel: ClientChannel = "web"): string {

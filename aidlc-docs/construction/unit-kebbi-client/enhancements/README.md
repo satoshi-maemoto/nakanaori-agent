@@ -6,6 +6,7 @@ Sibling repo `nakanaori-kebbi` と monorepo 契約・エージェントの **Keb
 |----|------|------|--------|
 | ENH-KEBBI-01 | TTS + Nuwa ASR 統合 | ✅ 完了 | [kebbi-tts-requirements.md](../../../inception/requirements/kebbi-tts-requirements.md) |
 | ENH-KEBBI-02 | [クライアントチャネル + 子B 番交代 UX](./client-channel-and-handoff/requirements.md) | ✅ 完了 | `client` API / 頭なで案内 / ハンドオフ prefetch |
+| ENH-KEBBI-03 | [手のふれあい中の聞き取りポーズ](./hand-hold-listening/requirements.md) | ✅ 完了 | 首傾き / 固定スマイル / 離したら中央復帰 |
 
 ## 参照
 

@@ -81,9 +81,9 @@ export type TtsEmotionLevel = {
 export type SynthesizeOptions = {
   emotionLevel?: TtsEmotionLevel;
   speakingRate?: number;
-  /** Explicit Google voice name (e.g. ja-JP-Neural2-C). */
+  /** Explicit Google voice name (e.g. ja-JP-Chirp3-HD-Rasalgethi). */
   voiceName?: string;
-  /** Web: map female/male robot to ja-JP Neural2 voices. */
+  /** Web: map female/male robot to ja-JP Chirp 3 HD voices. */
   avatarGender?: TtsAvatarGender;
   /** Kebbi: bright child-facing profile (explicit opt-in only). */
   profile?: TtsKebbiProfile;
@@ -95,8 +95,8 @@ export type SynthesizeResult = {
   service: "google_cloud";
 };
 
-/** Default neutral voice for Kuroko robot (calm, child-facing). */
-export const DEFAULT_VOICE_NAME = "ja-JP-Neural2-C";
+/** Default voice for Kuroko robot when gender unset (Chirp 3 HD male). */
+export const DEFAULT_VOICE_NAME = "ja-JP-Chirp3-HD-Rasalgethi";
 
 export function isTtsConfigured(): boolean {
   if (process.env.GOOGLE_TTS_CREDENTIALS_JSON?.trim()) return true;

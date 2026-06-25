@@ -17,7 +17,7 @@
 | unit-devops | CI | 更新済み（Node CI + web deploy） |
 | unit-web-ui | Code Generation + Enhancement | **完了** — ENH-UI-01〜05 |
 | unit-kebbi-client | Code Generation + Enhancement | **完了** — ENH-KEBBI-01〜02 |
-| unit-tts-service | Code Generation | **完了** — kebbi_child profile |
+| unit-tts-service | Code Generation | **完了** — ENH-TTS-01 Chirp 3 HD |
 
 **Construction 開始**: 2026-06-21（ユーザー承認済み）
 

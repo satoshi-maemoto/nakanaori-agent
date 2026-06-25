@@ -45,6 +45,16 @@ curl -sf -X POST "http://localhost:8080/v1/sessions/$SID/child-turn" \
 curl -sf -X POST http://localhost:8080/v1/tts/synthesize \
   -H "Content-Type: application/json" \
   -d '{"text":"こんにちは、ナカナオリだよ。"}' | jq '.data.format'
+
+# Web 女性（Chirp3-HD-Zephyr）
+curl -sf -X POST http://localhost:8080/v1/tts/synthesize \
+  -H "Content-Type: application/json" \
+  -d '{"text":"テスト","gender":"female"}' | jq '.data.format'
+
+# Kebbi 子ども向け（Chirp3-HD-Callirrhoe, rate 1.08）
+curl -sf -X POST http://localhost:8080/v1/tts/synthesize \
+  -H "Content-Type: application/json" \
+  -d '{"text":"テスト","options":{"profile":"kebbi_child"}}' | jq '.data.format'
 ```
 
 未設定時は `503`（Kebbi は Nuwa ロボ TTS にフォールバック）。
@@ -106,7 +116,7 @@ adb shell curl -sf http://<PC-LAN-IP>:8080/health
 2. ウェルカム TTS → マイク許可 → 連続 ASR
 3. 子ども発話 → `agent_message` 再生（API TTS `kebbi_child` または Nuwa フォールバック）
 4. 番終了 — **頭をなでる**（または「おわった」→ 頭なで）で `finish_turn: true`
-5. 子B: ハンドオフ挨拶 → 腕提示 → 手案内 → ASR
+5. 子B: ハンドオフ挨拶 → 腕提示 → 手案内 → 手長押しで聞き取りポーズ → ASR
 6. 先生 Web `/teacher` でブリーフ確認（`ai_disclaimer` 必須）
 
 ### ログ・診断

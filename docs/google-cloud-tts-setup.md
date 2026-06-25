@@ -87,13 +87,18 @@ python3 -c 'import json; print(json.dumps(json.load(open("credentials/google-tts
 
 | 用途 | 声 |
 |------|-----|
-| Web 女性ロボット | `ja-JP-Neural2-B` |
-| Web 男性ロボット | `ja-JP-Neural2-C` |
-| Kebbi / 未指定 | `GOOGLE_TTS_VOICE` または `ja-JP-Neural2-C` |
+| Web 女性ロボット | `ja-JP-Chirp3-HD-Zephyr` |
+| Web 男性ロボット | `ja-JP-Chirp3-HD-Rasalgethi` |
+| Kebbi 子ども向け | `ja-JP-Chirp3-HD-Callirrhoe`（`profile: kebbi_child`） |
+| 未指定 / 既定 | `GOOGLE_TTS_VOICE` または `ja-JP-Chirp3-HD-Rasalgethi` |
 
 ```bash
-GOOGLE_TTS_VOICE=ja-JP-Neural2-C
+GOOGLE_TTS_VOICE=ja-JP-Chirp3-HD-Rasalgethi
 ```
+
+Chirp 3 HD は **pitch 非対応**（API に pitch を送らない）。Kebbi は `speaking_rate: 1.08` で明るめに調整。
+
+**料金・試聴**: [Chirp 3 HD ドキュメント](https://cloud.google.com/text-to-speech/docs/chirp3-hd) / [pricing](https://cloud.google.com/text-to-speech/pricing) — Chirp 3 HD $30/100万文字（無料枠 100万/月）。Neural2 より合成が遅い場合あり（Kebbi は prefetch で緩和）。
 
 Web では API に `"gender": "male"` / `"female"` を渡すと上表の声が選ばれます。
 
