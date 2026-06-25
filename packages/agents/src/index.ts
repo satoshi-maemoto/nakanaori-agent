@@ -10,6 +10,10 @@ import {
   type ClientChannel,
   type SessionState,
 } from "./orchestrator.js";
+import {
+  overlayStructuredDisplayNames,
+  withDisplayLabels,
+} from "./display-labels.js";
 import type { SessionInsights, StructuredFacts, TeacherBrief } from "./schemas.js";
 import { StructuredFactsSchema } from "./schemas.js";
 
@@ -56,10 +60,13 @@ export class MediationWorkflow {
   async refreshSessionInsights(
     session: SessionState,
   ): Promise<{ insights: SessionInsights; session: SessionState }> {
-    const sessionWithNames = this.withDisplayLabels(session);
+    const sessionWithNames = withDisplayLabels(session);
 
     if (session.structured) {
-      const structured = StructuredFactsSchema.parse(session.structured);
+      const structured = overlayStructuredDisplayNames(
+        StructuredFactsSchema.parse(session.structured),
+        session,
+      );
       return {
         insights: this.briefAgent.buildInsights(structured),
         session,
@@ -71,7 +78,10 @@ export class MediationWorkflow {
       session.analysis_cache_key === cacheKey &&
       session.analysis_snapshot
     ) {
-      const structured = StructuredFactsSchema.parse(session.analysis_snapshot);
+      const structured = overlayStructuredDisplayNames(
+        StructuredFactsSchema.parse(session.analysis_snapshot),
+        session,
+      );
       return {
         insights: this.briefAgent.buildInsights(structured),
         session,
@@ -92,7 +102,10 @@ export class MediationWorkflow {
       };
     }
 
-    const structured = await this.structurer.analyzeSession(sessionWithNames);
+    const structured = overlayStructuredDisplayNames(
+      await this.structurer.analyzeSession(sessionWithNames),
+      session,
+    );
     const updated: SessionState = {
       ...session,
       analysis_cache_key: cacheKey,
@@ -180,7 +193,10 @@ export class MediationWorkflow {
       updated = this.orchestrator.advanceAfterTurn(updated, childId);
 
       if (updated.state === SessionStateName.STRUCTURING) {
-        const structured = await this.structurer.structure(this.withDisplayLabels(updated));
+        const structured = overlayStructuredDisplayNames(
+          await this.structurer.structure(withDisplayLabels(updated)),
+          updated,
+        );
         updated = {
           ...this.orchestrator.markReadyForTeacher(updated),
           structured: structured as unknown as Record<string, unknown>,
@@ -194,20 +210,14 @@ export class MediationWorkflow {
     return [updated, agentMessage, false];
   }
 
-  /** 先生向け整理では、わかった名前をラベルに反映する */
-  private withDisplayLabels(session: SessionState): SessionState {
-    return {
-      ...session,
-      child_a_label: session.child_a_name ?? session.child_a_label,
-      child_b_label: session.child_b_name ?? session.child_b_label,
-    };
-  }
-
   getTeacherBrief(session: SessionState): TeacherBrief {
-    const sessionWithNames = this.withDisplayLabels(session);
+    const sessionWithNames = withDisplayLabels(session);
     let structured: StructuredFacts | null = null;
     if (session.structured) {
-      structured = StructuredFactsSchema.parse(session.structured);
+      structured = overlayStructuredDisplayNames(
+        StructuredFactsSchema.parse(session.structured),
+        session,
+      );
     }
     if (session.escalated) {
       return this.briefAgent.formatEscalationBrief(
@@ -220,5 +230,6 @@ export class MediationWorkflow {
 }
 
 export { ChildNavigatorAgent, ConfirmationAgent, EmotionGuardAgent, FactStructurerAgent, ListenerAgent, TeacherBriefAgent };
+export { childDisplayLabel, overlayStructuredDisplayNames, withDisplayLabels } from "./display-labels.js";
 export * from "./orchestrator.js";
 export * from "./schemas.js";

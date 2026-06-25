@@ -88,14 +88,14 @@ export default function BriefCard({ brief }: { brief: TeacherBrief }) {
             <h3 className="mb-3 text-sm font-semibold text-slate-800">事実・気持ちの整理</h3>
             <div className="grid gap-4 md:grid-cols-2">
               <SideBlock
-                title={`子どもA — ${brief.child_a.label}`}
+                title={brief.child_a.label}
                 facts={brief.child_a.facts}
                 feelings={brief.child_a.feelings}
                 unknowns={brief.child_a.unknowns}
                 tone="a"
               />
               <SideBlock
-                title={`子どもB — ${brief.child_b.label}`}
+                title={brief.child_b.label}
                 facts={brief.child_b.facts}
                 feelings={brief.child_b.feelings}
                 unknowns={brief.child_b.unknowns}

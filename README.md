@@ -40,6 +40,15 @@ cp .env.example .env
 bash scripts/dev-stack.sh
 ```
 
+**同一 LAN のタブレット等** から先生・子ども UI にアクセスする場合:
+
+```text
+http://<MacのLAN-IP>:5173/child
+http://<MacのLAN-IP>:5173/teacher
+```
+
+`dev-stack` 起動時に LAN URL を表示します。`VITE_API_BASE_URL` は **空のまま**（Vite プロキシ経由）。Mac ファイアウォールで Node の受信を許可してください。
+
 ### Web
 
 ```bash

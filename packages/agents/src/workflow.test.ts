@@ -72,6 +72,44 @@ describe("MediationWorkflow", () => {
     expect(brief.teacher_hints.length).toBeGreaterThan(0);
   });
 
+  it("teacher brief uses collected names over LLM default labels", async () => {
+    const wf = new MediationWorkflow();
+    let session = wf.createSession("s-names");
+    [session] = await wf.processChildTurn(session, "a", "ゆうき");
+    [session] = await wf.processChildTurn(session, "a", "左のブランコ 割り込まれた", {
+      finishTurn: true,
+    });
+    [session] = await wf.processChildTurn(session, "b", "けんた");
+    [session] = await wf.processChildTurn(session, "b", "右のブランコ 先だった", {
+      finishTurn: true,
+    });
+    session = {
+      ...session,
+      structured: {
+        child_a: {
+          label: "子どもA",
+          facts: ["テスト"],
+          feelings: [],
+          unknowns: [],
+        },
+        child_b: {
+          label: "子どもB",
+          facts: ["テスト"],
+          feelings: [],
+          unknowns: [],
+        },
+        agreements: [],
+        disagreements: [],
+        unknowns: [],
+        teacher_hints: [],
+      },
+    };
+    const brief = wf.getTeacherBrief(session);
+    expect(brief.child_a.label).toBe("ゆうき");
+    expect(brief.child_b.label).toBe("けんた");
+    expect(brief.conversation_a.label).toBe("ゆうき");
+  });
+
   it("session insights available during listening", async () => {
     const wf = new MediationWorkflow();
     let session = wf.createSession("s3");

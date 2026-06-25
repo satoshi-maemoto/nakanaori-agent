@@ -1,5 +1,6 @@
-import { AI_DISCLAIMER } from "../constants.js";
 import type { SessionState } from "../orchestrator.js";
+import { childDisplayLabel, overlayStructuredDisplayNames } from "../display-labels.js";
+import { AI_DISCLAIMER } from "../constants.js";
 import type { SessionInsights, StructuredFacts, TeacherBrief } from "../schemas.js";
 import { StructuredFactsSchema } from "../schemas.js";
 
@@ -14,11 +15,11 @@ export class TeacherBriefAgent {
       ai_disclaimer: AI_DISCLAIMER,
       timeline: this.buildTimeline(session),
       conversation_a: {
-        label: session.child_a_label,
+        label: childDisplayLabel(session, "a"),
         utterances: session.turns_a.map((t) => t.utterance),
       },
       conversation_b: {
-        label: session.child_b_label,
+        label: childDisplayLabel(session, "b"),
         utterances: session.turns_b.map((t) => t.utterance),
       },
       child_a: facts.child_a,
@@ -64,16 +65,24 @@ export class TeacherBriefAgent {
     session: SessionState,
     structured?: StructuredFacts | null,
   ): StructuredFacts {
-    if (structured) return structured;
+    if (structured) {
+      return overlayStructuredDisplayNames(structured, session);
+    }
     if (session.structured) {
-      return StructuredFactsSchema.parse(session.structured);
+      return overlayStructuredDisplayNames(
+        StructuredFactsSchema.parse(session.structured),
+        session,
+      );
     }
     if (session.analysis_snapshot) {
-      return StructuredFactsSchema.parse(session.analysis_snapshot);
+      return overlayStructuredDisplayNames(
+        StructuredFactsSchema.parse(session.analysis_snapshot),
+        session,
+      );
     }
     return {
-      child_a: { label: session.child_a_label, facts: [], feelings: [], unknowns: [] },
-      child_b: { label: session.child_b_label, facts: [], feelings: [], unknowns: [] },
+      child_a: { label: childDisplayLabel(session, "a"), facts: [], feelings: [], unknowns: [] },
+      child_b: { label: childDisplayLabel(session, "b"), facts: [], feelings: [], unknowns: [] },
       agreements: [],
       disagreements: [],
       unknowns: [],
@@ -88,13 +97,13 @@ export class TeacherBriefAgent {
     for (const turn of session.turns_a) {
       events.push({
         at: new Date().toISOString(),
-        event: `${session.child_a_label}: ${turn.utterance}`,
+        event: `${childDisplayLabel(session, "a")}: ${turn.utterance}`,
       });
     }
     for (const turn of session.turns_b) {
       events.push({
         at: new Date().toISOString(),
-        event: `${session.child_b_label}: ${turn.utterance}`,
+        event: `${childDisplayLabel(session, "b")}: ${turn.utterance}`,
       });
     }
     events.push({ at: new Date().toISOString(), event: "ブリーフ生成" });

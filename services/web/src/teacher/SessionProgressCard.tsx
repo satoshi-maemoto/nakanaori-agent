@@ -1,5 +1,5 @@
 import type { SessionProgress } from "../api";
-import { formatSessionState } from "../lib/session-labels";
+import { displayChildLabel, formatSessionState } from "../lib/session-labels";
 import TeacherInsightsPanel, { ConversationHistory } from "../components/brief/TeacherInsightsPanel";
 
 type Props = {
@@ -7,8 +7,8 @@ type Props = {
 };
 
 export default function SessionProgressCard({ progress }: Props) {
-  const labelA = progress.child_a_name ?? progress.child_a_label;
-  const labelB = progress.child_b_name ?? progress.child_b_label;
+  const labelA = displayChildLabel(progress, "a");
+  const labelB = displayChildLabel(progress, "b");
   const turnsA = progress.turns_a.map((t) => t.utterance);
   const turnsB = progress.turns_b.map((t) => t.utterance);
   const showInsights = turnsA.length > 0 || turnsB.length > 0;

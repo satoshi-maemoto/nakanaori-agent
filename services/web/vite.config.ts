@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    // 同一 LAN のタブレット等から http://<PC-IP>:5173 でアクセス可能にする
+    host: true,
     port: 5173,
     proxy: {
       "/v1": {

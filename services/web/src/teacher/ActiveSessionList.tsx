@@ -1,5 +1,5 @@
 import type { SessionState } from "../api";
-import { formatSessionState } from "../lib/session-labels";
+import { displayChildLabel, formatSessionState } from "../lib/session-labels";
 import { cn } from "../lib/utils";
 
 type Props = {
@@ -42,6 +42,14 @@ export default function ActiveSessionList({
             const selected = s.session_id === selectedId;
             const briefReady =
               s.state === "ready_for_teacher" || s.state === "escalated";
+            const labelA = displayChildLabel(s, "a");
+            const labelB = displayChildLabel(s, "b");
+            const activeLabel =
+              s.active_child === "a"
+                ? labelA
+                : s.active_child === "b"
+                  ? labelB
+                  : null;
             return (
               <li key={s.session_id}>
                 <button
@@ -57,7 +65,7 @@ export default function ActiveSessionList({
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium text-slate-900">
-                      {s.child_a_label} / {s.child_b_label}
+                      {labelA} / {labelB}
                     </span>
                     {s.urgent && (
                       <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-800">
@@ -72,7 +80,7 @@ export default function ActiveSessionList({
                   </div>
                   <p className="mt-1 text-sm text-slate-600">
                     {formatSessionState(s.state)}
-                    {s.active_child && ` — ${s.active_child === "a" ? s.child_a_label : s.child_b_label} の番`}
+                    {activeLabel && ` — ${activeLabel} の番`}
                   </p>
                   <p className="mt-1 font-mono text-xs text-slate-400">
                     ID: {s.session_id.slice(0, 8)}…
