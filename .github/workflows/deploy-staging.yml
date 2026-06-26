@@ -70,11 +70,11 @@ jobs:
           mount_optional_secret GOOGLE_TTS_CREDENTIALS_JSON "TTS mode" "deploying without TTS (503 fallback)"
 
           SECRET_ARGS=()
-          if [[ ${#TO_REMOVE[@]} -gt 0 ]]; then
-            SECRET_ARGS+=(--remove-secrets "$(IFS=,; echo "${TO_REMOVE[*]}")")
-          fi
           if [[ ${#SET_SECRETS[@]} -gt 0 ]]; then
+            # --set-secrets replaces the full secret list (cannot combine with --remove-secrets)
             SECRET_ARGS+=(--set-secrets "$(IFS=,; echo "${SET_SECRETS[*]}")")
+          elif [[ ${#TO_REMOVE[@]} -gt 0 ]]; then
+            SECRET_ARGS+=(--remove-secrets "$(IFS=,; echo "${TO_REMOVE[*]}")")
           fi
 
           gcloud run deploy ${{ env.API_SERVICE }} \
