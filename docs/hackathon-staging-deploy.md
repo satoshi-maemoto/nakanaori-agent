@@ -1,6 +1,6 @@
 # 初回 Staging デプロイ手順（ハッカソン提出用）
 
-**目的**: **AIxR-API とは別の** Cloud Run サービス `nakanaori-api` + `nakanaori-web` をデプロイし、**Deployed URL** を README に記載する。
+**目的**: **AIxR-API とは別の** Cloud Run サービス `nakanaori-api` + `nakanaori-web` をデプロイし、**Deployed URL を事務局へ別途連絡**する（README には掲載しない）。
 
 **前提**: [hackathon-appeal-plan.md](./hackathon-appeal-plan.md) P0-1
 
@@ -19,7 +19,7 @@
 GitHub (public repo)          GCP
 ─────────────────────         ─────────────────────────────
 Secrets:                      Cloud Run (別サービス)
-  GCP_PROJECT_ID      ──►       nakanaori-api  ← GEMINI from Secret Manager
+  GCP_PROJECT_ID      ──►       nakanaori-api  ← GEMINI + TTS (Secret Manager, 任意)
   GCP_SA_KEY                    nakanaori-web  ← VITE_API_BASE_URL ビルド時注入
                                 Artifact Registry: nakanaori/{api,web}
                                 (AIxR-API の aixr-api-service-prod 等とは独立)
@@ -217,7 +217,22 @@ Kebbi / Web 音声は Google Cloud TTS 認証が API 側必要。staging では 
 
 ---
 
-## 8. 既存 GCP プロジェクト（AIxR 等）を使う場合
+## 8. Kebbi 実機（staging / local）
+
+| 操作 | コマンド |
+|------|----------|
+| staging デプロイ（既定） | `bash scripts/kebbi-deploy.sh` |
+| local（dev-stack） | `bash scripts/dev-stack.sh` → `kebbi-deploy.sh local` |
+| API URL のみ切替 | `kebbi-use-staging.sh` / `kebbi-use-local.sh` |
+| 設定画面を adb で開く | `kebbi-open-settings.sh` |
+
+接続先既定: [config/kebbi-targets.env](../config/kebbi-targets.env)（Web URL → API URL 自動導出）
+
+詳細: [kebbi-dev-guide.md](./kebbi-dev-guide.md)
+
+---
+
+## 9. 既存 GCP プロジェクト（AIxR 等）を使う場合
 
 - **OK**: 同一 `PROJECT_ID` に `nakanaori-api` / `nakanaori-web` を追加（請求・Secret 共有）
 - **NG**: AIxR-API の Cloud Run URL を Nakanaori の API ベース URL にする

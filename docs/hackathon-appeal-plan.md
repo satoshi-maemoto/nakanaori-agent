@@ -48,7 +48,7 @@
 | # | タスク | 担当ドキュメント | 状態 |
 |---|--------|------------------|------|
 | 1 | GCP Secrets 設定 → `main` push → staging デプロイ | [hackathon-staging-deploy.md](./hackathon-staging-deploy.md) · `scripts/bootstrap-staging-gcp.sh` | ✅ |
-| 2 | README 先頭に **Web / API の Deployed URL** を記載 | [README.md](../README.md) | ✅ |
+| 2 | Staging デプロイ + **Deployed URL を事務局へ連絡**（README 非掲載） | [README.md](../README.md) · [hackathon-staging-deploy.md](./hackathon-staging-deploy.md) | ✅ |
 | 3 | **Proto Pedia** 登録（文案: [proto-pedia-draft.md](./proto-pedia-draft.md)） | proto-pedia-draft.md | ☐ |
 | 4 | **3分デモ動画** 撮影・公開（台本: [demo-video-script.md](./demo-video-script.md)） | demo-video-script.md | ☐ |
 | 5 | 提出チェックリスト完了 | [hackathon-submission.md](./hackathon-submission.md) | ☐ |
@@ -90,9 +90,9 @@
 
 | 用途 | 推奨 |
 |------|------|
-| 審査員・Proto Pedia | **Cloud Run staging URL**（`VITE_API_BASE_URL` 注入済 Web） |
-| 決勝ライブ | Kebbi + LAN または staging API |
-| 開発 | `bash scripts/dev-stack.sh` |
+| 審査員・Proto Pedia | **Cloud Run staging URL**（事務局提出用；Web は `VITE_API_BASE_URL` 注入済） |
+| 決勝ライブ | Kebbi + staging API（`kebbi-deploy.sh` 既定）または LAN `dev-stack` |
+| 開発 | `bash scripts/dev-stack.sh` + `kebbi-deploy.sh local` |
 
 ---
 
@@ -106,6 +106,8 @@
 | [proto-pedia-draft.md](./proto-pedia-draft.md) | Proto Pedia 文案 |
 | [demo-scenario.md](./demo-scenario.md) | ライブピッチ Scene 1–8 |
 | [devops.md](./devops.md) | CI/CD パイプライン |
+| [kebbi-dev-guide.md](./kebbi-dev-guide.md) | Kebbi 実機 · 設定 UI · local/staging |
+| [config/kebbi-targets.env](../config/kebbi-targets.env) | Kebbi 接続先既定 |
 | [aidlc-docs/operations/hackathon-submission-plan.md](../aidlc-docs/operations/hackathon-submission-plan.md) | AI-DLC 実行計画 |
 
 ---
@@ -115,3 +117,4 @@
 | 日付 | 内容 |
 |------|------|
 | 2026-06-21 | 訴求力評価・本計画作成。P0 ドキュメント整備完了（README CI バッジ含む） |
+| 2026-06-26 | TTS 任意 Secret · README URL 非掲載 · Kebbi local/staging 切替 · 設定 UI 改善 — ドキュメント反映 |

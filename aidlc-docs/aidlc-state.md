@@ -41,12 +41,14 @@
 
 - [x] Cloud Run staging 初回デプロイ
 - [x] ハッカソン訴求力向上 — ドキュメント整備（appeal-plan / staging-deploy / video-script / proto-pedia）
-- [ ] ハッカソン P0 — Deployed URL + Proto Pedia + 3分動画
+- [ ] ハッカソン P0 — Deployed URL 事務局連絡 + Proto Pedia + 3分動画
 
 ## 現在の状態
 
-- **次ステージ**: `bootstrap-staging-gcp.sh` → GitHub Secrets → main push → README URL 更新
+- **次ステージ**: Proto Pedia 登録 · 3分デモ動画 · Deployed URL を事務局へ連絡
 - **staging 方針**: AIxR-API とは **別 Cloud Run**（`nakanaori-api` / `nakanaori-web`）
+- **staging Secret**: `GEMINI_API_KEY` / `GOOGLE_TTS_CREDENTIALS_JSON` — ENABLED 版のみ注入（未設定時警告でデプロイ続行）
+- **Kebbi 接続**: 既定 **staging** — [config/kebbi-targets.env](../config/kebbi-targets.env) · `kebbi-deploy.sh` / `kebbi-use-*.sh`
 - **ハッカソン計画**: `aidlc-docs/operations/hackathon-submission-plan.md` · `docs/hackathon-appeal-plan.md`
 - **Kebbi repo**: `$NAKANAORI_KEBBI_ROOT`（未設定時 `../nakanaori-kebbi`）
 - **技術スタック**: TypeScript, Tailwind v4, three + @pixiv/three-vrm, Hono, ADK, Gemini 2.5 Flash

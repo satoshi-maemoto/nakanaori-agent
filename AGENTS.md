@@ -41,7 +41,9 @@
 - **TTS**: `packages/tts` + `POST /v1/tts/synthesize` — Chirp 3 HD（Web `Zephyr`/`Rasalgethi`、Kebbi `Callirrhoe`）
 - Do **not** use CharaTomo `POST /api/v1/llm/chat`
 - Nuwa AAR: `app/libs/`（CharaTomo-Kebbi と同手順）
-- 実機: `bash scripts/kebbi-deploy.sh`（`NAKANAORI_KEBBI_ROOT` でパス上書き可）
+- 実機: `bash scripts/kebbi-deploy.sh`（既定 **staging**；`local` で LAN）
+- 接続先切替: `kebbi-use-staging.sh` / `kebbi-use-local.sh` — 設定: `kebbi-open-settings.sh`
+- 既定 URL: [config/kebbi-targets.env](config/kebbi-targets.env) · `NAKANAORI_KEBBI_ROOT` で sibling パス上書き可
 
 ## ローカル開発
 

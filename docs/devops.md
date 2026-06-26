@@ -31,9 +31,10 @@ push と PR のたびに:
 `main` への push 時:
 
 1. API Docker イメージをビルド → Artifact Registry（`nakanaori/api`）
-2. Cloud Run に `nakanaori-api` をデプロイ（Secret Manager に **ENABLED** 版があるときのみ注入；無効/未設定時は警告のうえ続行）
+2. Cloud Run に `nakanaori-api` をデプロイ（Secret Manager に **ENABLED** 版があるときのみ注入；無効/未設定時は `::warning::` のうえ続行）
    - `GEMINI_API_KEY` — 未設定時 stub モード（LLM off）
    - `GOOGLE_TTS_CREDENTIALS_JSON` — 未設定時 TTS 503 + Web/Kebbi フォールバック
+   - 有効 secret がある場合は `--set-secrets` のみ（`--remove-secrets` と併用不可）
 3. デプロイ済み API URL を取得
 4. Web Docker イメージを `VITE_API_BASE_URL` 付きでビルド → `nakanaori-web` をデプロイ
 
@@ -191,7 +192,11 @@ bash scripts/dev-stack.sh
 
 | スクリプト | 用途 |
 |-----------|------|
-| `scripts/kebbi-deploy.sh` | ビルド・インストール・`MainActivity` 起動 |
+| `scripts/kebbi-target.sh` | Kebbi API URL 解決（`local` / `staging`）— 他スクリプトから source |
+| `scripts/kebbi-set-api-url.sh` | adb で Kebbi SharedPreferences に API URL 書込 |
+| `scripts/kebbi-deploy.sh` | ビルド・インストール・API URL 設定・起動（`local` / `staging`、既定 staging） |
+| `scripts/kebbi-use-staging.sh` / `kebbi-use-local.sh` | 接続先のみ切替（adb） |
+| `scripts/kebbi-open-settings.sh` | Kebbi 設定画面を adb で直接起動 |
 | `scripts/kebbi-ensure-sdk.sh` | Android SDK / `local.properties` 確認 |
 | `scripts/kebbi-status.sh` | アプリ起動中か `adb` で確認 |
 | `scripts/kebbi-logcat.sh` | `NakanaoriKebbi` タグ logcat |

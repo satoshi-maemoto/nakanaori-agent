@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 # Build, install debug APK on connected Kebbi, and launch MainActivity.
+# Usage: bash scripts/kebbi-deploy.sh [local|staging]
+# Default target: KEBBI_TARGET from .env / config/kebbi-targets.env (staging)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 KEBBI="${NAKANAORI_KEBBI_ROOT:-$ROOT/../nakanaori-kebbi}"
 export JAVA_HOME="${JAVA_HOME:-/Applications/Android Studio.app/Contents/jbr/Contents/Home}"
+
+TARGET="${KEBBI_TARGET:-staging}"
+if [[ "${1:-}" == "local" || "${1:-}" == "staging" ]]; then
+  TARGET="$1"
+  shift
+fi
 
 if [[ ! -d "$KEBBI" ]]; then
   echo "[kebbi-deploy] ERROR: Kebbi repo not found: $KEBBI" >&2
@@ -22,6 +30,9 @@ bash "$ROOT/scripts/kebbi-ensure-sdk.sh"
 cd "$KEBBI"
 echo "[kebbi-deploy] installDebug → $KEBBI"
 ./gradlew :app:installDebug
+
+echo "[kebbi-deploy] API target=$TARGET"
+bash "$ROOT/scripts/kebbi-set-api-url.sh" "$TARGET"
 
 echo "[kebbi-deploy] launching com.nakanaori.kebbi/.ui.MainActivity"
 adb shell am start -n "com.nakanaori.kebbi/com.nakanaori.kebbi.ui.MainActivity"

@@ -34,19 +34,50 @@ ipconfig getifaddr en0
 USB で Kebbi を接続し:
 
 ```bash
-# nakanaori-agent から
+# ステージング（既定）— Cloud Run API
 bash scripts/kebbi-deploy.sh
+# または
+bash scripts/kebbi-deploy.sh staging
 
-# または nakanaori-kebbi から
-bash scripts/kebbi-deploy.sh
+# ローカル dev-stack（Mac の LAN IP :8080）
+bash scripts/dev-stack.sh   # 別ターミナル
+bash scripts/kebbi-deploy.sh local
 ```
+
+**接続先だけ切り替える**（APK 再インストールなし）:
+
+```bash
+bash scripts/kebbi-use-staging.sh   # Cloud Run
+bash scripts/kebbi-use-local.sh     # LAN（dev-stack 起動中）
+```
+
+設定は [config/kebbi-targets.env](../config/kebbi-targets.env) と `.env` の `KEBBI_TARGET` で上書き可能。ステージング Web URL から API URL（`nakanaori-web` → `nakanaori-api`）を自動導出します。
 
 `NAKANAORI_KEBBI_ROOT` で sibling パスを上書き可能。
 
-### 3. Kebbi 設定
+### 3. Kebbi 設定（手動）
 
-1. 設定を開く（下の **⚙ 設定をひらく**、ロボットの頭タップ、または音声で「設定」）
-2. **API URL** に PC の LAN IP を入れる（例 `http://192.168.11.4:8080`）
+設定画面の開き方（優先順）:
+
+| 方法 | 操作 |
+|------|------|
+| **画面下ボタン** | 「⚙ 設定を ひらく」（顔 UI の外・常に表示） |
+| **胸（お腹）タップ** | ロボット本体の胸センサー（短押し） |
+| **画面上部バー 3回タップ** | 黒いステータス領域を素早く 3回 |
+| **音声** | 「設定」「せってい」（マイク待ち中） |
+| **Mac から adb** | `bash scripts/kebbi-open-settings.sh` |
+
+胸の **長押し** は設定ではなく **セッションやり直し** です。  
+**頭・顔タップ** はセッション中 **次の番（head-pet）** 用で、設定には開きません。
+
+Kebbi アプリの設定画面には **ステージング（Cloud Run）** プリセットもあります。
+
+手動で URL を変える場合:
+
+1. 上記いずれかで設定を開く
+2. **API URL** に接続先を入れる（または「ステージング」プリセット）
+   - ステージング: `https://nakanaori-api-370062202060.asia-northeast1.run.app`
+   - ローカル: PC の LAN IP（例 `http://192.168.11.4:8080`）
 3. **保存** → **← もどる**
 4. メイン画面で `API に 接続中… http://192.168.x.x:8080` と表示されセッションが再開する
 
@@ -79,13 +110,14 @@ bash scripts/kebbi-logcat-clear.sh
 
 ## 画面と Nuwa 顔表示
 
-Kebbi では Nuwa SDK の `showFace()` が **ロボット表示を前面に出す** ため、Android の設定画面が裏に隠れることがある。
+Kebbi では Nuwa SDK の `showFace()` が **ロボット表示を前面に出す** ため、Android UI が隠れることがある。
 
 実装方針（`nakanaori-kebbi`）:
 
+- **設定バー**（画面下）は `facePlaceholder`（頭なで用タッチ）の外に配置し、常にタップ可能
 - 設定画面表示中は `hideFace()` + `hideWindow(true)` を呼ぶ
 - `NuwaSession.isSettingsScreenVisible` が true の間は `showFace()` を抑制（TTS 再生中も）
-- ロボットサービス接続直後は顔を出さず、**セッション確立後**に表示
+- 胸センサー短押し / 上部バー3回タップ / `kebbi-open-settings.sh` でも設定を開ける
 - 設定から戻ったら保存済み URL でセッションを再試行
 
 ## API URL の注意
@@ -149,7 +181,7 @@ Kebbi は `TtsApi.kt` から `options.profile: "kebbi_child"` を送信。サー
 4. **長押し中**（`startHandHoldListening`）: 首を手の方向へ傾け、固定スマイル + 聞き取り中の首の subtle 動き
 5. **手を離す** と首を中央に戻し、通常の顔表情に復帰（ENH-KEBBI-03）
 
-頭タップ／なでる → 番交代。胸タップ → 設定画面。手タップは設定に使わない。
+頭・顔タップ／なでる → 番交代（head-pet）。**胸（お腹）短押し** → 設定画面。**胸長押し** → セッションやり直し。手タップは設定に使わない。
 
 ### しゃべり中の動き
 
@@ -160,22 +192,32 @@ Kebbi は `TtsApi.kt` から `options.profile: "kebbi_child"` を送信。サー
 
 台本: [examples/turn-order-story-dialogue.md](./examples/turn-order-story-dialogue.md)
 
-1. Mac で `dev-stack`、Kebbi 設定で LAN API URL
-2. Kebbi: 起動 → ウェルカム → 名前 → 話す → **頭をなでる** で番交代
-3. 子B の番: 手の案内 → 話す → **頭をなでる** → 終了メッセージ
-4. 先生 Web `http://localhost:5173/teacher` でブリーフ確認
+### staging API（既定）
 
-長押し（頭センサー）でセッション再試行。
+```bash
+bash scripts/kebbi-deploy.sh              # staging API を adb 設定 + APK
+# 設定変更: kebbi-open-settings.sh / 画面下ボタン / 胸タップ / 上バー3回タップ
+```
+
+### ローカル API
+
+1. Mac で `bash scripts/dev-stack.sh`
+2. `bash scripts/kebbi-deploy.sh local`（または設定で LAN API URL）
+3. Kebbi: ウェルカム → 名前 → 話す → **頭をなでる** で番交代
+4. 子B の番: 手の案内 → 話す → **頭をなでる** → 終了メッセージ
+5. 先生 Web `http://localhost:5173/teacher` でブリーフ確認
+
+**胸長押し**でセッション再試行。
 
 ## トラブルシューティング
 
 | 症状 | 原因 | 対処 |
 |------|------|------|
-| 起動後なにも起きない | API が `127.0.0.1` のまま | 設定で LAN IP を保存し「もどる」 |
+| 起動後なにも起きない | API が `127.0.0.1` のまま / staging 未設定 | `kebbi-use-staging.sh` または設定で URL 保存→「もどる」 |
 | 設定を保存しても 127.0.0.1 エラー | 旧ビルド（再接続なし） | 最新 APK を `kebbi-deploy.sh` で入れ直す |
-| 設定画面が見えない | Nuwa 顔が前面 | 頭タップ or 下の設定ボタン（顔は自動で hide） |
-| API 接続失敗 | Mac ファイアウォール / 別ネットワーク | 同一 Wi‑Fi、`curl` で実機から `/health` 確認 |
-| TTS 無音 | API に Google 認証未設定 | `google-cloud-tts-setup.md`、または Nuwa TTS フォールバックを確認 |
+| 設定画面が開けない | Nuwa 顔が前面 / 胸センサー不調 | **画面下「⚙ 設定をひらく」**（常時表示）· 上バー3回タップ · `kebbi-open-settings.sh` |
+| TTS 503 / 無音（staging） | `GOOGLE_TTS_CREDENTIALS_JSON` 未注入 | Secret Manager 登録 + 再デプロイ（[google-cloud-tts-setup.md](./google-cloud-tts-setup.md)） |
+| API 接続失敗 | Mac ファイアウォール / 別ネットワーク / staging 障害 | 同一 Wi‑Fi、`curl` / `kebbi-use-staging.sh` |
 | Gradle ビルド失敗 | SDK パス / Kotlin 競合 | `local.properties`、`gradle.properties` の `android.builtInKotlin=false` |
 | マイクが効かない | 権限未許可 | 初回起動時の許可ダイアログを承認 |
 

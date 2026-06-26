@@ -93,14 +93,22 @@ gcloud run services describe nakanaori-web --region asia-northeast1 --format 'va
 ### デプロイ
 
 ```bash
+# 既定: staging API
 bash scripts/kebbi-deploy.sh
-# または nakanaori-kebbi で bash scripts/kebbi-deploy.sh
+
+# ローカル dev-stack
+bash scripts/dev-stack.sh
+bash scripts/kebbi-deploy.sh local
 ```
 
-### 設定（必須）
+### 設定
 
-1. 設定を開く（画面下 **⚙ 設定をひらく** / ロボット頭タップ / 「設定」と発話）
-2. API URL = `http://<PC-LAN-IP>:8080`（**`127.0.0.1` 不可**）
+**`kebbi-deploy.sh` が staging / local の API URL を adb 設定する**ため、初回は手動設定不要（staging 既定）。
+
+手動で変える場合:
+
+1. 設定を開く — 画面下 **⚙ 設定をひらく** / 胸（お腹）短押し / 上バー3回タップ / 「設定」と発話 / `kebbi-open-settings.sh`
+2. API URL 確認（local: `http://<PC-LAN-IP>:8080` — **`127.0.0.1` 不可**）
 3. 子ども A/B ラベル、**この Kebbi が 話す 子**（A または B）
 4. **保存** → **← もどる**（保存後にセッション再接続）
 

@@ -114,11 +114,19 @@ curl -s "$API_URL/v1/sessions/$SESSION_ID/teacher-brief"
 
 ## Kebbi 実機デモ
 
+### staging（既定）
+
+```bash
+bash scripts/kebbi-deploy.sh
+```
+
+### ローカル
+
 1. Mac: `bash scripts/dev-stack.sh`
-2. Kebbi: `bash scripts/kebbi-deploy.sh`
-3. 設定 → API URL = `http://<PC-LAN-IP>:8080` → 保存 → もどる
+2. Kebbi: `bash scripts/kebbi-deploy.sh local`
+3. 必要なら `bash scripts/kebbi-open-settings.sh` で API URL 確認
 4. 上記 Scene 2–3 を音声で実施（台本: [turn-order-story-dialogue.md](./examples/turn-order-story-dialogue.md)）
-5. 先生 Web `/teacher` でブリーフ確認
+5. 先生 Web `/teacher`（staging または LAN）でブリーフ確認
 
 詳細: [kebbi-dev-guide.md](./kebbi-dev-guide.md)
 

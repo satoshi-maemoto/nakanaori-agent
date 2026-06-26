@@ -65,11 +65,20 @@ cd services/web && npm install && npm run dev
 ### Kebbi 実機
 
 ```bash
-bash scripts/dev-stack.sh          # Mac: API :8080
-bash scripts/kebbi-deploy.sh       # Kebbi: ビルド・インストール・起動
+# ステージング（既定）— Cloud Run API を adb で Kebbi に設定
+bash scripts/kebbi-deploy.sh
+
+# ローカル dev-stack 向け
+bash scripts/dev-stack.sh          # 別ターミナル
+bash scripts/kebbi-deploy.sh local
+
+# URL だけ切替 / 設定画面を adb で開く
+bash scripts/kebbi-use-staging.sh
+bash scripts/kebbi-use-local.sh
+bash scripts/kebbi-open-settings.sh
 ```
 
-Kebbi 設定で API URL に **PC の LAN IP**（例 `http://192.168.11.4:8080`）を指定。詳細: [docs/kebbi-dev-guide.md](docs/kebbi-dev-guide.md)
+接続先の既定: [config/kebbi-targets.env](config/kebbi-targets.env)（staging Web URL から API URL を自動導出）。詳細: [docs/kebbi-dev-guide.md](docs/kebbi-dev-guide.md)
 
 ### デモ（curl — 順番取り合い）
 
@@ -102,7 +111,7 @@ curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 ## DevOps
 
 - CI: lint, プロンプト禁止語チェック, Vitest
-- Staging: `main` への push で Cloud Run デプロイ
+- Staging: `main` への push で Cloud Run デプロイ（`GEMINI_API_KEY` / `GOOGLE_TTS_CREDENTIALS_JSON` は Secret Manager で任意注入）
 
 [docs/devops.md](docs/devops.md)
 

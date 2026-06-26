@@ -47,8 +47,14 @@ Nuwa Kebbi Android クライアントは **この monorepo 外** の sibling rep
 # Mac: API
 bash scripts/dev-stack.sh
 
-# Kebbi: ビルド・実機インストール・起動
+# Kebbi: ビルド・実機インストール・起動（既定 staging）
 bash scripts/kebbi-deploy.sh
+bash scripts/kebbi-deploy.sh local      # dev-stack 向け
+bash scripts/kebbi-use-staging.sh       # URL のみ staging
+bash scripts/kebbi-use-local.sh       # URL のみ LAN
+bash scripts/kebbi-open-settings.sh   # 設定画面を adb で開く
 ```
 
-Kebbi 設定の API URL は **`http://<PC-LAN-IP>:8080`**（`127.0.0.1` は端末自身を指すため不可）。保存後「もどる」でセッション再接続。
+接続先の既定値: [config/kebbi-targets.env](../../config/kebbi-targets.env)
+
+Kebbi 設定の API URL — **staging**: Cloud Run API / **local**: `http://<PC-LAN-IP>:8080`（`127.0.0.1` は不可）。保存後「もどる」でセッション再接続。
