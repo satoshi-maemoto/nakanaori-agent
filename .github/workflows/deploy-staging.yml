@@ -37,23 +37,46 @@ jobs:
         env:
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         run: |
+          set -euo pipefail
           IMAGE="${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/nakanaori/api:${{ github.sha }}"
-          SECRET_ARGS=(--remove-secrets GEMINI_API_KEY)
-          if gcloud secrets describe GEMINI_API_KEY --project="$PROJECT_ID" &>/dev/null; then
-            ENABLED=$(gcloud secrets versions list GEMINI_API_KEY \
-              --project="$PROJECT_ID" \
-              --filter="state=ENABLED" \
-              --format="value(name)" \
-              --limit=1)
-            if [[ -n "$ENABLED" ]]; then
-              SECRET_ARGS=(--set-secrets "GEMINI_API_KEY=GEMINI_API_KEY:latest")
-              echo "GEMINI_API_KEY: mounting enabled secret (LLM mode)"
+
+          mount_optional_secret() {
+            local name="$1"
+            local ok_label="$2"
+            local off_label="$3"
+            if gcloud secrets describe "$name" --project="$PROJECT_ID" &>/dev/null; then
+              local enabled
+              enabled=$(gcloud secrets versions list "$name" \
+                --project="$PROJECT_ID" \
+                --filter="state=ENABLED" \
+                --format="value(name)" \
+                --limit=1)
+              if [[ -n "$enabled" ]]; then
+                SET_SECRETS+=("${name}=${name}:latest")
+                echo "${name}: mounting enabled secret (${ok_label})"
+              else
+                TO_REMOVE+=("$name")
+                echo "::warning::${name} has no ENABLED version — ${off_label}"
+              fi
             else
-              echo "::warning::GEMINI_API_KEY has no ENABLED version — deploying in stub mode (LLM off)."
+              TO_REMOVE+=("$name")
+              echo "::warning::${name} not in Secret Manager — ${off_label}"
             fi
-          else
-            echo "::warning::GEMINI_API_KEY not in Secret Manager — deploying in stub mode (LLM off)."
+          }
+
+          SET_SECRETS=()
+          TO_REMOVE=()
+          mount_optional_secret GEMINI_API_KEY "LLM mode" "deploying in stub mode (LLM off)"
+          mount_optional_secret GOOGLE_TTS_CREDENTIALS_JSON "TTS mode" "deploying without TTS (503 fallback)"
+
+          SECRET_ARGS=()
+          if [[ ${#TO_REMOVE[@]} -gt 0 ]]; then
+            SECRET_ARGS+=(--remove-secrets "$(IFS=,; echo "${TO_REMOVE[*]}")")
           fi
+          if [[ ${#SET_SECRETS[@]} -gt 0 ]]; then
+            SECRET_ARGS+=(--set-secrets "$(IFS=,; echo "${SET_SECRETS[*]}")")
+          fi
+
           gcloud run deploy ${{ env.API_SERVICE }} \
             --image "$IMAGE" \
             --region ${{ env.REGION }} \

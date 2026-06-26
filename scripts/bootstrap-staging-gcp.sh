@@ -9,6 +9,8 @@
 #   export REGION=asia-northeast1          # 任意（デフォルト asia-northeast1）
 #   # GEMINI_API_KEY を Secret Manager に登録する場合（初回のみ）:
 #   export GEMINI_API_KEY=your-key
+#   # TTS（任意）— サービスアカウント JSON ファイル:
+#   export GOOGLE_TTS_CREDENTIALS_FILE=./credentials/google-tts-service-account.json
 #   bash scripts/bootstrap-staging-gcp.sh
 #
 # 完了後: GitHub リポジトリ Secrets に GCP_PROJECT_ID / GCP_SA_KEY を登録 → main push
@@ -22,6 +24,7 @@ AR_REPO="${AR_REPO:-nakanaori}"
 DEPLOY_SA_NAME="${DEPLOY_SA_NAME:-nakanaori-github-deploy}"
 DEPLOY_SA_EMAIL="${DEPLOY_SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 SECRET_NAME="${SECRET_NAME:-GEMINI_API_KEY}"
+TTS_SECRET_NAME="${TTS_SECRET_NAME:-GOOGLE_TTS_CREDENTIALS_JSON}"
 
 echo "==> Nakanaori staging bootstrap"
 echo "    PROJECT_ID=$PROJECT_ID"
@@ -38,6 +41,7 @@ gcloud services enable \
   artifactregistry.googleapis.com \
   secretmanager.googleapis.com \
   storage.googleapis.com \
+  texttospeech.googleapis.com \
   --project="$PROJECT_ID"
 
 echo "==> Artifact Registry ($AR_REPO)..."
@@ -64,6 +68,28 @@ else
       --data-file=- \
       --project="$PROJECT_ID"
     echo "    created"
+  fi
+fi
+
+echo "==> Secret Manager ($TTS_SECRET_NAME) — optional TTS..."
+if gcloud secrets describe "$TTS_SECRET_NAME" --project="$PROJECT_ID" &>/dev/null; then
+  echo "    secret exists (skip create; use 'gcloud secrets versions add' to rotate)"
+else
+  if [[ -n "${GOOGLE_TTS_CREDENTIALS_FILE:-}" && -f "$GOOGLE_TTS_CREDENTIALS_FILE" ]]; then
+    python3 -c "import json,sys; print(json.dumps(json.load(open(sys.argv[1]))))" \
+      "$GOOGLE_TTS_CREDENTIALS_FILE" | gcloud secrets create "$TTS_SECRET_NAME" \
+      --data-file=- \
+      --project="$PROJECT_ID"
+    echo "    created from $GOOGLE_TTS_CREDENTIALS_FILE"
+  elif [[ -n "${GOOGLE_TTS_CREDENTIALS_JSON:-}" ]]; then
+    printf '%s' "$GOOGLE_TTS_CREDENTIALS_JSON" | gcloud secrets create "$TTS_SECRET_NAME" \
+      --data-file=- \
+      --project="$PROJECT_ID"
+    echo "    created from GOOGLE_TTS_CREDENTIALS_JSON env"
+  else
+    echo "    WARN: TTS credentials not set — staging deploys without TTS (503 fallback)."
+    echo "    See docs/google-cloud-tts-setup.md"
+    echo "    export GOOGLE_TTS_CREDENTIALS_FILE=./credentials/google-tts-service-account.json"
   fi
 fi
 
@@ -122,16 +148,18 @@ echo "==> Cloud Run runtime — Secret Manager accessor..."
 PROJECT_NUMBER="$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')"
 RUNTIME_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 
-if gcloud secrets describe "$SECRET_NAME" --project="$PROJECT_ID" &>/dev/null; then
-  gcloud secrets add-iam-policy-binding "$SECRET_NAME" \
-    --project="$PROJECT_ID" \
-    --member="serviceAccount:${RUNTIME_SA}" \
-    --role="roles/secretmanager.secretAccessor" \
-    --quiet >/dev/null
-  echo "    $RUNTIME_SA → secretAccessor on $SECRET_NAME"
-else
-  echo "    skip (secret $SECRET_NAME not found yet)"
-fi
+for sm_secret in "$SECRET_NAME" "$TTS_SECRET_NAME"; do
+  if gcloud secrets describe "$sm_secret" --project="$PROJECT_ID" &>/dev/null; then
+    gcloud secrets add-iam-policy-binding "$sm_secret" \
+      --project="$PROJECT_ID" \
+      --member="serviceAccount:${RUNTIME_SA}" \
+      --role="roles/secretmanager.secretAccessor" \
+      --quiet >/dev/null
+    echo "    $RUNTIME_SA → secretAccessor on $sm_secret"
+  else
+    echo "    skip (secret $sm_secret not found yet)"
+  fi
+done
 
 KEY_FILE="${KEY_FILE:-./nakanaori-github-deploy-key.json}"
 if [[ -f "$KEY_FILE" ]]; then
@@ -155,5 +183,5 @@ echo "2. git push origin main  → deploy-staging.yml deploys:"
 echo "     Cloud Run: nakanaori-api, nakanaori-web"
 echo "     Images:    ${REGION}-docker.pkg.dev/${PROJECT_ID}/${AR_REPO}/api|web"
 echo ""
-echo "3. After deploy, update README デモ URL and run smoke tests."
-echo "   See docs/hackathon-staging-deploy.md"
+echo "3. After deploy, get URLs (gcloud run services describe) and report to hackathon secretariat."
+echo "   Run smoke tests — see docs/hackathon-staging-deploy.md"

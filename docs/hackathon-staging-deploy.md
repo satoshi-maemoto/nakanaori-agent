@@ -89,6 +89,28 @@ gcloud secrets add-iam-policy-binding GEMINI_API_KEY \
   --role="roles/secretmanager.secretAccessor"
 ```
 
+### 1.3b Secret Manager — TTS 認証（任意）
+
+TTS を staging で有効にする場合、サービスアカウント JSON を **1 行 JSON** として Secret Manager に登録します。
+
+```bash
+# Cloud Text-to-Speech API を有効化
+gcloud services enable texttospeech.googleapis.com --project=$PROJECT_ID
+
+# JSON ファイルから Secret 作成（bootstrap でも可）
+python3 -c 'import json; print(json.dumps(json.load(open("credentials/google-tts-service-account.json"))))' \
+  | gcloud secrets create GOOGLE_TTS_CREDENTIALS_JSON \
+    --data-file=- \
+    --project=$PROJECT_ID
+
+gcloud secrets add-iam-policy-binding GOOGLE_TTS_CREDENTIALS_JSON \
+  --project="$PROJECT_ID" \
+  --member="serviceAccount:${RUNTIME_SA}" \
+  --role="roles/secretmanager.secretAccessor"
+```
+
+**未設定でもデプロイは成功** — workflow が `::warning::` を出し、API は TTS 503 + フォールバックで動作します。
+
 ### 1.4 デプロイ用サービスアカウント
 
 GitHub Actions 専用 SA（最小限のロール）:
@@ -121,7 +143,7 @@ gcloud iam service-accounts keys create nakanaori-github-deploy-key.json \
 
 **Settings → Secrets and variables → Actions**
 
-`GEMINI_API_KEY` は **GitHub には置かない** — Secret Manager のみ（`deploy-staging.yml` が `--set-secrets` で注入）。
+`GEMINI_API_KEY` と `GOOGLE_TTS_CREDENTIALS_JSON` は **GitHub には置かない** — Secret Manager のみ（`deploy-staging.yml` が `--set-secrets` で注入）。
 
 ローカル開発用 `.env` も gitignore 済み（`.env.example` のみコミット）。
 
@@ -144,21 +166,17 @@ curl -s "$(gcloud run services describe nakanaori-api --region asia-northeast1 -
 
 ---
 
-## 4. README 更新
+## 4. デプロイ後の確認
 
-デプロイ成功後、[README.md](../README.md) の「デモ URL」セクションを更新:
+デプロイ成功後、URL を取得して **ハッカソン事務局へ別途連絡**します（README には掲載しない）。
 
-```markdown
-## デモ URL
-
-| サービス | URL |
-|----------|-----|
-| Web（子ども） | https://nakanaori-web-370062202060.asia-northeast1.run.app/child |
-| Web（先生） | https://nakanaori-web-370062202060.asia-northeast1.run.app/teacher |
-| API health | https://nakanaori-api-370062202060.asia-northeast1.run.app/health |
+```bash
+gcloud run services describe nakanaori-web --region asia-northeast1 --format 'value(status.url)'
+gcloud run services describe nakanaori-api --region asia-northeast1 --format 'value(status.url)'
+bash scripts/smoke-staging.sh   # API_URL / WEB_URL を上記で設定
 ```
 
-[hackathon-submission.md](./hackathon-submission.md) の Deployed URL チェックを `[x]` に。
+[hackathon-submission.md](./hackathon-submission.md) の提出チェックを更新。
 
 ---
 
@@ -178,6 +196,8 @@ curl -s "$(gcloud run services describe nakanaori-api --region asia-northeast1 -
 |------|------|
 | deploy workflow 失敗 | Actions ログ、`GCP_SA_KEY` / Artifact Registry 権限 |
 | GEMINI secret DISABLED | **正常** — workflow は `::warning::` のうえ stub モードでデプロイ（`--remove-secrets`） |
+| TTS secret 未設定 / DISABLED | **正常** — workflow は `::warning::` のうえ TTS 503 フォールバックでデプロイ |
+| TTS 502 on staging | Secret の JSON 形式・TTS API 有効化・`roles/cloudtts.user` を確認 |
 | `Permission denied` on secret | デプロイ SA に `secretmanager.admin`、実行 SA に `secretAccessor` |
 | Web が API に繋がらない | Web イメージの `VITE_API_BASE_URL` が API URL か確認（再デプロイ） |
 | teacher_hints 空 | Cloud Run の `GEMINI_API_KEY` secret 注入を確認 |
@@ -189,7 +209,9 @@ curl -s "$(gcloud run services describe nakanaori-api --region asia-northeast1 -
 
 ## 7. TTS（任意）
 
-Kebbi / Web 音声は Google Cloud TTS 認証が API 側必要。staging では未設定でも **503 + フォールバック** でデモ可能。
+Kebbi / Web 音声は Google Cloud TTS 認証が API 側必要。staging では Secret `GOOGLE_TTS_CREDENTIALS_JSON` が **ENABLED** のときのみ TTS 有効；未設定でも **503 + フォールバック** でデモ可能。
+
+`deploy-staging.yml` は GEMINI と同様、Secret が無い／無効なら `::warning::` を出して `--remove-secrets` のうえデプロイ続行。
 
 [google-cloud-tts-setup.md](./google-cloud-tts-setup.md)
 

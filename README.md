@@ -10,16 +10,11 @@
 
 [DevOps × AI Agent Hackathon 2026](https://findy.co.jp/4127/) 提出作品。
 
-## デモ URL
+## Staging デプロイ
 
-| サービス | URL |
-|----------|-----|
-| Web（トップ） | https://nakanaori-web-370062202060.asia-northeast1.run.app/ |
-| Web（子ども） | https://nakanaori-web-370062202060.asia-northeast1.run.app/child |
-| Web（先生） | https://nakanaori-web-370062202060.asia-northeast1.run.app/teacher |
-| API health | https://nakanaori-api-370062202060.asia-northeast1.run.app/health |
+`main` への push で Cloud Run（`nakanaori-api` / `nakanaori-web`）へ自動デプロイされます。
 
-初回デプロイ手順: [docs/hackathon-staging-deploy.md](docs/hackathon-staging-deploy.md)（**別 Cloud Run** — `nakanaori-api` / `nakanaori-web`）
+**デモ URL は README には掲載しません** — ハッカソン事務局への別途連絡用です。URL の確認方法は [docs/hackathon-staging-deploy.md](docs/hackathon-staging-deploy.md) を参照してください。
 
 ## 構成
 
@@ -114,7 +109,7 @@ curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 ## 提出物（ハッカソン）
 
 - [ ] 公開 GitHub リポジトリ
-- [x] デプロイ URL（[staging 手順](docs/hackathon-staging-deploy.md)）
+- [x] Staging デプロイ（URL は事務局へ別途連絡 — [手順](docs/hackathon-staging-deploy.md)）
 - [ ] Proto Pedia 登録（[文案](docs/proto-pedia-draft.md)）
 - [ ] 3分デモ動画（[台本](docs/demo-video-script.md)）
 

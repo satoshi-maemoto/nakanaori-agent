@@ -81,6 +81,35 @@ python3 -c 'import json; print(json.dumps(json.load(open("credentials/google-tts
 
 生成した文字列を `GOOGLE_TTS_CREDENTIALS_JSON=` の右辺に貼り付けます。
 
+### 方法 C: Cloud Run staging（Secret Manager — 推奨）
+
+`deploy-staging.yml` は GEMINI と同様、`GOOGLE_TTS_CREDENTIALS_JSON` を Secret Manager から **ENABLED 版があるときのみ** マウントします。未設定・無効時は `::warning::` を出してデプロイ続行（API は 503、Web/Kebbi はフォールバック）。
+
+```bash
+export PROJECT_ID=your-gcp-project
+PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --format='value(projectNumber)')
+RUNTIME_SA="${PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+
+gcloud services enable texttospeech.googleapis.com --project="$PROJECT_ID"
+
+python3 -c 'import json; print(json.dumps(json.load(open("credentials/google-tts-service-account.json"))))' \
+  | gcloud secrets create GOOGLE_TTS_CREDENTIALS_JSON --data-file=- --project="$PROJECT_ID"
+
+gcloud secrets add-iam-policy-binding GOOGLE_TTS_CREDENTIALS_JSON \
+  --project="$PROJECT_ID" \
+  --member="serviceAccount:${RUNTIME_SA}" \
+  --role="roles/secretmanager.secretAccessor"
+```
+
+`main` へ push すると新 revision に secret が注入されます。OFF にする場合:
+
+```bash
+gcloud secrets versions disable latest --secret=GOOGLE_TTS_CREDENTIALS_JSON --project="$PROJECT_ID"
+# または Cloud Run から外す:
+gcloud run services update nakanaori-api --region asia-northeast1 \
+  --remove-secrets GOOGLE_TTS_CREDENTIALS_JSON
+```
+
 ---
 
 ## 3. 任意: 音声の変更
