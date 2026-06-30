@@ -11,6 +11,10 @@ import type { AvatarGender } from "../avatar/model-config";
 import { childCopy } from "../lib/child-copy";
 import { loadAvatarGender, saveAvatarGender } from "../lib/avatar-storage";
 import { useRobotTts } from "../lib/use-robot-tts";
+import {
+  type SpeechInputErrorCode,
+  useSpeechInput,
+} from "../lib/use-speech-input";
 import { cn } from "../lib/utils";
 
 const AvatarCanvas = lazy(() => import("../avatar/AvatarCanvas"));
@@ -93,6 +97,19 @@ function FlowStepsCollapsible({
   );
 }
 
+function voiceErrorMessage(code: SpeechInputErrorCode): string {
+  switch (code) {
+    case "not-supported":
+      return childCopy.voiceUnsupported;
+    case "permission-denied":
+      return childCopy.voicePermissionDenied;
+    case "no-speech":
+      return childCopy.voiceNoSpeech;
+    default:
+      return childCopy.voiceError;
+  }
+}
+
 export default function ChildView() {
   const [gender, setGender] = useState<AvatarGender>(() => loadAvatarGender());
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -113,6 +130,17 @@ export default function ChildView() {
   const composingRef = useRef(false);
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const { speak: speakRobot, stop: stopRobotTts } = useRobotTts(gender);
+  const {
+    supported: voiceSupported,
+    listening: voiceListening,
+    toggle: toggleVoice,
+    stop: stopVoice,
+  } = useSpeechInput({
+    onTranscript: setInput,
+    onError: (code) => {
+      setMessages((m) => [...m, { role: "system", text: voiceErrorMessage(code) }]);
+    },
+  });
 
   const childMessageCount = messages.filter((m) => m.role === "child").length;
   const flowCompact = childMessageCount >= FLOW_AUTO_COLLAPSE_AFTER;
@@ -143,6 +171,10 @@ export default function ChildView() {
     if (res.child_b_label) setChildBLabel(res.child_b_label);
   }
 
+  useEffect(() => {
+    if (speaking) stopVoice();
+  }, [speaking, stopVoice]);
+
   async function startSession() {
     setLoading(true);
     try {
@@ -168,6 +200,7 @@ export default function ChildView() {
 
   async function submitTurn(finishTurn: boolean) {
     if (!sessionId || escalated || sessionComplete || loading) return;
+    stopVoice();
     const text = input.trim();
     if (!text && !finishTurn) return;
 
@@ -215,6 +248,15 @@ export default function ChildView() {
     setConfirmingFinish(true);
   }
 
+  function handleVoiceToggle() {
+    if (!voiceSupported || loading || confirmingFinish || sessionComplete) return;
+    if (!voiceListening) {
+      stopRobotTts();
+      setSpeaking(false);
+    }
+    toggleVoice(input);
+  }
+
   const canSend =
     Boolean(input.trim()) && !loading && !confirmingFinish && !sessionComplete;
   const canFinishTurn =
@@ -227,6 +269,12 @@ export default function ChildView() {
   const labels = { a: childALabel, b: childBLabel };
   const activeName = displayChildName(childId, names, labels);
   const isLastTurn = childId === "b" && sessionState === "listening_b";
+  const canUseVoice =
+    voiceSupported &&
+    !loading &&
+    !confirmingFinish &&
+    !sessionComplete &&
+    !escalated;
 
   return (
     <AppShell title={childCopy.pageTitle} variant="child" largeTitle>
@@ -364,13 +412,37 @@ export default function ChildView() {
               </div>
             ) : (
               <div className="shrink-0 flex flex-col gap-3 border-t border-slate-100 px-4 py-4 md:px-5">
-                <div className="flex gap-3">
+                <div className="flex gap-2 sm:gap-3">
+                  {voiceSupported ? (
+                    <Button
+                      type="button"
+                      variant={voiceListening ? "destructive" : "secondary"}
+                      size="xl"
+                      onClick={handleVoiceToggle}
+                      disabled={!canUseVoice}
+                      className={cn(
+                        "shrink-0 px-4 sm:px-5",
+                        voiceListening && "animate-pulse",
+                      )}
+                      aria-pressed={voiceListening}
+                      aria-label={childCopy.voiceButtonTitle}
+                      data-testid="voice-input-button"
+                    >
+                      <span aria-hidden="true" className="text-2xl leading-none">
+                        {voiceListening ? "🎙️" : "🎤"}
+                      </span>
+                      <span className="sr-only sm:not-sr-only sm:ml-2 sm:text-lg">
+                        {voiceListening ? childCopy.voiceButtonListening : childCopy.voiceButton}
+                      </span>
+                    </Button>
+                  ) : null}
                   <Input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder={childCopy.inputPlaceholder}
                     disabled={loading}
-                    className="h-14 text-lg"
+                    className="h-14 min-w-0 flex-1 text-lg"
+                    aria-label={childCopy.inputPlaceholder}
                     onCompositionStart={() => {
                       composingRef.current = true;
                     }}
@@ -383,7 +455,7 @@ export default function ChildView() {
                     size="xl"
                     onClick={() => void submitTurn(false)}
                     disabled={!canSend}
-                    className="shrink-0 px-6"
+                    className="shrink-0 px-4 sm:px-6"
                   >
                     {childCopy.sendButton}
                   </Button>
