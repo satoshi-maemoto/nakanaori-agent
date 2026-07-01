@@ -105,6 +105,8 @@ function voiceErrorMessage(code: SpeechInputErrorCode): string {
       return childCopy.voicePermissionDenied;
     case "no-speech":
       return childCopy.voiceNoSpeech;
+    case "network":
+      return childCopy.voiceNetwork;
     default:
       return childCopy.voiceError;
   }
@@ -249,12 +251,16 @@ export default function ChildView() {
   }
 
   function handleVoiceToggle() {
-    if (!voiceSupported || loading || confirmingFinish || sessionComplete) return;
-    if (!voiceListening) {
-      stopRobotTts();
-      setSpeaking(false);
-    }
-    toggleVoice(input);
+    if (!voiceSupported || loading || confirmingFinish || sessionComplete || speaking) return;
+    void (async () => {
+      if (!voiceListening) {
+        stopRobotTts();
+        setSpeaking(false);
+        // TTS 再生直後はマイク取得が失敗しやすいので少し待つ
+        await new Promise((r) => setTimeout(r, 300));
+      }
+      toggleVoice(input);
+    })();
   }
 
   const canSend =
@@ -272,6 +278,7 @@ export default function ChildView() {
   const canUseVoice =
     voiceSupported &&
     !loading &&
+    !speaking &&
     !confirmingFinish &&
     !sessionComplete &&
     !escalated;

@@ -22,6 +22,8 @@ export const childCopy = {
   voiceUnsupported: "この ブラウザでは マイクが 使えません。文字で かいてね。",
   voicePermissionDenied: "マイクを 使う きょかが ひつようです。",
   voiceNoSpeech: "こえが 聞こえませんでした。もう一度 ためしてね。",
+  voiceNetwork:
+    "音声の 認識に つながれませんでした。Chrome や Safari で ひらき直すか、文字で かいてね。",
   voiceError: "音声が 聞き取れませんでした。もう一度 ためしてね。",
   sendButton: "おくる",
   sendHint: "「おくる」= つづけて 話す · マイク でも はなせる",

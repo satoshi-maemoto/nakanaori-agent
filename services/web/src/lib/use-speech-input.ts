@@ -90,14 +90,19 @@ export function useSpeechInput({
 
       recognition.onerror = (event) => {
         if (event.error === "aborted") return;
+        console.warn("[SpeechInput] recognition error:", event.error, event.message);
         const code: SpeechInputErrorCode =
-          event.error === "not-allowed"
+          event.error === "not-allowed" || event.error === "audio-capture"
             ? "permission-denied"
             : event.error === "no-speech"
               ? "no-speech"
               : event.error === "network"
                 ? "network"
-                : "unknown";
+                : event.error === "service-not-allowed"
+                  ? "not-supported"
+                  : "unknown";
+        recognitionRef.current = null;
+        setListening(false);
         onErrorRef.current?.(code);
       };
 
