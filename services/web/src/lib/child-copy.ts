@@ -7,7 +7,7 @@ export const childCopy = {
   flowClose: "とじる",
   flowSteps: [
     "① なまえ を 教える",
-    "② きょうの こと を 話す（「おくる」で つづけて よい）",
+    "② きょうの こと を 話す（マイク でも かいて でも よい）",
     "③ 「番を おわる」→ もう いい？ と 聞く",
     "④ 2人 終わったら せんせいに 相談",
   ] as const,
@@ -16,8 +16,17 @@ export const childCopy = {
   genderMale: "おとこの ロボット",
   startButton: "はじめる",
   inputPlaceholder: "はなしたい ことを かいて…",
+  voiceButton: "はなす",
+  voiceButtonListening: "きいてる…",
+  voiceButtonTitle: "マイクで はなす",
+  voiceUnsupported: "この ブラウザでは マイクが 使えません。文字で かいてね。",
+  voicePermissionDenied: "マイクを 使う きょかが ひつようです。",
+  voiceNoSpeech: "こえが 聞こえませんでした。もう一度 ためしてね。",
+  voiceNetwork:
+    "音声の 認識に つながれませんでした。Chrome や Safari で ひらき直すか、文字で かいてね。",
+  voiceError: "音声が 聞き取れませんでした。もう一度 ためしてね。",
   sendButton: "おくる",
-  sendHint: "「おくる」= つづけて 話す",
+  sendHint: "「おくる」= つづけて 話す · マイク でも はなせる",
   finishTurnButton: "番を おわる",
   confirmFinish: (name: string, isLast: boolean) =>
     isLast
