@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { cn } from "../../lib/utils";
 import ConfirmationGuidePanel from "./ConfirmationGuidePanel";

@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
 import {
   prepareTtsText,

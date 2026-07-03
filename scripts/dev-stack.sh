@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Start API (:8080) + Vite (:5173) for local dev / browser verify.
 set -euo pipefail
 

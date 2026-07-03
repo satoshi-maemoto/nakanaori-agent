@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { cn } from "../../lib/utils";
 
 type Props = { active?: boolean; done?: boolean; label: string; large?: boolean };

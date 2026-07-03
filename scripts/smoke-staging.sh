@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Post-deploy smoke test for staging (API + Web).
 # Usage: API_URL=https://... WEB_URL=https://... bash scripts/smoke-staging.sh
 set -euo pipefail

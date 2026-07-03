@@ -1,0 +1,16 @@
+Nakanaori Agent (ナカナオリ・エージェント)
+Copyright 2026 Satoshi Maemoto
+
+This product includes software developed as part of the Nakanaori Agent project.
+
+Project: https://github.com/satoshi-maemoto/nakanaori-agent
+
+When you redistribute or create derivative works of this software, retain this
+NOTICE file together with the Apache License 2.0 text. See LICENSE for terms.
+
+Documentation, demo media, and ProtoPedia submission materials in docs/ are
+licensed under Creative Commons Attribution 4.0 International (CC BY 4.0) unless
+otherwise noted. See docs/CONTENT-LICENSE.md.
+
+Third-party assets (for example VRoid sample VRM/GLB models) remain under their
+respective licenses. See services/web/public/models/README.md.

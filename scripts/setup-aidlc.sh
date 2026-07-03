@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Re-download latest AI-DLC rules from awslabs/aidlc-workflows releases.
 set -euo pipefail
 

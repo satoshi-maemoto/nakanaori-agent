@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Open Kebbi settings screen on a connected device (hides robot face overlay first).
 set -euo pipefail
 

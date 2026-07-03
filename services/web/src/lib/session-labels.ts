@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 /** 先生画面用 — セッション状態の日本語ラベル */
 export const sessionStateLabel: Record<string, string> = {
   created: "準備中",

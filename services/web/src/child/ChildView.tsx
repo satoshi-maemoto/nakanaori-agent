@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { lazy, Suspense, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { createSession, postChildTurn } from "../api";
 import type { ChatMessage } from "../components/chat/ChatBubble";

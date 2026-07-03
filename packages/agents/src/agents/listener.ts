@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { ROBOT_NAME } from "./child-navigator.js";
 import { isLlmEnabled, loadPrompt, withRetry } from "../config.js";
 import { runLlmAgentText } from "../llm/adk-runner.js";

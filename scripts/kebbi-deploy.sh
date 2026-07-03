@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Build, install debug APK on connected Kebbi, and launch MainActivity.
 # Usage: bash scripts/kebbi-deploy.sh [local|staging]
 # Default target: KEBBI_TARGET from .env / config/kebbi-targets.env (staging)

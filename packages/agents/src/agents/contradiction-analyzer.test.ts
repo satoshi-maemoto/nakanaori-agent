@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { describe, expect, it } from "vitest";
 import { fallbackAnalyzeContradictions } from "./contradiction-analyzer.js";
 import { SessionStateName, type SessionState } from "../orchestrator.js";

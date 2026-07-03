@@ -49,7 +49,7 @@ SNS 表示用。**100文字以内**に収める。
 
 **推奨**: 「表示する — Creative Commons Attribution CC BY version 4.0 or later (CC BY 4+)」
 
-> リポジトリ本体は MIT（[LICENSE](../LICENSE)）。ProtoPedia 上の作品説明・画像は CC BY 4+ 表示が無難。
+> ProtoPedia 上の作品説明・画像・動画は **CC BY 4+**（[docs/CONTENT-LICENSE.md](./CONTENT-LICENSE.md)）。ソースコードは **Apache 2.0**（[LICENSE](../LICENSE) + [NOTICE](../NOTICE)）。
 
 ---
 

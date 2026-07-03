@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Copy VRM/GLB avatar models from sibling CharaTomo-Web repo.
 set -euo pipefail
 

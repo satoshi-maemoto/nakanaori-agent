@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Push Nakanaori API URL to Kebbi SharedPreferences (debug build).
 # Usage: bash scripts/kebbi-set-api-url.sh [local|staging]
 set -euo pipefail

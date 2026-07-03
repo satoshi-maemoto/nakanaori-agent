@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { AvatarGender } from "./model-config";
 import { childCopy } from "../lib/child-copy";
 import { cn } from "../lib/utils";

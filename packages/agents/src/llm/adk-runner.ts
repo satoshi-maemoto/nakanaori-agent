@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { InMemoryRunner, LlmAgent } from "@google/adk";
 import type { z } from "zod";
 import { getGeminiModel } from "../config.js";

@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { AvatarGender } from "./model-config";
 import { FALLBACK_AVATAR } from "./model-config";
 import { useVrmAvatar } from "./useVrmAvatar";

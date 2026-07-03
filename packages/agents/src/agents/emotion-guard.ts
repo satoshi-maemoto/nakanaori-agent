@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { ESCALATION_PATTERNS } from "./patterns.js";
 import type { RiskAssessment } from "../schemas.js";
 

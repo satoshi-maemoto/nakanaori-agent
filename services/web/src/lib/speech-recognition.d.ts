@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 /** Web Speech API (Chrome / Safari) — not in default TypeScript DOM lib */
 interface SpeechRecognitionAlternative {
   readonly transcript: string;

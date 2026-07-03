@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { resolveGoogleApplicationCredentials } from "./resolve-google-credentials.js";
 import type { TtsAvatarGender, TtsKebbiProfile } from "./voice-config.js";
 

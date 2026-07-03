@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Run a Kebbi helper script after stopping any prior VS Code task instance.
 set -euo pipefail
 

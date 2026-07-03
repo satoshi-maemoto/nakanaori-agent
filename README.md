@@ -126,4 +126,10 @@ curl -s "$API_URL/v1/sessions/$SESSION/teacher-brief" | jq
 
 ## ライセンス
 
-MIT — [LICENSE](LICENSE) を参照
+| 対象 | ライセンス |
+|------|------------|
+| **ソースコード** | [Apache License 2.0](LICENSE) — [NOTICE](NOTICE) を同梱 |
+| **ドキュメント・デモ素材** | [CC BY 4.0](docs/CONTENT-LICENSE.md) |
+| **VRM モデル** | VRoid Project サンプル（[models/README.md](services/web/public/models/README.md)） |
+
+再利用時は LICENSE / NOTICE の著作権表示を残してください。

@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { SessionState } from "@nakanaori/agents";
 
 const sessions = new Map<string, SessionState>();

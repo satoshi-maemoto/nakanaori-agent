@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 /** 小学低学年向け UI 文言（やさしい漢字 + ひらがな） */
 export const childCopy = {
   pageTitle: "はなしを きいてくれる ロボット",

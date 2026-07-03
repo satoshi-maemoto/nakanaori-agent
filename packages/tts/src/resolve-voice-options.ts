@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { SynthesizeOptions } from "./prepare-tts-text.js";
 import { DEFAULT_VOICE_NAME } from "./prepare-tts-text.js";
 import {

@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Resolve Kebbi API URL for local | staging (sourced by kebbi-set-api-url.sh / kebbi-deploy.sh).
 
 kebbi_agent_root() {

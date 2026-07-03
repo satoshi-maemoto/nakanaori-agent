@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import "./load-env.js";
 import { serve } from "@hono/node-server";
 import { cors } from "hono/cors";

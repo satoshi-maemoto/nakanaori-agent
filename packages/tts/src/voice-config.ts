@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 /** Web avatar gender → Google Cloud TTS Chirp 3 HD (ja-JP). */
 export const TTS_VOICE_BY_AVATAR_GENDER = {
   female: "ja-JP-Chirp3-HD-Zephyr",

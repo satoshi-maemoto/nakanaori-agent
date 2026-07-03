@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { SessionState } from "../api";
 import { displayChildLabel, formatSessionState } from "../lib/session-labels";
 import { cn } from "../lib/utils";

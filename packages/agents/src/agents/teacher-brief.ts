@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { SessionState } from "../orchestrator.js";
 import { childDisplayLabel, overlayStructuredDisplayNames } from "../display-labels.js";
 import { AI_DISCLAIMER } from "../constants.js";

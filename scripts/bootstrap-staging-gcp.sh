@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Nakanaori staging — GCP 初回セットアップ（別 Cloud Run サービス）
 #
 # 用途: nakanaori-api / nakanaori-web を AIxR-API とは独立した Cloud Run にデプロイするための

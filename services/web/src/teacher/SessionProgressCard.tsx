@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { SessionProgress } from "../api";
 import { displayChildLabel, formatSessionState } from "../lib/session-labels";
 import TeacherInsightsPanel, { ConversationHistory } from "../components/brief/TeacherInsightsPanel";

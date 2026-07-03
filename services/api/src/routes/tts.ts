@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { isTtsConfigured, synthesizeSpeech, type SynthesizeOptions } from "@nakanaori/tts";
 import type { Context } from "hono";
 

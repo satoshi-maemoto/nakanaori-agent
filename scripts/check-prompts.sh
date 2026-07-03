@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Check agent TypeScript sources for forbidden judgment labels.
 # Prompt .md files may list forbidden terms in "Forbidden" sections — excluded.
 set -euo pipefail

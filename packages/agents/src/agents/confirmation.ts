@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import type { StructuredFacts } from "../schemas.js";
 import type { ConfirmationResult } from "../schemas.js";
 

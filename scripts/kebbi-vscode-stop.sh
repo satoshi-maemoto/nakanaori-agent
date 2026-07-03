@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Copyright 2026 Satoshi Maemoto
+# SPDX-License-Identifier: Apache-2.0
+
+
 # Stop prior Kebbi VS Code / Cursor tasks before re-launching (idempotent).
 set -uo pipefail
 

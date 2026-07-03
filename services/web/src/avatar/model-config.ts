@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 export type AvatarGender = "male" | "female";
 
 /** CharaTomo-Web `getVRMModelUrl()` と同じファイル名 */

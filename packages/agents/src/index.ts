@@ -1,3 +1,6 @@
+// Copyright 2026 Satoshi Maemoto
+// SPDX-License-Identifier: Apache-2.0
+
 import { ConfirmationAgent } from "./agents/confirmation.js";
 import { ChildNavigatorAgent, extractChildName } from "./agents/child-navigator.js";
 import { EmotionGuardAgent } from "./agents/emotion-guard.js";
